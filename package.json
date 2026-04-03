@@ -1,0 +1,11 @@
+{
+  "name": "pulsar",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:api": "pnpm --filter @pulsar/api dev",
+    "dev:cli": "pnpm --filter @pulsar/cli dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test"
+  }
+}
