@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+packages/*/node_modules
+
+# Build output
+dist
+packages/*/dist
+
+# Environment files
+.env
+*.env
+packages/**/.env
+packages/**/*.env
+
+# Version control
+.git
+.gitignore
+
+# Editor and OS
+.DS_Store
+.vscode
+*.log
+
+# Test artifacts
+coverage
+packages/*/coverage
+
+# Local dev
+*.local

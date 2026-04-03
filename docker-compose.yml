@@ -1,0 +1,8 @@
+services:
+  pulsar-api:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - packages/api/.env
+    restart: unless-stopped
