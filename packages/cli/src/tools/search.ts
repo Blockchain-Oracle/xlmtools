@@ -21,17 +21,6 @@ export function registerSearchTool(server: McpServer): void {
           .default(10)
           .describe("Number of results (1-20)"),
       }),
-      outputSchema: z.object({
-        query: z.string(),
-        results: z.array(
-          z.object({
-            title: z.string(),
-            url: z.string(),
-            description: z.string(),
-          })
-        ),
-        count: z.number(),
-      }),
     },
     async ({ query, count }) => {
       logger.debug({ query, count }, "search tool invoked");

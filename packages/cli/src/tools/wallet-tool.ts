@@ -13,12 +13,6 @@ export function registerWalletTool(server: McpServer): void {
       description:
         "Show your Stellar wallet address, current USDC balance, and how to fund it. Free.",
       inputSchema: z.object({}),
-      outputSchema: z.object({
-        address: z.string(),
-        xlm_balance: z.string(),
-        usdc_balance: z.string(),
-        fund_instructions: z.array(z.string()),
-      }),
     },
     async () => {
       logger.debug("wallet tool invoked");
