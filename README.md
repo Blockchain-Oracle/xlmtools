@@ -1,6 +1,6 @@
 # PULSAR
 
-**Stellar-native MCP server for Claude Code. 14 tools. Billed via Stellar USDC.**
+**Stellar-native MCP server for Claude Code. 13 tools. Billed via Stellar USDC.**
 
 One-line install:
 
@@ -10,7 +10,7 @@ claude mcp add pulsar npx @pulsar/mcp
 
 ## What is this?
 
-PULSAR gives Claude Code 14 useful tools — web search, research, image generation, virtual card issuance, and more — all billed through MPP (Machine Payment Protocol) on Stellar. Fund once with testnet USDC. Every tool call pays automatically via an on-chain USDC transfer. No subscriptions. No API keys to manage.
+PULSAR gives Claude Code 13 useful tools — web search, research, image generation, and more — all billed through MPP (Machine Payment Protocol) on Stellar. Fund once with testnet USDC. Every tool call pays automatically via an on-chain USDC transfer. No subscriptions. No API keys to manage.
 
 **The name:** A pulsar is a rapidly rotating neutron star that emits precise, regular pulses. That's what this does — precise micropayment pulses on Stellar, one per tool call.
 
@@ -20,8 +20,7 @@ PULSAR gives Claude Code 14 useful tools — web search, research, image generat
 |---|---|---|
 | Payment | x402 per-call on Base | MPP charge on Stellar |
 | 100 tool calls | 100 on-chain txs | 100 on-chain txs (charge mode) |
-| Tools | 9 | 14 |
-| Card issuance | No | Yes (ASGCard) |
+| Tools | 9 | 13 |
 | Network | Base (EVM) | Stellar testnet |
 
 No Stellar equivalent of this existed before PULSAR.
@@ -40,7 +39,6 @@ No Stellar equivalent of this existed before PULSAR.
 | `scrape` | $0.002 | Extract webpage content (Jina) |
 | `image` | $0.040 | Generate images (DALL-E 3) |
 | `stocks` | $0.001 | Stock prices (Alpha Vantage) |
-| `card` | $10+ | Virtual Mastercard (ASGCard) |
 
 ### Free
 
@@ -94,7 +92,7 @@ Claude Code (MCP client)
 PULSAR CLI process  (~/.pulsar/)
     │  - holds Stellar keypair locally
     │  - Mppx polyfills fetch to handle 402 payments
-    │  - 14 MCP tools registered
+    │  - 13 MCP tools registered
     │
     │ HTTPS + MPP payment headers
     ▼
@@ -108,7 +106,7 @@ PULSAR API Server  (Express)
     ├── ScreenshotOne   ├── Jina Reader
     ├── OpenAI DALL-E   ├── Alpha Vantage
     ├── CoinGecko       ├── OpenWeatherMap
-    └── ASGCard
+    └── DNS (domain)
 ```
 
 ## Tech Stack
@@ -143,5 +141,5 @@ Built for the **Stellar Agents x402 / Stripe / MPP** hackathon.
 **Novel contributions:**
 1. First MCP server on Stellar
 2. First MPP charge billing for AI tool calls
-3. 14 tools Claude Code actually needs daily
-4. Virtual card issuance via ASGCard (MVP)
+3. 13 tools Claude Code actually needs daily
+4. Pay-per-query model — no API keys, no subscriptions

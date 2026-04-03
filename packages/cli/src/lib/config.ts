@@ -7,7 +7,6 @@ export const TOOL_PRICES: Record<string, string> = {
   scrape:     "0.002",
   image:      "0.040",
   stocks:     "0.001",
-  card:       "10.000",
 };
 
 export const FREE_TOOLS = new Set(["crypto", "weather", "domain", "wallet", "tools"]);

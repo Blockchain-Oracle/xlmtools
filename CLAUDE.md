@@ -9,18 +9,16 @@ Stellar Agents x402/MPP hackathon. The gap we're filling: nobody has built an MC
 server on Stellar with MPP billing. BlockRun MCP does this on EVM/Base.
 PULSAR does it on Stellar.
 
-## The 14 tools
+## The 13 tools
 search, research, reddit, youtube, screenshot, scrape, image, crypto, weather,
-stocks, card, domain, wallet, tools
+stocks, domain, wallet, tools
+
+(Card tool removed — ASGCard already has their own MCP server with x402 billing.
+No point duplicating. Users can install ASGCard's MCP server alongside PULSAR.)
 
 ## Payment model
 MPP charge mode (via `mppx`). Each paid tool call triggers a 402 → Mppx auto-builds
 Soroban SAC USDC transfer → signs with local Stellar key → retries with payment proof.
-
-## The `card` tool (MVP scope)
-Issues a virtual Mastercard via ASGCard API. Currently a stub — `@asgcard/sdk@1.1.4`
-exists on npm and can be wired in. Card details go into Claude Code context; user
-uses them manually. Autonomous agent spending is a future problem.
 
 ## Project structure
 ```
@@ -33,9 +31,8 @@ research/  ← ecosystem research notes
 ```
 
 ## Current state (2026-04-03)
-- All 14 CLI tools implemented and registered
+- All 13 CLI tools implemented and registered
 - All API routes implemented with MPP charge gating
-- Card tool is MVP stub (wire @asgcard/sdk when ready)
 - Both packages build cleanly with TypeScript
 - Not yet deployed (API server needs hosting)
 

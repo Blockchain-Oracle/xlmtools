@@ -12,7 +12,7 @@ import { screenshotRoute } from "./routes/screenshot.js";
 import { scrapeRoute } from "./routes/scrape.js";
 import { imageRoute } from "./routes/image.js";
 import { stocksRoute } from "./routes/stocks.js";
-import { cardRoute } from "./routes/card.js";
+
 
 const app = express();
 app.use(express.json());
@@ -32,8 +32,6 @@ app.use("/screenshot", screenshotRoute);
 app.use("/scrape", scrapeRoute);
 app.use("/image", imageRoute);
 app.use("/stocks", stocksRoute);
-app.use("/card", cardRoute);
-
 const PORT = Number(process.env.PORT ?? 3000);
 app.listen(PORT, () => {
   logger.info({ port: PORT }, "PULSAR API running");
