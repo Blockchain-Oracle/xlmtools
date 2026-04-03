@@ -5,6 +5,10 @@ import { Mppx } from "mppx/client";
 import { stellar } from "@stellar/mpp/charge/client";
 import { loadOrCreateWallet, getKeypair } from "./lib/wallet.js";
 import { logger } from "./lib/logger.js";
+import { registerCryptoTool } from "./tools/crypto.js";
+import { registerWeatherTool } from "./tools/weather.js";
+import { registerDomainTool } from "./tools/domain.js";
+import { registerToolsListTool } from "./tools/tools-list.js";
 
 const config = loadOrCreateWallet();
 const keypair = getKeypair(config);
@@ -28,7 +32,11 @@ const server = new McpServer(
   { capabilities: { tools: {}, logging: {} } }
 );
 
-// Tools registered in later tasks
+// Free tools
+registerCryptoTool(server);
+registerWeatherTool(server);
+registerDomainTool(server);
+registerToolsListTool(server);
 
 async function main() {
   const transport = new StdioServerTransport();
