@@ -1,0 +1,13 @@
+{
+    "result": {
+        "content": [
+            {
+                "type": "text",
+                "text": "{\n  \"stellar\": {\n    \"usd\": 0.163094,\n    \"usd_market_cap\": 5395974292.852885,\n    \"usd_24h_change\": 0.090243556771594\n  }\n}"
+            }
+        ],
+        "isError": false
+    },
+    "jsonrpc": "2.0",
+    "id": 1
+}
