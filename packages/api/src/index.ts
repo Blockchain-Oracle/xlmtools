@@ -4,6 +4,7 @@ import { logger } from "./lib/logger.js";
 import { cryptoRoute } from "./routes/crypto.js";
 import { weatherRoute } from "./routes/weather.js";
 import { domainRoute } from "./routes/domain.js";
+import { searchRoute } from "./routes/search.js";
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,7 @@ app.get("/health", (_req, res) => {
 app.use("/crypto", cryptoRoute);
 app.use("/weather", weatherRoute);
 app.use("/domain", domainRoute);
+app.use("/search", searchRoute);
 
 const PORT = Number(process.env.PORT ?? 3000);
 app.listen(PORT, () => {
