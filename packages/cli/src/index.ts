@@ -18,6 +18,7 @@ import { registerScreenshotTool } from "./tools/screenshot.js";
 import { registerScrapeTool } from "./tools/scrape.js";
 import { registerImageTool } from "./tools/image.js";
 import { registerStocksTool } from "./tools/stocks.js";
+import { registerCardTool } from "./tools/card.js";
 
 const config = loadOrCreateWallet();
 const keypair = getKeypair(config);
@@ -57,6 +58,7 @@ registerScreenshotTool(server);
 registerScrapeTool(server);
 registerImageTool(server);
 registerStocksTool(server);
+registerCardTool(server);
 
 async function main() {
   const transport = new StdioServerTransport();
