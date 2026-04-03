@@ -9,6 +9,8 @@ import { registerCryptoTool } from "./tools/crypto.js";
 import { registerWeatherTool } from "./tools/weather.js";
 import { registerDomainTool } from "./tools/domain.js";
 import { registerToolsListTool } from "./tools/tools-list.js";
+import { registerWalletTool } from "./tools/wallet-tool.js";
+import { registerSearchTool } from "./tools/search.js";
 
 const config = loadOrCreateWallet();
 const keypair = getKeypair(config);
@@ -37,6 +39,10 @@ registerCryptoTool(server);
 registerWeatherTool(server);
 registerDomainTool(server);
 registerToolsListTool(server);
+registerWalletTool(server);
+
+// Paid tools
+registerSearchTool(server);
 
 async function main() {
   const transport = new StdioServerTransport();
