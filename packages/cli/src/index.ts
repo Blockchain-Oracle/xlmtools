@@ -12,7 +12,7 @@ import { registerToolsListTool } from "./tools/tools-list.js";
 import { registerWalletTool } from "./tools/wallet-tool.js";
 import { registerSearchTool } from "./tools/search.js";
 import { registerResearchTool } from "./tools/research.js";
-import { registerRedditTool } from "./tools/reddit.js";
+
 import { registerYoutubeTool } from "./tools/youtube.js";
 import { registerScreenshotTool } from "./tools/screenshot.js";
 import { registerScrapeTool } from "./tools/scrape.js";
@@ -52,7 +52,7 @@ registerWalletTool(server);
 // Paid tools
 registerSearchTool(server);
 registerResearchTool(server);
-registerRedditTool(server);
+
 registerYoutubeTool(server);
 registerScreenshotTool(server);
 registerScrapeTool(server);

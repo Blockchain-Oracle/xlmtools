@@ -6,7 +6,7 @@ import { weatherRoute } from "./routes/weather.js";
 import { domainRoute } from "./routes/domain.js";
 import { searchRoute } from "./routes/search.js";
 import { researchRoute } from "./routes/research.js";
-import { redditRoute } from "./routes/reddit.js";
+
 import { youtubeRoute } from "./routes/youtube.js";
 import { screenshotRoute } from "./routes/screenshot.js";
 import { scrapeRoute } from "./routes/scrape.js";
@@ -26,7 +26,7 @@ app.use("/weather", weatherRoute);
 app.use("/domain", domainRoute);
 app.use("/search", searchRoute);
 app.use("/research", researchRoute);
-app.use("/reddit", redditRoute);
+
 app.use("/youtube", youtubeRoute);
 app.use("/screenshot", screenshotRoute);
 app.use("/scrape", scrapeRoute);
