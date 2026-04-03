@@ -9,4 +9,10 @@ export const TOOL_PRICES: Record<string, string> = {
   stocks:     "0.001",
 };
 
-export const FREE_TOOLS = new Set(["crypto", "weather", "domain", "wallet", "tools"]);
+export const FREE_TOOLS = new Set([
+  "crypto", "weather", "domain", "wallet", "tools",
+  // Stellar-native tools (free — Horizon + StellarExpert + Reflector are public APIs)
+  "dex-orderbook", "dex-candles", "dex-trades",
+  "swap-quote", "stellar-asset", "stellar-account",
+  "stellar-pools", "oracle-price",
+]);

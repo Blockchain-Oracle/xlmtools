@@ -12,7 +12,14 @@ import { screenshotRoute } from "./routes/screenshot.js";
 import { scrapeRoute } from "./routes/scrape.js";
 import { imageRoute } from "./routes/image.js";
 import { stocksRoute } from "./routes/stocks.js";
-
+import { dexOrderbookRoute } from "./routes/dex-orderbook.js";
+import { dexCandlesRoute } from "./routes/dex-candles.js";
+import { dexTradesRoute } from "./routes/dex-trades.js";
+import { swapQuoteRoute } from "./routes/swap-quote.js";
+import { stellarAssetRoute } from "./routes/stellar-asset.js";
+import { stellarAccountRoute } from "./routes/stellar-account.js";
+import { stellarPoolsRoute } from "./routes/stellar-pools.js";
+import { oraclePriceRoute } from "./routes/oracle-price.js";
 
 const app = express();
 app.use(express.json());
@@ -32,6 +39,17 @@ app.use("/screenshot", screenshotRoute);
 app.use("/scrape", scrapeRoute);
 app.use("/image", imageRoute);
 app.use("/stocks", stocksRoute);
+
+// Stellar-native tools (free — no MPP gate)
+app.use("/dex-orderbook", dexOrderbookRoute);
+app.use("/dex-candles", dexCandlesRoute);
+app.use("/dex-trades", dexTradesRoute);
+app.use("/swap-quote", swapQuoteRoute);
+app.use("/stellar-asset", stellarAssetRoute);
+app.use("/stellar-account", stellarAccountRoute);
+app.use("/stellar-pools", stellarPoolsRoute);
+app.use("/oracle-price", oraclePriceRoute);
+
 const PORT = Number(process.env.PORT ?? 3000);
 app.listen(PORT, () => {
   logger.info({ port: PORT }, "PULSAR API running");

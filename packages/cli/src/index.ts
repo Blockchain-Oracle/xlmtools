@@ -18,7 +18,14 @@ import { registerScreenshotTool } from "./tools/screenshot.js";
 import { registerScrapeTool } from "./tools/scrape.js";
 import { registerImageTool } from "./tools/image.js";
 import { registerStocksTool } from "./tools/stocks.js";
-
+import { registerDexOrderbookTool } from "./tools/dex-orderbook.js";
+import { registerDexCandlesTool } from "./tools/dex-candles.js";
+import { registerDexTradesTool } from "./tools/dex-trades.js";
+import { registerSwapQuoteTool } from "./tools/swap-quote.js";
+import { registerStellarAssetTool } from "./tools/stellar-asset.js";
+import { registerStellarAccountTool } from "./tools/stellar-account.js";
+import { registerStellarPoolsTool } from "./tools/stellar-pools.js";
+import { registerOraclePriceTool } from "./tools/oracle-price.js";
 
 const config = loadOrCreateWallet();
 const keypair = getKeypair(config);
@@ -58,6 +65,17 @@ registerScreenshotTool(server);
 registerScrapeTool(server);
 registerImageTool(server);
 registerStocksTool(server);
+
+// Stellar-native tools (free)
+registerDexOrderbookTool(server);
+registerDexCandlesTool(server);
+registerDexTradesTool(server);
+registerSwapQuoteTool(server);
+registerStellarAssetTool(server);
+registerStellarAccountTool(server);
+registerStellarPoolsTool(server);
+registerOraclePriceTool(server);
+
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
