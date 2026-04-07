@@ -4,6 +4,7 @@ import { TOOL_PRICES } from "../lib/pricing.js";
 import { nodeToWebRequest, sendWebResponse } from "../lib/adapter.js";
 import { apiError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
+import { withReceiptBody } from "../lib/receipt.js";
 
 export const imageRoute = Router();
 
@@ -74,12 +75,8 @@ imageRoute.post("/", async (req, res) => {
 
   logger.info({}, "image generation complete");
 
-  const webRes = result.withReceipt(
-    Response.json({
-      prompt,
-      image_url: image.url,
-      revised_prompt: image.revised_prompt,
-    }),
-  );
-  await sendWebResponse(webRes as globalThis.Response, res);
+  const body = { prompt, image_url: image.url, revised_prompt: image.revised_prompt };
+  const wrapped = result.withReceipt(Response.json(body));
+  const webRes = withReceiptBody(wrapped as globalThis.Response, body, "image");
+  await sendWebResponse(webRes, res);
 });

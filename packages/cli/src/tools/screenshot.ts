@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
-import { ok, err } from "../lib/format.js";
+import { okPaid, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 import { TOOL_PRICES } from "../lib/config.js";
 
@@ -29,7 +29,7 @@ export function registerScreenshotTool(server: McpServer): void {
           const body = await res.text();
           return err(`Screenshot API error ${res.status}: ${body}`);
         }
-        return ok(await res.json());
+        return okPaid(await res.json());
       } catch (e: unknown) {
         logger.error({ err: e }, "screenshot tool error");
         return err(`Screenshot failed: ${String(e)}`);

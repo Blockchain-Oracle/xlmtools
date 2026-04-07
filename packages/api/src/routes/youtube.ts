@@ -4,6 +4,7 @@ import { TOOL_PRICES } from "../lib/pricing.js";
 import { nodeToWebRequest, sendWebResponse } from "../lib/adapter.js";
 import { apiError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
+import { withReceiptBody } from "../lib/receipt.js";
 
 export const youtubeRoute = Router();
 
@@ -68,10 +69,10 @@ youtubeRoute.get("/", async (req, res) => {
 
     logger.info({ videoId, captionCount: captions.length }, "youtube captions complete");
 
-    const webRes = result.withReceipt(
-      Response.json({ videoId, captions, count: captions.length }),
-    );
-    await sendWebResponse(webRes as globalThis.Response, res);
+    const captionBody = { videoId, captions, count: captions.length };
+    const captionWrapped = result.withReceipt(Response.json(captionBody));
+    const captionWebRes = withReceiptBody(captionWrapped as globalThis.Response, captionBody, "youtube");
+    await sendWebResponse(captionWebRes, res);
     return;
   }
 
@@ -119,8 +120,8 @@ youtubeRoute.get("/", async (req, res) => {
 
   logger.info({ query, resultCount: results.length }, "youtube search complete");
 
-  const webRes = result.withReceipt(
-    Response.json({ query, results, count: results.length }),
-  );
-  await sendWebResponse(webRes as globalThis.Response, res);
+  const searchBody = { query, results, count: results.length };
+  const searchWrapped = result.withReceipt(Response.json(searchBody));
+  const searchWebRes = withReceiptBody(searchWrapped as globalThis.Response, searchBody, "youtube");
+  await sendWebResponse(searchWebRes, res);
 });

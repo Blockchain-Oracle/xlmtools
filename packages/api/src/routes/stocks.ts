@@ -4,6 +4,7 @@ import { TOOL_PRICES } from "../lib/pricing.js";
 import { nodeToWebRequest, sendWebResponse } from "../lib/adapter.js";
 import { apiError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
+import { withReceiptBody } from "../lib/receipt.js";
 
 export const stocksRoute = Router();
 
@@ -69,15 +70,15 @@ stocksRoute.get("/", async (req, res) => {
 
   logger.info({ symbol }, "stocks request complete");
 
-  const webRes = result.withReceipt(
-    Response.json({
-      symbol: quote["01. symbol"],
-      price: quote["05. price"],
-      change: quote["09. change"],
-      change_pct: quote["10. change percent"],
-      volume: quote["06. volume"],
-      latest_trading_day: quote["07. latest trading day"],
-    }),
-  );
-  await sendWebResponse(webRes as globalThis.Response, res);
+  const body = {
+    symbol: quote["01. symbol"],
+    price: quote["05. price"],
+    change: quote["09. change"],
+    change_pct: quote["10. change percent"],
+    volume: quote["06. volume"],
+    latest_trading_day: quote["07. latest trading day"],
+  };
+  const wrapped = result.withReceipt(Response.json(body));
+  const webRes = withReceiptBody(wrapped as globalThis.Response, body, "stocks");
+  await sendWebResponse(webRes, res);
 });

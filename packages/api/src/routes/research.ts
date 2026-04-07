@@ -4,6 +4,7 @@ import { TOOL_PRICES } from "../lib/pricing.js";
 import { nodeToWebRequest, sendWebResponse } from "../lib/adapter.js";
 import { apiError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
+import { withReceiptBody } from "../lib/receipt.js";
 
 export const researchRoute = Router();
 
@@ -77,8 +78,8 @@ researchRoute.get("/", async (req, res) => {
 
   logger.info({ query, resultCount: results.length }, "exa research complete");
 
-  const webRes = result.withReceipt(
-    Response.json({ query, results, count: results.length }),
-  );
-  await sendWebResponse(webRes as globalThis.Response, res);
+  const body = { query, results, count: results.length };
+  const wrapped = result.withReceipt(Response.json(body));
+  const webRes = withReceiptBody(wrapped as globalThis.Response, body, "research");
+  await sendWebResponse(webRes, res);
 });
