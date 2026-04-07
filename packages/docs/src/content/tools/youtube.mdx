@@ -1,0 +1,45 @@
+# YouTube
+
+Search YouTube videos or look up a specific video by ID. Returns video metadata including titles, descriptions, view counts, and channel info.
+
+**Price:** $0.002 USDC per call
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `query` | string | No | — | Search query to find videos |
+| `id` | string | No | — | YouTube video ID for direct lookup |
+
+You must provide either `query` or `id` (or both).
+
+## Examples
+
+### Search for videos
+
+```
+Find YouTube videos about Stellar blockchain development
+```
+
+### Look up a specific video
+
+```
+Get details for YouTube video dQw4w9WgXcQ
+```
+
+## Response
+
+Returns video metadata:
+
+- **title** — Video title
+- **channel** — Channel name
+- **views** — View count
+- **duration** — Video length
+- **description** — Video description
+- **url** — Direct link to the video
+
+## Use cases
+
+- Finding tutorials and educational content
+- Researching what's being discussed about a topic
+- Getting metadata for a specific video link

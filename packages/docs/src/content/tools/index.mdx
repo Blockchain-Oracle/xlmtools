@@ -1,0 +1,53 @@
+import { Callout } from 'nextra/components'
+
+# Tools Overview
+
+PULSAR provides 20 tools across four categories: web, media, finance, and Stellar-native. Seven tools are paid (via USDC micropayments), and thirteen are free.
+
+## Pricing table
+
+### Paid tools
+
+| Tool | Description | Price per call |
+| --- | --- | --- |
+| [search](/tools/search) | Real-time web and news search | $0.003 |
+| [research](/tools/research) | Multi-source deep research with summaries | $0.010 |
+| [youtube](/tools/youtube) | YouTube video search and lookup | $0.002 |
+| [screenshot](/tools/screenshot) | Capture a screenshot of any URL | $0.010 |
+| [scrape](/tools/scrape) | Extract clean text from any URL | $0.002 |
+| [image](/tools/image) | AI image generation from text prompts | $0.040 |
+| [stocks](/tools/stocks) | Real-time stock quotes and market data | $0.001 |
+
+### Free tools
+
+| Tool | Description |
+| --- | --- |
+| [crypto](/tools/crypto) | Cryptocurrency prices, market caps, 24h changes |
+| [weather](/tools/weather) | Current weather for any city |
+| [domain](/tools/domain) | Domain name availability check |
+| [wallet](/tools/stellar-tools) | Your PULSAR wallet address and balance |
+| [tools](/tools/stellar-tools) | List all tools and their prices |
+| [dex-orderbook](/tools/stellar-tools) | Stellar DEX live orderbook |
+| [dex-candles](/tools/stellar-tools) | OHLCV candlestick price data |
+| [dex-trades](/tools/stellar-tools) | Recent DEX trades |
+| [swap-quote](/tools/stellar-tools) | Best swap path between two assets |
+| [stellar-asset](/tools/stellar-tools) | Asset info: supply, trustlines, rating |
+| [stellar-account](/tools/stellar-tools) | Account lookup: balances, signers |
+| [stellar-pools](/tools/stellar-tools) | Liquidity pool data |
+| [oracle-price](/tools/stellar-tools) | Reflector oracle prices |
+
+<Callout type="info">
+All prices are in USDC on Stellar testnet. Payments are settled instantly via the Micropayment Protocol (MPP).
+</Callout>
+
+## How payment works
+
+When you call a paid tool, PULSAR handles the payment automatically:
+
+1. The API server returns HTTP `402 Payment Required`
+2. The MPP client builds a Soroban USDC transfer transaction
+3. Your local Stellar key signs it
+4. The request is retried with payment proof
+5. The API verifies the payment and returns the result
+
+No manual steps required. See the [Payment Flow](/guides/payment-flow) guide for details.

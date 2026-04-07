@@ -1,0 +1,48 @@
+import { Callout } from 'nextra/components'
+
+# Web Search
+
+Search the web and news in real-time. Returns results with titles, snippets, and source URLs.
+
+**Price:** $0.003 USDC per call
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `query` | string | Yes | — | Search query |
+| `count` | integer | No | 10 | Number of results (1-20) |
+
+## Example
+
+Ask your AI agent:
+
+```
+Search for "Stellar Soroban smart contracts" and give me the top 5 results
+```
+
+PULSAR will call the `search` tool with `query: "Stellar Soroban smart contracts"` and `count: 5`.
+
+## Response
+
+The tool returns an array of search results, each containing:
+
+- **title** — Page title
+- **url** — Source URL
+- **snippet** — Brief excerpt from the page
+
+```json
+{
+  "results": [
+    {
+      "title": "Soroban | Stellar Smart Contracts",
+      "url": "https://soroban.stellar.org",
+      "snippet": "Soroban is the smart contracts platform on Stellar..."
+    }
+  ]
+}
+```
+
+<Callout type="info">
+The search tool queries multiple web sources in real-time. Results are not cached — you always get fresh data.
+</Callout>

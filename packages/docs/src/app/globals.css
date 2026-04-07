@@ -1,0 +1,11 @@
+@import 'nextra-theme-docs/style.css';
+
+:root {
+  --nextra-primary-hue: 160deg;
+  --nextra-primary-saturation: 70%;
+  --nextra-primary-lightness: 45%;
+}
+
+.dark {
+  --nextra-primary-lightness: 55%;
+}

@@ -1,0 +1,30 @@
+# Domain Check
+
+Check if a domain name is available for registration.
+
+**Price:** Free
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `name` | string | Yes | — | Domain name to check (e.g. `stellar-tools.xyz`) |
+
+## Example
+
+```
+Is the domain pulsar-mcp.com available?
+```
+
+## Response
+
+Returns availability status:
+
+- **domain** — The domain that was checked
+- **available** — `true` if the domain is available, `false` if taken
+
+## Use cases
+
+- Brainstorming and checking project names
+- Verifying domain availability during planning
+- Quickly checking multiple domain ideas

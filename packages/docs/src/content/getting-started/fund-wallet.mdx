@@ -1,0 +1,56 @@
+import { Callout } from 'nextra/components'
+
+# Fund Your Wallet
+
+PULSAR auto-creates a Stellar testnet wallet on first run. Before you can use paid tools, you need to fund it with testnet XLM (for transaction fees) and testnet USDC (for tool payments).
+
+## Step 1: Find your wallet address
+
+Ask your AI agent:
+
+```
+Show me my PULSAR wallet
+```
+
+The agent will call the `wallet` tool and return your Stellar public key (starts with `G`).
+
+You can also find it directly in the config file:
+
+```bash
+cat ~/.pulsar/wallet.json
+```
+
+## Step 2: Get testnet XLM
+
+Visit the Stellar Laboratory and fund your account:
+
+1. Go to [lab.stellar.org/account/fund](https://lab.stellar.org/account/fund)
+2. Paste your Stellar public key
+3. Click **Fund** to receive 10,000 testnet XLM
+
+<Callout type="info">
+Testnet XLM is required to pay Stellar network transaction fees (fractions of a cent). You'll also need it to establish the USDC trustline.
+</Callout>
+
+## Step 3: Get testnet USDC
+
+1. Go to the [Circle Faucet](https://faucet.circle.com)
+2. Select **Stellar Testnet** as the network
+3. Paste your Stellar public key
+4. Request USDC
+
+You'll receive testnet USDC that can be used to pay for PULSAR tool calls.
+
+## Step 4: Verify your balance
+
+Ask your AI agent:
+
+```
+Check my PULSAR wallet balance
+```
+
+You should see your XLM and USDC balances. With USDC loaded, you're ready to make paid tool calls.
+
+<Callout type="warning">
+This is **testnet** only. No real funds are used. Testnet tokens have no monetary value.
+</Callout>

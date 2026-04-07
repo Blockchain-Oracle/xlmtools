@@ -1,0 +1,231 @@
+import { Callout } from 'nextra/components'
+
+# Stellar DEX & Data Tools
+
+PULSAR includes 8 Stellar-native tools that query the Stellar DEX, Horizon API, StellarExpert analytics, and the Reflector oracle network. All of these tools are **free** — they use public Stellar infrastructure with no backend costs.
+
+<Callout type="info">
+These tools work on Stellar testnet. Asset pairs, accounts, and pools all refer to the testnet network.
+</Callout>
+
+---
+
+## dex-orderbook
+
+View the live orderbook for any Stellar asset pair. Shows bids, asks, and spread.
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `pair` | string | Yes | — | Asset pair (e.g. `XLM/USDC`, `USDC/EURC`) |
+| `limit` | integer | No | 10 | Number of price levels per side (1-200) |
+
+### Example
+
+```
+Show me the XLM/USDC orderbook with 20 levels
+```
+
+### Well-known assets
+
+`XLM`, `USDC`, `EURC`, `AQUA`, `yUSDC`, `BLND`, `SHX`
+
+For other assets, use the `CODE:ISSUER` format (e.g. `MOBI:GA6HCMBLTZS5VYYBCATRBRZ3BZJMAFUDKYYF6AH6MVCMGWMRDNSWJPIH`).
+
+---
+
+## dex-candles
+
+Get OHLCV candlestick price data for any Stellar asset pair.
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `pair` | string | Yes | — | Asset pair (e.g. `XLM/USDC`) |
+| `resolution` | enum | No | `1h` | Candle interval: `1m`, `5m`, `15m`, `1h`, `1d`, `1w` |
+| `limit` | integer | No | 20 | Number of candles (1-200) |
+
+### Example
+
+```
+Get the last 50 hourly candles for XLM/USDC
+```
+
+### Response
+
+Each candle contains:
+
+- **open**, **high**, **low**, **close** — Price data
+- **volume** — Base asset volume
+- **timestamp** — Candle start time
+
+---
+
+## dex-trades
+
+Get recent trades for any Stellar asset pair.
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `pair` | string | Yes | — | Asset pair (e.g. `XLM/USDC`) |
+| `limit` | integer | No | 10 | Number of trades (1-200) |
+| `trade_type` | enum | No | `all` | Filter: `all`, `orderbook`, or `liquidity_pool` |
+
+### Example
+
+```
+Show me the last 20 XLM/USDC trades from the orderbook only
+```
+
+---
+
+## swap-quote
+
+Find the best swap path between any two Stellar assets using the native DEX pathfinding.
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `from` | string | Yes | — | Source asset (e.g. `XLM`, `USDC`) |
+| `to` | string | Yes | — | Destination asset (e.g. `USDC`, `EURC`) |
+| `amount` | string | Yes | — | Amount to swap |
+| `mode` | enum | No | `send` | `send` = fix the send amount; `receive` = fix the receive amount |
+
+### Example
+
+```
+What's the best rate to swap 1000 XLM to USDC?
+```
+
+### Response
+
+Returns:
+
+- **rate** — Exchange rate
+- **path** — Intermediate assets used in the path
+- **source_amount** / **destination_amount** — Exact amounts
+
+---
+
+## stellar-asset
+
+Look up any Stellar asset: supply, trustlines, rating, issuer organization, and analytics.
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `asset` | string | Yes | — | Asset to look up (e.g. `USDC`, `XLM`, `AQUA`, `CODE:ISSUER`) |
+
+### Example
+
+```
+Tell me about the USDC asset on Stellar
+```
+
+### Response
+
+Combines on-chain data from Horizon with analytics from StellarExpert:
+
+- **asset_code** / **asset_issuer** — Asset identifiers
+- **supply** — Total supply
+- **trustlines** — Number of accounts holding the asset
+- **rating** — StellarExpert trust rating
+- **issuer_info** — Organization name, domain, and TOML data
+
+---
+
+## stellar-account
+
+Look up any Stellar account: balances, trustlines, signers, and status.
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `address` | string | Yes | — | Stellar public key (G-address, 56 characters) |
+
+### Example
+
+```
+Look up the account GABC...XYZ on Stellar
+```
+
+### Response
+
+- **address** — Public key
+- **balances** — All asset balances (XLM, USDC, etc.)
+- **trustlines** — Established trustlines
+- **signers** — Account signers and weights
+- **sequence** — Current sequence number
+
+---
+
+## stellar-pools
+
+Browse Stellar liquidity pools. Optionally filter by asset.
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `asset` | string | No | — | Filter by asset (e.g. `XLM`, `USDC`). Omit for all pools. |
+| `limit` | integer | No | 10 | Number of pools (1-200) |
+
+### Example
+
+```
+Show me all liquidity pools that include USDC
+```
+
+### Response
+
+Each pool includes:
+
+- **pool_id** — Unique pool identifier
+- **reserves** — Asset reserves with amounts
+- **total_shares** — LP token supply
+- **total_trustlines** — Number of LP holders
+
+---
+
+## oracle-price
+
+Get real-time prices from Reflector, Stellar's decentralized oracle network.
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `asset` | string | Yes | — | Asset ticker (e.g. `BTC`, `ETH`, `EUR`, `SOL`) |
+| `feed` | enum | No | `crypto` | Oracle feed: `crypto`, `fiat`, or `dex` |
+
+### Example
+
+```
+What's the oracle price of BTC?
+```
+
+### Feeds
+
+| Feed | Description | Example assets |
+| --- | --- | --- |
+| `crypto` | Major cryptocurrency prices | BTC, ETH, SOL, XRP, ADA |
+| `fiat` | Foreign exchange rates | EUR, GBP, JPY, CHF |
+| `dex` | Stellar DEX pair prices | XLM, USDC pairs |
+
+### Response
+
+- **asset** — Requested asset
+- **price** — Current price in USD
+- **timestamp** — Last update time
+- **source** — Oracle network (Reflector)
+
+<Callout type="info">
+Reflector oracle prices are updated every 5 minutes via multi-node consensus across the Stellar network. These are on-chain prices — not sourced from centralized exchanges.
+</Callout>

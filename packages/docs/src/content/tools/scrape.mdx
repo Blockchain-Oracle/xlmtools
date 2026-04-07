@@ -1,0 +1,32 @@
+# Scrape
+
+Extract clean, readable text content from any public URL. Strips HTML, ads, and navigation — returns just the main content.
+
+**Price:** $0.002 USDC per call
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `url` | string (URL) | Yes | — | URL of the page to scrape |
+
+## Example
+
+```
+Scrape the content from https://stellar.org/learn/intro-to-stellar
+```
+
+## Response
+
+Returns the extracted text content:
+
+- **content** — Clean text from the page, with formatting preserved
+- **title** — Page title
+- **url** — The URL that was scraped
+
+## Use cases
+
+- Extracting article text for summarization
+- Pulling documentation content for analysis
+- Reading blog posts without visiting the site
+- Gathering text data from multiple URLs for comparison

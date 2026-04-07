@@ -1,0 +1,36 @@
+# Crypto Prices
+
+Get real-time cryptocurrency prices, market caps, and 24-hour changes. Powered by public APIs.
+
+**Price:** Free
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `ids` | string | Yes | — | Comma-separated coin IDs (e.g. `bitcoin,ethereum,stellar`) |
+| `vs_currency` | string | No | `usd` | Quote currency (e.g. `usd`, `eur`, `gbp`) |
+
+## Example
+
+```
+Get the current price of Bitcoin, Ethereum, and Stellar in USD
+```
+
+PULSAR will call the `crypto` tool with `ids: "bitcoin,ethereum,stellar"` and `vs_currency: "usd"`.
+
+## Response
+
+Returns price data for each requested coin:
+
+- **id** — Coin identifier
+- **current_price** — Price in the requested currency
+- **market_cap** — Market capitalization
+- **price_change_percentage_24h** — 24-hour price change as a percentage
+- **total_volume** — 24-hour trading volume
+
+## Supported coins
+
+Any coin listed on CoinGecko can be queried. Common IDs:
+
+`bitcoin`, `ethereum`, `stellar`, `solana`, `ripple`, `cardano`, `polkadot`, `chainlink`, `uniswap`

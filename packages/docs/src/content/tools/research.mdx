@@ -1,0 +1,41 @@
+import { Callout } from 'nextra/components'
+
+# Deep Research
+
+Perform deep research on any topic. PULSAR crawls multiple web pages, extracts key information, and returns summarized, sourced results.
+
+**Price:** $0.010 USDC per call
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `query` | string | Yes | — | Research query |
+| `num_results` | integer | No | 5 | Number of sources to analyze (1-20) |
+
+## Example
+
+```
+Research the current state of micropayments on Stellar
+```
+
+PULSAR will crawl and summarize content from multiple sources about Stellar micropayments.
+
+## Response
+
+Returns a structured summary with:
+
+- **summary** — Synthesized findings across all sources
+- **sources** — List of URLs analyzed with per-source summaries
+- **key_points** — Extracted highlights
+
+<Callout type="info">
+The research tool is more thorough (and more expensive) than `search`. Use `search` for quick lookups and `research` when you need in-depth analysis of a topic.
+</Callout>
+
+## Use cases
+
+- Competitive analysis and market research
+- Technical deep-dives into protocols or libraries
+- Summarizing recent developments on a topic
+- Gathering sourced information for reports

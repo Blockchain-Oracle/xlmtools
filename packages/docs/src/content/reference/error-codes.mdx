@@ -1,0 +1,98 @@
+import { Callout } from 'nextra/components'
+
+# Error Codes
+
+PULSAR uses standard HTTP status codes and returns structured error messages. This page covers common errors and how to resolve them.
+
+## HTTP Status Codes
+
+| Status | Meaning | Description |
+| --- | --- | --- |
+| `200` | Success | Tool call completed successfully |
+| `400` | Bad Request | Invalid parameters (check the tool schema) |
+| `402` | Payment Required | MPP payment needed (handled automatically by the CLI) |
+| `403` | Forbidden | Payment proof invalid or rejected |
+| `404` | Not Found | Unknown tool or endpoint |
+| `429` | Too Many Requests | Rate limit exceeded — try again shortly |
+| `500` | Internal Server Error | Server-side failure |
+| `502` | Bad Gateway | Upstream API (e.g. search provider) is down |
+
+## Common Errors
+
+### "Provide either query or id"
+
+**Tool:** `youtube`
+
+You called the YouTube tool without providing either a `query` or `id` parameter. At least one is required.
+
+```
+// Wrong — no parameters
+youtube({})
+
+// Correct
+youtube({ query: "Stellar blockchain" })
+```
+
+### "Search API error 402"
+
+**Tool:** Any paid tool
+
+Your wallet doesn't have enough USDC to pay for the tool call. Fund your wallet:
+
+1. Check your balance: call the `wallet` tool
+2. Get testnet USDC from [faucet.circle.com](https://faucet.circle.com) (select Stellar Testnet)
+3. Retry the tool call
+
+### "Failed to load account"
+
+**Tool:** `wallet`
+
+Your Stellar account hasn't been created on the network yet. You need to fund it with testnet XLM first:
+
+1. Get your public key from `~/.pulsar/wallet.json`
+2. Go to [lab.stellar.org/account/fund](https://lab.stellar.org/account/fund)
+3. Fund the account with testnet XLM
+
+### "Orderbook error 400: Invalid pair"
+
+**Tool:** `dex-orderbook`, `dex-candles`, `dex-trades`
+
+The asset pair format is incorrect. Use the format `BASE/QUOTE`:
+
+```
+// Correct formats
+XLM/USDC
+USDC/EURC
+AQUA/XLM
+
+// For non-well-known assets, use CODE:ISSUER
+MOBI:GA6HCMBLTZS5VYYBCATRBRZ3BZJMAFUDKYYF6AH6MVCMGWMRDNSWJPIH/XLM
+```
+
+### "Swap quote error: No path found"
+
+**Tool:** `swap-quote`
+
+No trading path exists between the two assets on the Stellar DEX. This can happen if:
+
+- One of the assets has very low liquidity
+- The asset code is misspelled
+- The assets are not traded against each other (even indirectly)
+
+Try a different asset pair or check that both assets exist using `stellar-asset`.
+
+## MCP-Level Errors
+
+These errors come from the MCP transport layer, not from PULSAR tools.
+
+### "Server disconnected"
+
+The PULSAR CLI process exited unexpectedly. Restart your MCP host session.
+
+### "Tool not found: pulsar_xxx"
+
+The tool name is incorrect. Call the `tools` tool to list all available tools and their exact names.
+
+<Callout type="info">
+If you encounter persistent errors, check that you're running Node.js 22+ (`node --version`) and that your `~/.pulsar/wallet.json` file isn't corrupted. Deleting the wallet file and restarting will regenerate it.
+</Callout>

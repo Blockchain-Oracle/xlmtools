@@ -1,0 +1,59 @@
+import { Callout } from 'nextra/components'
+
+# Installation
+
+PULSAR installs as a single MCP server. No global packages, no Docker, no config files.
+
+## Claude Code (recommended)
+
+```bash
+claude mcp add pulsar npx @pulsar/mcp
+```
+
+That's it. Claude Code will download and run the server automatically the next time you start a session.
+
+## Claude Desktop
+
+Open your Claude Desktop config file:
+
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+Add PULSAR to the `mcpServers` section:
+
+```json
+{
+  "mcpServers": {
+    "pulsar": {
+      "command": "npx",
+      "args": ["@pulsar/mcp"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop to pick up the change.
+
+## Cursor / Windsurf
+
+Both editors support MCP servers via their settings. Add a new server entry:
+
+- **Command**: `npx`
+- **Args**: `@pulsar/mcp`
+- **Transport**: `stdio`
+
+See the [MCP Host Setup](/guides/mcp-setup) guide for detailed instructions per editor.
+
+## Verify installation
+
+After adding the server, ask your AI agent:
+
+```
+What tools does PULSAR provide?
+```
+
+The agent will call the `tools` tool and list all 20 available tools with their prices.
+
+<Callout type="info">
+On first run, PULSAR generates a Stellar keypair and stores it locally at `~/.pulsar/wallet.json`. This wallet is used to sign micropayments for paid tool calls. You'll need to fund it with testnet USDC before using paid tools.
+</Callout>

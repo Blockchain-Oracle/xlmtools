@@ -1,0 +1,29 @@
+# Screenshot
+
+Capture a full-page screenshot of any public URL. Returns the image in your chosen format.
+
+**Price:** $0.010 USDC per call
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `url` | string (URL) | Yes | — | URL of the page to screenshot |
+| `format` | enum | No | `png` | Image format: `png`, `jpg`, or `webp` |
+
+## Example
+
+```
+Take a screenshot of https://stellar.org in PNG format
+```
+
+## Response
+
+Returns the screenshot image data that your MCP host can display inline.
+
+## Use cases
+
+- Capturing the current state of a webpage for reference
+- Visual verification of web deployments
+- Documenting UI changes across deploys
+- Creating visual reports from live sites

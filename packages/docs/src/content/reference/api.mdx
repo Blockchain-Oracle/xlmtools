@@ -1,0 +1,197 @@
+import { Callout } from 'nextra/components'
+
+# API Reference
+
+The PULSAR API server is an Express 5 HTTP server that handles tool execution and MPP payment verification. The CLI client communicates with this server on every tool call.
+
+<Callout type="warning">
+You don't typically call the API directly. The PULSAR CLI handles all communication automatically. This reference is for developers who want to understand the internals or build custom integrations.
+</Callout>
+
+## Base URL
+
+```
+https://api.pulsar.tools  (production — coming soon)
+http://localhost:4000      (local development)
+```
+
+## Authentication
+
+Paid endpoints use MPP (Micropayment Protocol) for authentication. The first request returns `402 Payment Required` with payment instructions. Subsequent requests include the signed payment proof.
+
+Free endpoints require no authentication.
+
+## Endpoints
+
+### GET /search
+
+Web search. **Paid: $0.003 USDC**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `q` | string | Search query |
+| `count` | integer | Number of results (1-20, default 10) |
+
+### GET /research
+
+Deep research. **Paid: $0.010 USDC**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `q` | string | Research query |
+| `num_results` | integer | Number of sources (1-20, default 5) |
+
+### GET /youtube
+
+YouTube search/lookup. **Paid: $0.002 USDC**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `q` | string | Search query (optional) |
+| `id` | string | Video ID (optional) |
+
+### GET /screenshot
+
+Web screenshot. **Paid: $0.010 USDC**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `url` | string | URL to screenshot |
+| `format` | string | `png`, `jpg`, or `webp` (default `png`) |
+
+### GET /scrape
+
+Web scraper. **Paid: $0.002 USDC**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `url` | string | URL to scrape |
+
+### POST /image
+
+Image generation. **Paid: $0.040 USDC**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `prompt` | string | Text prompt |
+| `size` | string | `1024x1024`, `1024x1792`, or `1792x1024` |
+
+### GET /stocks
+
+Stock quotes. **Paid: $0.001 USDC**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `symbol` | string | Ticker symbol |
+
+### GET /crypto
+
+Crypto prices. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `ids` | string | Comma-separated coin IDs |
+| `vs_currency` | string | Quote currency (default `usd`) |
+
+### GET /weather
+
+Weather data. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `location` | string | City name |
+
+### GET /domain
+
+Domain availability. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `name` | string | Domain to check |
+
+### GET /dex-orderbook
+
+Stellar DEX orderbook. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `pair` | string | Asset pair (e.g. `XLM/USDC`) |
+| `limit` | integer | Levels per side (1-200, default 10) |
+
+### GET /dex-candles
+
+DEX candlestick data. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `pair` | string | Asset pair |
+| `resolution` | string | `1m`, `5m`, `15m`, `1h`, `1d`, `1w` |
+| `limit` | integer | Number of candles (1-200, default 20) |
+
+### GET /dex-trades
+
+DEX trade history. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `pair` | string | Asset pair |
+| `limit` | integer | Number of trades (1-200, default 10) |
+| `trade_type` | string | `all`, `orderbook`, or `liquidity_pool` |
+
+### GET /swap-quote
+
+DEX swap pathfinding. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `from` | string | Source asset |
+| `to` | string | Destination asset |
+| `amount` | string | Amount to swap |
+| `mode` | string | `send` or `receive` |
+
+### GET /stellar-asset
+
+Asset information. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `asset` | string | Asset code or `CODE:ISSUER` |
+
+### GET /stellar-account
+
+Account lookup. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `address` | string | Stellar public key |
+
+### GET /stellar-pools
+
+Liquidity pools. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `asset` | string | Filter by asset (optional) |
+| `limit` | integer | Number of pools (1-200, default 10) |
+
+### GET /oracle-price
+
+Oracle prices. **Free**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `asset` | string | Asset ticker |
+| `feed` | string | `crypto`, `fiat`, or `dex` |
+
+## MPP Response Headers
+
+When a paid endpoint returns `402`, the response includes these headers:
+
+```http
+X-MPP-Version: 1
+X-MPP-Amount: <price>
+X-MPP-Asset: USDC
+X-MPP-Destination: <server stellar address>
+X-MPP-Network: testnet
+X-MPP-Memo: <tool>:<request_id>
+```

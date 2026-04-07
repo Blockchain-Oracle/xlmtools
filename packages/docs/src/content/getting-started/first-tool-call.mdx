@@ -1,0 +1,57 @@
+import { Callout } from 'nextra/components'
+
+# First Tool Call
+
+With PULSAR installed and your wallet funded, you're ready to make your first paid tool call.
+
+## Try a web search
+
+Ask your AI agent:
+
+```
+Search the web for "Stellar network MPP micropayments"
+```
+
+Behind the scenes, PULSAR will:
+
+1. Receive the `search` tool call from your MCP host
+2. Send the request to the PULSAR API server
+3. The API responds with HTTP `402 Payment Required` and an MPP payment header
+4. PULSAR's MPP client (`mppx`) automatically builds a Soroban USDC transfer transaction
+5. Signs it with your local Stellar key
+6. Retries the request with the payment proof attached
+7. The API verifies the payment and returns the search results
+
+**Cost: $0.003 USDC** — deducted automatically from your wallet.
+
+## Try a free tool
+
+Not all tools require payment. Try a free one:
+
+```
+What's the weather in Lagos?
+```
+
+The `weather` tool is free. No payment flow is triggered — the request goes straight through.
+
+## Try a Stellar tool
+
+```
+Show me the XLM/USDC orderbook on the Stellar DEX
+```
+
+The `dex-orderbook` tool queries the Stellar Horizon API directly. It's free and returns live bids, asks, and spread data.
+
+## What happened to my balance?
+
+Ask your agent:
+
+```
+Check my PULSAR wallet balance
+```
+
+You'll see that $0.003 was deducted for the search. Free tools don't affect your balance.
+
+<Callout type="info">
+Every paid tool call creates a verifiable on-chain transaction. You can look up your account on [Stellar Expert](https://stellar.expert/explorer/testnet) to see the payment history.
+</Callout>

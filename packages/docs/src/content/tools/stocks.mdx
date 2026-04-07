@@ -1,0 +1,35 @@
+# Stocks
+
+Get real-time stock price and market data for any ticker symbol.
+
+**Price:** $0.001 USDC per call
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `symbol` | string | Yes | — | Stock ticker symbol (e.g. `AAPL`, `TSLA`, `MSFT`) |
+
+## Example
+
+```
+What's the current stock price of AAPL?
+```
+
+## Response
+
+Returns market data including:
+
+- **symbol** — Ticker symbol
+- **price** — Current price
+- **change** — Price change
+- **changePercent** — Percentage change
+- **volume** — Trading volume
+- **marketCap** — Market capitalization
+- **high** / **low** — Daily high and low
+
+## Use cases
+
+- Quick stock price checks during conversations
+- Comparing multiple stocks for research
+- Getting market data without leaving your editor

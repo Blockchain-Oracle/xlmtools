@@ -1,0 +1,14 @@
+export default {
+  index: { title: 'Overview' },
+  search: { title: 'Web Search' },
+  research: { title: 'Deep Research' },
+  youtube: { title: 'YouTube' },
+  screenshot: { title: 'Screenshot' },
+  scrape: { title: 'Scrape' },
+  image: { title: 'Image Generation' },
+  stocks: { title: 'Stocks' },
+  crypto: { title: 'Crypto Prices' },
+  weather: { title: 'Weather' },
+  domain: { title: 'Domain Check' },
+  'stellar-tools': { title: 'Stellar DEX & Data' },
+}

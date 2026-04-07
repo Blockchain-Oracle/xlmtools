@@ -1,0 +1,108 @@
+import { Callout } from 'nextra/components'
+
+# MCP Host Setup
+
+PULSAR works with any MCP-compatible host. Here's how to set it up in each supported editor and application.
+
+## Claude Code
+
+The simplest setup — one command:
+
+```bash
+claude mcp add pulsar npx @pulsar/mcp
+```
+
+Claude Code will automatically download and run the PULSAR server when you start a new session.
+
+To verify:
+
+```bash
+claude mcp list
+```
+
+You should see `pulsar` listed with transport `stdio`.
+
+## Claude Desktop
+
+### macOS
+
+1. Open the config file:
+   ```bash
+   open ~/Library/Application\ Support/Claude/claude_desktop_config.json
+   ```
+
+2. Add PULSAR to the `mcpServers` object:
+   ```json
+   {
+     "mcpServers": {
+       "pulsar": {
+         "command": "npx",
+         "args": ["@pulsar/mcp"]
+       }
+     }
+   }
+   ```
+
+3. Save and restart Claude Desktop.
+
+### Windows
+
+1. Open `%APPDATA%\Claude\claude_desktop_config.json` in your editor.
+2. Add the same `mcpServers` entry.
+3. Save and restart Claude Desktop.
+
+## Cursor
+
+1. Open Settings (`Cmd+,` or `Ctrl+,`)
+2. Search for "MCP" in the settings search bar
+3. Under **MCP Servers**, click **Add Server**
+4. Configure:
+   - **Name**: `pulsar`
+   - **Command**: `npx`
+   - **Args**: `@pulsar/mcp`
+   - **Transport**: `stdio`
+5. Save and restart Cursor
+
+## Windsurf
+
+1. Open the Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`)
+2. Search for "MCP: Add Server"
+3. Configure:
+   - **Name**: `pulsar`
+   - **Command**: `npx @pulsar/mcp`
+   - **Transport**: `stdio`
+4. Save
+
+## Verifying the connection
+
+After setup, ask your AI agent:
+
+```
+List all available PULSAR tools
+```
+
+The agent should call the `tools` tool and return a list of all 20 PULSAR tools with their prices. If you see the tool list, PULSAR is connected and working.
+
+<Callout type="info">
+If the server fails to start, make sure you have Node.js 22+ installed. Run `node --version` to check.
+</Callout>
+
+## Troubleshooting
+
+### "Command not found: npx"
+
+Install Node.js 22+ from [nodejs.org](https://nodejs.org).
+
+### Server starts but no tools appear
+
+Check that your MCP host supports the MCP protocol version used by PULSAR. Update your host to the latest version.
+
+### Wallet errors
+
+On first run, PULSAR creates a wallet at `~/.pulsar/wallet.json`. If this file is corrupted, delete it and restart:
+
+```bash
+rm ~/.pulsar/wallet.json
+```
+
+A new wallet will be generated automatically.

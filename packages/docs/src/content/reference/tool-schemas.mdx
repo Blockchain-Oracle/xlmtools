@@ -1,0 +1,278 @@
+import { Callout } from 'nextra/components'
+
+# Tool Schemas
+
+Each PULSAR tool is registered as an MCP tool with a typed input schema (using Zod) and structured output. Below are the complete schemas for all 20 tools.
+
+<Callout type="info">
+These schemas match the MCP `tools/list` response. Your MCP host uses these schemas to validate inputs before sending tool calls to PULSAR.
+</Callout>
+
+## Paid tools
+
+### search
+
+```typescript
+{
+  name: "search",
+  title: "Web Search",
+  inputSchema: {
+    query: z.string(),          // Search query
+    count: z.number().int()     // Results count (1-20, default 10)
+      .min(1).max(20).default(10)
+  }
+}
+```
+
+### research
+
+```typescript
+{
+  name: "research",
+  title: "Deep Research",
+  inputSchema: {
+    query: z.string(),              // Research query
+    num_results: z.number().int()   // Sources to analyze (1-20, default 5)
+      .min(1).max(20).default(5)
+  }
+}
+```
+
+### youtube
+
+```typescript
+{
+  name: "youtube",
+  title: "YouTube Search / Lookup",
+  inputSchema: {
+    query: z.string().optional(),  // Search query
+    id: z.string().optional()      // Video ID for direct lookup
+  }
+}
+```
+
+### screenshot
+
+```typescript
+{
+  name: "screenshot",
+  title: "Web Screenshot",
+  inputSchema: {
+    url: z.string().url(),                         // URL to capture
+    format: z.enum(["png", "jpg", "webp"])         // Image format (default "png")
+      .default("png")
+  }
+}
+```
+
+### scrape
+
+```typescript
+{
+  name: "scrape",
+  title: "Web Scraper",
+  inputSchema: {
+    url: z.string().url()   // URL to scrape
+  }
+}
+```
+
+### image
+
+```typescript
+{
+  name: "image",
+  title: "AI Image Generation",
+  inputSchema: {
+    prompt: z.string(),    // Text prompt
+    size: z.enum(["1024x1024", "1024x1792", "1792x1024"])
+      .default("1024x1024")
+  }
+}
+```
+
+### stocks
+
+```typescript
+{
+  name: "stocks",
+  title: "Stock Quotes",
+  inputSchema: {
+    symbol: z.string()   // Ticker symbol (e.g. "AAPL")
+  }
+}
+```
+
+## Free tools
+
+### crypto
+
+```typescript
+{
+  name: "crypto",
+  title: "Crypto Prices",
+  inputSchema: {
+    ids: z.string(),                    // Comma-separated coin IDs
+    vs_currency: z.string()             // Quote currency (default "usd")
+      .default("usd")
+  }
+}
+```
+
+### weather
+
+```typescript
+{
+  name: "weather",
+  title: "Weather",
+  inputSchema: {
+    location: z.string()   // City name
+  }
+}
+```
+
+### domain
+
+```typescript
+{
+  name: "domain",
+  title: "Domain Availability",
+  inputSchema: {
+    name: z.string()   // Domain to check
+  }
+}
+```
+
+### wallet
+
+```typescript
+{
+  name: "wallet",
+  title: "PULSAR Wallet",
+  inputSchema: {}   // No parameters
+}
+```
+
+### tools
+
+```typescript
+{
+  name: "tools",
+  title: "List Tools",
+  inputSchema: {}   // No parameters
+}
+```
+
+### dex-orderbook
+
+```typescript
+{
+  name: "dex-orderbook",
+  title: "Stellar DEX Orderbook",
+  inputSchema: {
+    pair: z.string(),              // Asset pair (e.g. "XLM/USDC")
+    limit: z.number().int()        // Levels per side (1-200, default 10)
+      .min(1).max(200).default(10)
+  }
+}
+```
+
+### dex-candles
+
+```typescript
+{
+  name: "dex-candles",
+  title: "Stellar DEX Price Candles",
+  inputSchema: {
+    pair: z.string(),
+    resolution: z.enum(["1m", "5m", "15m", "1h", "1d", "1w"])
+      .default("1h"),
+    limit: z.number().int()
+      .min(1).max(200).default(20)
+  }
+}
+```
+
+### dex-trades
+
+```typescript
+{
+  name: "dex-trades",
+  title: "Stellar DEX Trades",
+  inputSchema: {
+    pair: z.string(),
+    limit: z.number().int()
+      .min(1).max(200).default(10),
+    trade_type: z.enum(["all", "orderbook", "liquidity_pool"])
+      .default("all")
+  }
+}
+```
+
+### swap-quote
+
+```typescript
+{
+  name: "swap-quote",
+  title: "Stellar Swap Quote",
+  inputSchema: {
+    from: z.string(),              // Source asset
+    to: z.string(),                // Destination asset
+    amount: z.string(),            // Amount to swap
+    mode: z.enum(["send", "receive"])
+      .default("send")
+  }
+}
+```
+
+### stellar-asset
+
+```typescript
+{
+  name: "stellar-asset",
+  title: "Stellar Asset Info",
+  inputSchema: {
+    asset: z.string()   // Asset code or "CODE:ISSUER"
+  }
+}
+```
+
+### stellar-account
+
+```typescript
+{
+  name: "stellar-account",
+  title: "Stellar Account Lookup",
+  inputSchema: {
+    address: z.string()   // Stellar public key (G-address)
+  }
+}
+```
+
+### stellar-pools
+
+```typescript
+{
+  name: "stellar-pools",
+  title: "Stellar Liquidity Pools",
+  inputSchema: {
+    asset: z.string().optional(),   // Filter by asset
+    limit: z.number().int()
+      .min(1).max(200).default(10)
+  }
+}
+```
+
+### oracle-price
+
+```typescript
+{
+  name: "oracle-price",
+  title: "Stellar Oracle Price",
+  inputSchema: {
+    asset: z.string(),                          // Asset ticker
+    feed: z.enum(["crypto", "fiat", "dex"])     // Oracle feed
+      .default("crypto")
+  }
+}
+```
