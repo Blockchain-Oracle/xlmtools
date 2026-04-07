@@ -4,6 +4,8 @@ import { loadOrCreateWallet } from "../lib/wallet.js";
 import { okPaid, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 import { TOOL_PRICES } from "../lib/config.js";
+import { withBudget } from "../lib/budget.js";
+import { withCache } from "../lib/cache.js";
 
 export function registerResearchTool(server: McpServer): void {
   server.registerTool(
@@ -24,20 +26,24 @@ export function registerResearchTool(server: McpServer): void {
     },
     async ({ query, num_results }) => {
       logger.debug({ query, num_results }, "research tool invoked");
-      try {
-        const config = loadOrCreateWallet();
-        const res = await fetch(
-          `${config.apiUrl}/research?q=${encodeURIComponent(query)}&num_results=${num_results}`
-        );
-        if (!res.ok) {
-          const body = await res.text();
-          return err(`Research API error ${res.status}: ${body}`);
-        }
-        return okPaid(await res.json());
-      } catch (e: unknown) {
-        logger.error({ err: e }, "research tool error");
-        return err(`Research failed: ${String(e)}`);
-      }
-    }
+      return withCache("research", { query, num_results }, () =>
+        withBudget("research", async () => {
+          try {
+            const config = loadOrCreateWallet();
+            const res = await fetch(
+              `${config.apiUrl}/research?q=${encodeURIComponent(query)}&num_results=${num_results}`,
+            );
+            if (!res.ok) {
+              const body = await res.text();
+              return err(`Research API error ${res.status}: ${body}`);
+            }
+            return okPaid(await res.json());
+          } catch (e: unknown) {
+            logger.error({ err: e }, "research tool error");
+            return err(`Research failed: ${String(e)}`);
+          }
+        }),
+      );
+    },
   );
 }

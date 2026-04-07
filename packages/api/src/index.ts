@@ -20,6 +20,7 @@ import { stellarAssetRoute } from "./routes/stellar-asset.js";
 import { stellarAccountRoute } from "./routes/stellar-account.js";
 import { stellarPoolsRoute } from "./routes/stellar-pools.js";
 import { oraclePriceRoute } from "./routes/oracle-price.js";
+import { statsRoute } from "./routes/stats.js";
 
 const app = express();
 app.use(express.json());
@@ -49,6 +50,9 @@ app.use("/stellar-asset", stellarAssetRoute);
 app.use("/stellar-account", stellarAccountRoute);
 app.use("/stellar-pools", stellarPoolsRoute);
 app.use("/oracle-price", oraclePriceRoute);
+
+// Stats API (call log — in-memory, no auth)
+app.use("/stats", statsRoute);
 
 const PORT = Number(process.env.PORT ?? 3000);
 app.listen(PORT, () => {

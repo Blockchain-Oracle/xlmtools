@@ -1,5 +1,6 @@
 import { Receipt } from "mppx";
 import { TOOL_PRICES, type PaidTool } from "./pricing.js";
+import { recordCall } from "./call-log.js";
 
 export interface ReceiptInfo {
   tx_hash: string;
@@ -44,6 +45,17 @@ export function withReceiptBody(
 ): globalThis.Response {
   const receipt = extractReceipt(webRes, tool);
   const enrichedBody = receipt ? { ...body, receipt } : body;
+
+  // Record call in the in-memory log for the stats API
+  if (receipt) {
+    recordCall({
+      tool,
+      amount: receipt.amount,
+      currency: receipt.currency,
+      tx_hash: receipt.tx_hash,
+      timestamp: new Date().toISOString(),
+    });
+  }
 
   // Preserve the original headers (including Payment-Receipt)
   const headers = new Headers(webRes.headers);

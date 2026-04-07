@@ -26,6 +26,7 @@ import { registerStellarAssetTool } from "./tools/stellar-asset.js";
 import { registerStellarAccountTool } from "./tools/stellar-account.js";
 import { registerStellarPoolsTool } from "./tools/stellar-pools.js";
 import { registerOraclePriceTool } from "./tools/oracle-price.js";
+import { registerBudgetTool } from "./tools/budget.js";
 
 const config = loadOrCreateWallet();
 const keypair = getKeypair(config);
@@ -55,6 +56,7 @@ registerWeatherTool(server);
 registerDomainTool(server);
 registerToolsListTool(server);
 registerWalletTool(server);
+registerBudgetTool(server);
 
 // Paid tools
 registerSearchTool(server);

@@ -4,6 +4,8 @@ import { loadOrCreateWallet } from "../lib/wallet.js";
 import { okPaid, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 import { TOOL_PRICES } from "../lib/config.js";
+import { withBudget } from "../lib/budget.js";
+import { withCache } from "../lib/cache.js";
 
 export function registerStocksTool(server: McpServer): void {
   server.registerTool(
@@ -19,20 +21,24 @@ export function registerStocksTool(server: McpServer): void {
     },
     async ({ symbol }) => {
       logger.debug({ symbol }, "stocks tool invoked");
-      try {
-        const config = loadOrCreateWallet();
-        const res = await fetch(
-          `${config.apiUrl}/stocks?symbol=${encodeURIComponent(symbol)}`
-        );
-        if (!res.ok) {
-          const body = await res.text();
-          return err(`Stocks API error ${res.status}: ${body}`);
-        }
-        return okPaid(await res.json());
-      } catch (e: unknown) {
-        logger.error({ err: e }, "stocks tool error");
-        return err(`Stocks query failed: ${String(e)}`);
-      }
-    }
+      return withCache("stocks", { symbol }, () =>
+        withBudget("stocks", async () => {
+          try {
+            const config = loadOrCreateWallet();
+            const res = await fetch(
+              `${config.apiUrl}/stocks?symbol=${encodeURIComponent(symbol)}`,
+            );
+            if (!res.ok) {
+              const body = await res.text();
+              return err(`Stocks API error ${res.status}: ${body}`);
+            }
+            return okPaid(await res.json());
+          } catch (e: unknown) {
+            logger.error({ err: e }, "stocks tool error");
+            return err(`Stocks query failed: ${String(e)}`);
+          }
+        }),
+      );
+    },
   );
 }

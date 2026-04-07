@@ -4,6 +4,8 @@ import { loadOrCreateWallet } from "../lib/wallet.js";
 import { okPaid, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 import { TOOL_PRICES } from "../lib/config.js";
+import { withBudget } from "../lib/budget.js";
+import { withCache } from "../lib/cache.js";
 
 export function registerYoutubeTool(server: McpServer): void {
   server.registerTool(
@@ -21,21 +23,28 @@ export function registerYoutubeTool(server: McpServer): void {
       if (!query && !id) {
         return err("Provide either query or id");
       }
-      try {
-        const config = loadOrCreateWallet();
-        const params = new URLSearchParams();
-        if (query) params.set("q", query);
-        if (id) params.set("id", id);
-        const res = await fetch(`${config.apiUrl}/youtube?${params.toString()}`);
-        if (!res.ok) {
-          const body = await res.text();
-          return err(`YouTube API error ${res.status}: ${body}`);
-        }
-        return okPaid(await res.json());
-      } catch (e: unknown) {
-        logger.error({ err: e }, "youtube tool error");
-        return err(`YouTube lookup failed: ${String(e)}`);
-      }
-    }
+      const params: Record<string, unknown> = { query, id };
+      return withCache("youtube", params, () =>
+        withBudget("youtube", async () => {
+          try {
+            const config = loadOrCreateWallet();
+            const qs = new URLSearchParams();
+            if (query) qs.set("q", query);
+            if (id) qs.set("id", id);
+            const res = await fetch(
+              `${config.apiUrl}/youtube?${qs.toString()}`,
+            );
+            if (!res.ok) {
+              const body = await res.text();
+              return err(`YouTube API error ${res.status}: ${body}`);
+            }
+            return okPaid(await res.json());
+          } catch (e: unknown) {
+            logger.error({ err: e }, "youtube tool error");
+            return err(`YouTube lookup failed: ${String(e)}`);
+          }
+        }),
+      );
+    },
   );
 }

@@ -4,6 +4,8 @@ import { loadOrCreateWallet } from "../lib/wallet.js";
 import { okPaid, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 import { TOOL_PRICES } from "../lib/config.js";
+import { withBudget } from "../lib/budget.js";
+import { withCache } from "../lib/cache.js";
 
 export function registerScrapeTool(server: McpServer): void {
   server.registerTool(
@@ -17,20 +19,24 @@ export function registerScrapeTool(server: McpServer): void {
     },
     async ({ url }) => {
       logger.debug({ url }, "scrape tool invoked");
-      try {
-        const config = loadOrCreateWallet();
-        const res = await fetch(
-          `${config.apiUrl}/scrape?url=${encodeURIComponent(url)}`
-        );
-        if (!res.ok) {
-          const body = await res.text();
-          return err(`Scrape API error ${res.status}: ${body}`);
-        }
-        return okPaid(await res.json());
-      } catch (e: unknown) {
-        logger.error({ err: e }, "scrape tool error");
-        return err(`Scrape failed: ${String(e)}`);
-      }
-    }
+      return withCache("scrape", { url }, () =>
+        withBudget("scrape", async () => {
+          try {
+            const config = loadOrCreateWallet();
+            const res = await fetch(
+              `${config.apiUrl}/scrape?url=${encodeURIComponent(url)}`,
+            );
+            if (!res.ok) {
+              const body = await res.text();
+              return err(`Scrape API error ${res.status}: ${body}`);
+            }
+            return okPaid(await res.json());
+          } catch (e: unknown) {
+            logger.error({ err: e }, "scrape tool error");
+            return err(`Scrape failed: ${String(e)}`);
+          }
+        }),
+      );
+    },
   );
 }
