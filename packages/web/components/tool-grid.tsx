@@ -21,13 +21,27 @@ const TABS: { value: FilterTab; label: string }[] = [
   { value: "free", label: "Free" },
 ]
 
+/** Tools to feature prominently at the top (shown when no search/filter active) */
+const FEATURED_NAMES = ["dex-orderbook", "research", "image", "swap-quote"]
+
 export function ToolGrid() {
   const [query, setQuery] = useState("")
   const [activeTab, setActiveTab] = useState<FilterTab>("all")
 
+  const showFeatured = query.trim() === "" && activeTab === "all"
+
+  const featuredTools = useMemo(
+    () => tools.filter((t) => FEATURED_NAMES.includes(t.name)),
+    []
+  )
+
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim()
-    return tools.filter((tool) => {
+    const base = showFeatured
+      ? tools.filter((t) => !FEATURED_NAMES.includes(t.name))
+      : tools
+
+    return base.filter((tool) => {
       const matchesCategory =
         activeTab === "all"
           ? true
@@ -43,7 +57,9 @@ export function ToolGrid() {
 
       return matchesCategory && matchesQuery
     })
-  }, [query, activeTab])
+  }, [query, activeTab, showFeatured])
+
+  const totalVisible = showFeatured ? featuredTools.length + filtered.length : filtered.length
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -78,21 +94,42 @@ export function ToolGrid() {
         </div>
       </div>
 
-      {/* Result count */}
-      <p className="text-xs text-muted-foreground font-mono">
-        {filtered.length} tool{filtered.length !== 1 ? "s" : ""}
-      </p>
+      {/* Featured section */}
+      {showFeatured && featuredTools.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <p className="text-[10px] font-mono tracking-widest text-muted-foreground uppercase">
+            Featured
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {featuredTools.map((tool, i) => (
+              <BlurFade key={tool.name} delay={0.04 * i} inView>
+                <ToolCard tool={tool} />
+              </BlurFade>
+            ))}
+          </div>
+        </div>
+      )}
 
-      {/* Grid */}
+      {/* Result count + section header */}
+      <div className="flex items-center justify-between">
+        <p className="text-[10px] font-mono tracking-widest text-muted-foreground uppercase">
+          {showFeatured ? "All tools" : "Results"}
+        </p>
+        <p className="text-xs text-muted-foreground font-mono">
+          {totalVisible} tool{totalVisible !== 1 ? "s" : ""}
+        </p>
+      </div>
+
+      {/* Main grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {filtered.map((tool, i) => (
-          <BlurFade key={tool.name} delay={0.05 * i} inView>
+          <BlurFade key={tool.name} delay={0.04 * i} inView>
             <ToolCard tool={tool} />
           </BlurFade>
         ))}
       </div>
 
-      {filtered.length === 0 && (
+      {filtered.length === 0 && !showFeatured && (
         <p className="text-center text-sm text-muted-foreground py-12">
           No tools match your search.
         </p>

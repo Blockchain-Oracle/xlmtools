@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <!-- Pulse wave + lightning bolt mark -->
+  <polyline
+    points="2,20 8,20 11,10 14,30 17,14 20,26 23,6 26,34 29,18 32,18 38,18"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>
