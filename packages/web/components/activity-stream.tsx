@@ -37,34 +37,36 @@ function TransactionRow({ tx }: { tx: Transaction }) {
   return (
     <div
       className={cn(
-        "grid grid-cols-[1fr_auto_auto] items-center gap-4 px-4 py-3",
-        "rounded-lg border border-border/60 bg-card/40",
-        "hover:bg-card hover:border-border transition-colors"
+        "grid grid-cols-[1fr_auto_auto] items-center gap-6 px-5 py-4",
+        "rounded-xl border border-border/40 bg-card/50",
+        "hover:bg-card hover:border-foreground/10 transition-all duration-200 group"
       )}
     >
       {/* Left: time + tool name */}
-      <div className="flex items-center gap-4 min-w-0">
-        <span className="text-xs text-muted-foreground font-mono w-20 shrink-0 tabular-nums">
+      <div className="flex items-center gap-6 min-w-0">
+        <span className="text-[11px] text-muted-foreground/60 font-mono w-20 shrink-0 tabular-nums font-medium uppercase tracking-wider">
           {tx.time}
         </span>
-        <span className="text-sm font-medium text-foreground truncate font-mono">
-          {tx.tool}
-        </span>
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="size-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+          <span className="text-sm font-bold text-foreground truncate font-mono tracking-tight">
+            {tx.tool}
+          </span>
+        </div>
       </div>
 
       {/* Amount badge */}
       <div className="shrink-0">
         {tx.amount ? (
-          <Badge
-            variant="secondary"
-            className="font-mono text-xs tabular-nums"
-          >
-            {tx.amount}
-          </Badge>
+          <div className="px-2 py-0.5 rounded bg-foreground/5 border border-foreground/10">
+            <span className="font-mono text-[11px] font-bold text-foreground tabular-nums">
+              {tx.amount}
+            </span>
+          </div>
         ) : (
           <Badge
             variant="outline"
-            className="text-xs text-emerald-600 border-emerald-300/60 dark:text-emerald-400 dark:border-emerald-800"
+            className="text-[10px] font-bold text-emerald-600 border-emerald-500/20 bg-emerald-500/5 dark:text-emerald-400 dark:border-emerald-400/20"
           >
             FREE
           </Badge>
@@ -72,19 +74,19 @@ function TransactionRow({ tx }: { tx: Transaction }) {
       </div>
 
       {/* Tx link */}
-      <div className="shrink-0 w-5 flex justify-center">
+      <div className="shrink-0 w-8 flex justify-center">
         {explorerUrl ? (
           <a
             href={explorerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground/50 hover:text-foreground transition-colors"
+            className="p-1.5 rounded-md text-muted-foreground/40 hover:text-foreground hover:bg-muted transition-all"
             title="View on Stellar Expert"
           >
             <ExternalLink className="size-3.5" />
           </a>
         ) : (
-          <span className="size-3.5" />
+          <div className="size-3.5" />
         )}
       </div>
     </div>

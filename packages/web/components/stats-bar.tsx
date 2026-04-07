@@ -1,39 +1,50 @@
-import { cn } from "@/lib/utils";
 import { NumberTicker } from "@/components/ui/number-ticker";
+import { cn } from "@/lib/utils";
 
 const stats = [
-  { label: "TOOLS", value: 20, type: "number" as const },
-  { label: "NETWORK", value: "Stellar Testnet", type: "text" as const },
-  { label: "PAYMENT", value: "MPP / USDC", type: "text" as const },
+  {
+    label: "Tools",
+    display: "number" as const,
+    numValue: 20,
+    textValue: "",
+  },
+  {
+    label: "Settle time",
+    display: "text" as const,
+    numValue: 0,
+    textValue: "~1s",
+  },
+  {
+    label: "Subscription cost",
+    display: "text" as const,
+    numValue: 0,
+    textValue: "$0",
+  },
 ];
 
 export function StatsBar() {
   return (
-    <div
-      className={cn(
-        "flex items-center justify-center",
-        "divide-x divide-border",
-        "rounded-xl border border-border bg-card",
-        "w-full max-w-lg"
-      )}
-    >
-      {stats.map(({ label, value, type }) => (
+    <div className="grid grid-cols-3">
+      {stats.map(({ label, display, numValue, textValue }, index) => (
         <div
           key={label}
-          className="flex flex-1 flex-col items-center gap-1 px-5 py-4"
+          className={cn(
+            "flex flex-col items-center gap-3 py-16 px-8",
+            index > 0 && "border-l border-border"
+          )}
         >
-          <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
-            {label}
-          </span>
-          <span className="font-mono text-sm font-semibold text-foreground tabular-nums">
-            {type === "number" ? (
+          <div className="font-mono text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tighter text-foreground tabular-nums leading-none">
+            {display === "number" ? (
               <NumberTicker
-                value={value as number}
-                className="font-mono text-sm font-semibold tabular-nums"
+                value={numValue}
+                className="font-mono text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tighter text-foreground tabular-nums"
               />
             ) : (
-              value
+              textValue
             )}
+          </div>
+          <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground text-center">
+            {label}
           </span>
         </div>
       ))}

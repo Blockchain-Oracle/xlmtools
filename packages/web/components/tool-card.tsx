@@ -2,9 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { Check, Copy, Database, Search, Sparkles, Star, Wrench } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { MagicCard } from "@/components/ui/magic-card"
+import { Check, Database, Search, Sparkles, Star, Wrench } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Tool, ToolCategory } from "@/lib/tools"
 
@@ -37,21 +35,21 @@ interface BrandLogoProps {
 
 function BrandLogo({ stem, name, hasDark }: BrandLogoProps) {
   return (
-    <div className="size-8 flex items-center justify-center rounded-md bg-muted/60 shrink-0 overflow-hidden p-1.5">
+    <>
       {hasDark ? (
         <>
           <Image
             src={`/logos/${stem}-dark.svg`}
             alt={name}
-            width={20}
-            height={20}
+            width={18}
+            height={18}
             className="size-full object-contain block dark:hidden"
           />
           <Image
             src={`/logos/${stem}.svg`}
             alt={name}
-            width={20}
-            height={20}
+            width={18}
+            height={18}
             className="size-full object-contain hidden dark:block"
           />
         </>
@@ -59,12 +57,12 @@ function BrandLogo({ stem, name, hasDark }: BrandLogoProps) {
         <Image
           src={`/logos/${stem}.svg`}
           alt={name}
-          width={20}
-          height={20}
-          className="size-full object-contain invert dark:invert-0"
+          width={18}
+          height={18}
+          className="size-full object-contain"
         />
       )}
-    </div>
+    </>
   )
 }
 
@@ -81,89 +79,66 @@ export function ToolCard({ tool, featured = false }: ToolCardProps) {
     }
   }
 
-  const hasBrandLogo = Boolean(tool.logo)
-
   return (
-    <MagicCard
-      mode="orb"
-      className={cn("rounded-xl cursor-default")}
-      glowFrom="#6366f1"
-      glowTo="#8b5cf6"
-      glowSize={300}
-      glowBlur={50}
-      glowOpacity={0.55}
+    <button
+      onClick={handleCopy}
+      title={`Copy prompt: ${tool.title}`}
+      className={cn(
+        "group w-full text-left flex items-center gap-3.5 px-4 py-3.5 rounded-xl border transition-all duration-200 cursor-pointer",
+        copied
+          ? "border-emerald-500/50 bg-emerald-500/5 dark:bg-emerald-500/5"
+          : featured
+            ? "border-border bg-card hover:border-foreground/25 hover:bg-muted/50 active:scale-[0.99]"
+            : "border-border/70 bg-card hover:border-foreground/20 hover:bg-muted/40 active:scale-[0.99]"
+      )}
     >
-      <div className={cn("flex flex-col gap-3.5 p-5", featured && "pb-6")}>
-        {/* Header row: brand logo / category icon + name + price */}
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2.5 min-w-0">
-            {hasBrandLogo ? (
-              <BrandLogo stem={tool.logo!} name={tool.title} hasDark={tool.logoHasDark ?? false} />
-            ) : (
-              <div className="size-8 flex items-center justify-center rounded-md bg-muted/60 shrink-0 text-muted-foreground">
-                {categoryIcon[tool.category]}
-              </div>
-            )}
-            <span className="font-mono text-sm font-semibold text-foreground leading-tight truncate">
-              {tool.title}
-            </span>
-          </div>
+      {/* Icon / Logo */}
+      <div className="size-8 shrink-0 flex items-center justify-center rounded-lg bg-muted border border-border/60 overflow-hidden p-1.5">
+        {tool.logo ? (
+          <BrandLogo stem={tool.logo} name={tool.title} hasDark={tool.logoHasDark ?? false} />
+        ) : (
+          <span className="text-muted-foreground">{categoryIcon[tool.category]}</span>
+        )}
+      </div>
 
+      {/* Text block — grows to fill space */}
+      <div className="flex-1 min-w-0">
+        {/* Row 1: name + price */}
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-sm font-semibold text-foreground truncate tracking-tight">
+            {tool.title}
+          </span>
           {tool.price ? (
-            <Badge
-              variant="outline"
-              className="shrink-0 font-mono text-[10px] px-1.5 tabular-nums"
-            >
+            <span className="font-mono text-xs font-medium text-muted-foreground tabular-nums shrink-0">
               {tool.price}
-            </Badge>
+            </span>
           ) : (
-            <Badge
-              variant="outline"
-              className="shrink-0 font-mono text-[10px] px-1.5 text-emerald-600 border-emerald-300/60 dark:text-emerald-400 dark:border-emerald-800"
-            >
-              FREE
-            </Badge>
+            <span className="font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider shrink-0">
+              Free
+            </span>
           )}
         </div>
 
-        {/* Description */}
-        <p className="text-xs leading-relaxed text-muted-foreground">
-          {tool.description}
-        </p>
-
-        {/* Footer: category + copy button */}
-        <div className="flex items-center justify-between gap-2 pt-1">
-          <div className="flex items-center gap-1.5 text-muted-foreground/70">
-            {categoryIcon[tool.category]}
-            <span className="text-[10px] font-mono tracking-wider uppercase">
-              {categoryLabel[tool.category]}
-            </span>
-          </div>
-
-          <button
-            onClick={handleCopy}
-            title="Copy sample prompt"
-            className={cn(
-              "flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-mono transition-all",
-              copied
-                ? "text-emerald-600 dark:text-emerald-400"
-                : "text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/40"
-            )}
-          >
-            {copied ? (
-              <>
-                <Check className="size-3" />
-                <span>Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="size-3" />
-                <span>Prompt</span>
-              </>
-            )}
-          </button>
+        {/* Row 2: description + category */}
+        <div className="flex items-center gap-2 mt-0.5">
+          <p className="text-xs text-muted-foreground truncate flex-1">
+            {tool.description}
+          </p>
+          <span className="font-mono text-[9px] tracking-widest text-muted-foreground/50 uppercase shrink-0">
+            {categoryLabel[tool.category]}
+          </span>
         </div>
       </div>
-    </MagicCard>
+
+      {/* Copy feedback — shows briefly after click */}
+      <div className={cn(
+        "shrink-0 size-5 flex items-center justify-center rounded-md transition-all duration-200",
+        copied
+          ? "opacity-100 text-emerald-500"
+          : "opacity-0 group-hover:opacity-60 text-muted-foreground"
+      )}>
+        <Check className="size-3.5" />
+      </div>
+    </button>
   )
 }

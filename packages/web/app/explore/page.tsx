@@ -8,54 +8,52 @@ export const metadata = {
 
 export default function ExplorePage() {
   return (
-    <main className="relative mx-auto w-full max-w-4xl flex-1 px-6 py-12">
-      {/* Subtle dot background */}
-      <DotPattern
-        width={20}
-        height={20}
-        cr={1}
-        className="opacity-[0.06] dark:opacity-[0.04] text-foreground"
-      />
-
-      <div className="relative z-10">
-        {/* Page header */}
-        <div className="mb-10">
-          <span className="font-mono text-[10px] tracking-[0.22em] text-muted-foreground uppercase">
+    <main className="flex flex-1 flex-col">
+      {/* Page header — alternating bg */}
+      <div className="w-full bg-secondary border-b border-border">
+        <div className="max-w-4xl mx-auto px-6 py-16">
+          <span className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase">
             On-Chain Activity
           </span>
-          <h1
-            className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
-            style={{ letterSpacing: "-0.018em" }}
-          >
+          <h1 className="mt-3 text-5xl sm:text-6xl font-bold tracking-tighter text-foreground leading-[0.9]">
             Explorer
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Live transaction stream. Every paid tool call leaves a receipt on
-            Stellar.
+          <p className="mt-4 text-sm text-muted-foreground max-w-md">
+            Every paid tool call leaves a verifiable receipt on Stellar.
           </p>
         </div>
+      </div>
 
-        {/* Column headers — like frames.ag */}
-        <div
-          className="mb-3 grid grid-cols-[1fr_auto_auto] items-center gap-4 px-4 py-2 rounded-lg border border-border/60 bg-muted/30"
-        >
-          <div className="flex items-center gap-4">
-            <span className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase w-20 shrink-0">
-              Time
+      {/* Stream */}
+      <div className="relative max-w-4xl mx-auto w-full px-6 py-12">
+        <DotPattern
+          width={24}
+          height={24}
+          cr={1}
+          className="text-foreground/[0.07] dark:text-foreground/[0.06]"
+        />
+
+        <div className="relative z-10">
+          {/* Column headers */}
+          <div className="mb-3 grid grid-cols-[1fr_auto_auto] items-center gap-4 px-4 py-2.5 rounded-lg border border-border bg-card">
+            <div className="flex items-center gap-6">
+              <span className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase w-20 shrink-0">
+                Time
+              </span>
+              <span className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase">
+                Tool
+              </span>
+            </div>
+            <span className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase">
+              Amount
             </span>
             <span className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase">
-              Tool
+              Tx
             </span>
           </div>
-          <span className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase">
-            Amount
-          </span>
-          <span className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase">
-            Tx
-          </span>
-        </div>
 
-        <ActivityStream />
+          <ActivityStream />
+        </div>
       </div>
     </main>
   );

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { GitFork } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -12,6 +11,26 @@ const navLinks = [
   { href: "/stats", label: "Stats" },
 ];
 
+function PulsarLogo({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      <polyline
+        points="2,20 8,20 11,10 14,30 17,14 20,26 23,6 26,34 29,18 32,18 38,18"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function Navbar() {
   return (
     <header
@@ -21,20 +40,14 @@ export function Navbar() {
         "bg-background/90 backdrop-blur-md"
       )}
     >
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         {/* Left: logo + wordmark */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
-          <Image
-            src="/logos/pulsar.svg"
-            alt="PULSAR"
-            width={18}
-            height={18}
-            className="size-[18px] dark:invert-0 invert"
-          />
-          <span className="font-mono text-sm font-bold tracking-[0.18em] text-foreground">
+          <PulsarLogo className="size-7 text-foreground shrink-0" />
+          <span className="font-mono text-base font-bold tracking-[0.15em] text-foreground">
             PULSAR
           </span>
         </Link>
@@ -45,7 +58,7 @@ export function Navbar() {
             <Link
               key={href}
               href={href}
-              className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
+              className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
             >
               {label}
             </Link>
@@ -55,7 +68,7 @@ export function Navbar() {
             href="https://github.com/pulsarmcp/pulsar"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-1 flex items-center gap-1.5 px-2.5 py-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
+            className="ml-1 flex items-center gap-1.5 px-2.5 py-2 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
             aria-label="GitHub"
           >
             <GitFork className="size-4" />

@@ -101,7 +101,7 @@ export function ToolGrid() {
           <p className="text-[10px] font-mono tracking-widest text-muted-foreground uppercase">
             Featured
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {featuredTools.map((tool, i) => (
               <BlurFade key={tool.name} delay={0.04 * i} inView>
                 <ToolCard tool={tool} featured />
@@ -121,8 +121,8 @@ export function ToolGrid() {
         </p>
       </div>
 
-      {/* Main grid — 2 columns on desktop like frames.ag */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Main grid — 2 cols on tablet, 3 cols on large screens */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {filtered.map((tool, i) => (
           <BlurFade key={tool.name} delay={0.04 * i} inView>
             <ToolCard tool={tool} />
