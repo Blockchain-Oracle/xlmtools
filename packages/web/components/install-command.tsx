@@ -57,8 +57,8 @@ export function InstallCommand() {
       <BorderBeam
         size={80}
         duration={5}
-        colorFrom="#a855f7"
-        colorTo="#38bdf8"
+        colorFrom="#64748b"
+        colorTo="#94a3b8"
         borderWidth={1.5}
       />
     </div>

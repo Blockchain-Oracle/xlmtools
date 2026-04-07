@@ -1,11 +1,4 @@
 import { Terminal, Wallet, Zap } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { cn } from "@/lib/utils";
 
@@ -42,39 +35,46 @@ const steps = [
 export function SetupSteps() {
   return (
     <section className="w-full max-w-4xl">
-      <h2 className="mb-8 text-center font-mono text-xs tracking-widest text-muted-foreground uppercase">
+      <h2 className="mb-10 text-center font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
         Get started in 3 steps
       </h2>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
         {steps.map(({ step, icon: Icon, title, description, detail, delay }) => (
           <BlurFade key={step} delay={delay} inView>
-            <Card className="relative overflow-hidden">
-              <CardHeader className="pb-0">
-                <div className="flex items-start justify-between">
-                  <div
-                    className={cn(
-                      "flex size-9 items-center justify-center rounded-lg",
-                      "bg-muted text-muted-foreground"
-                    )}
-                  >
-                    <Icon className="size-4" />
-                  </div>
-                  <span className="font-mono text-3xl font-bold text-border select-none">
-                    {step}
-                  </span>
+            <div
+              className={cn(
+                "relative flex flex-col gap-4 rounded-xl border border-border bg-card p-6",
+                "min-h-[220px]"
+              )}
+            >
+              <div className="flex items-start justify-between">
+                <div
+                  className={cn(
+                    "flex size-10 items-center justify-center rounded-lg",
+                    "bg-muted text-muted-foreground"
+                  )}
+                >
+                  <Icon className="size-4.5" />
                 </div>
-                <CardTitle className="mt-3 text-sm font-semibold">
+                <span className="font-mono text-3xl font-bold text-border select-none">
+                  {step}
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <h3 className="text-base font-semibold text-foreground">
                   {title}
-                </CardTitle>
-                <CardDescription className="text-xs">{description}</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-2">
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  {detail}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {description}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+
+              <p className="text-sm leading-relaxed text-muted-foreground/70">
+                {detail}
+              </p>
+            </div>
           </BlurFade>
         ))}
       </div>

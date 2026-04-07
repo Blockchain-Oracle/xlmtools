@@ -1,85 +1,89 @@
 "use client";
 
-import { ScrollProgress } from "@/components/ui/scroll-progress";
-import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
-import { HeroBanner } from "@/components/hero-banner";
-import { HeroHeading } from "@/components/hero-heading";
-import { HeroCta } from "@/components/hero-cta";
 import { InstallCommand } from "@/components/install-command";
 import { LogoBar } from "@/components/logo-bar";
 import { StatsBar } from "@/components/stats-bar";
 import { SetupSteps } from "@/components/setup-steps";
+import { BlurFade } from "@/components/ui/blur-fade";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <>
-      <ScrollProgress />
+    <main className="flex flex-1 flex-col items-center">
+      {/* Hero */}
+      <section className="flex w-full flex-col items-center px-6 pt-24 pb-20 sm:pt-32 sm:pb-28">
+        <div className="flex max-w-2xl flex-col items-center gap-8 text-center">
+          <BlurFade delay={0}>
+            <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+              STELLAR-NATIVE MCP SERVER
+            </span>
+          </BlurFade>
 
-      <main className="flex flex-1 flex-col items-center px-6">
-        {/* Hero section — grid pattern background */}
-        <section className="relative w-full flex flex-col items-center overflow-hidden pb-16">
-          {/* Interactive grid background */}
-          <InteractiveGridPattern
-            width={40}
-            height={40}
-            squares={[40, 20]}
-            className="opacity-30"
-            squaresClassName="stroke-border/50 hover:fill-muted/40"
-          />
+          <BlurFade delay={0.1}>
+            <h1 className="text-5xl font-semibold tracking-tight text-foreground sm:text-7xl">
+              Outperform regular&nbsp;agents.
+            </h1>
+          </BlurFade>
 
-          {/* Radial fade mask over the grid */}
-          <div
-            className="pointer-events-none absolute inset-0 z-10"
-            style={{
-              background:
-                "radial-gradient(ellipse 70% 60% at 50% 50%, transparent 30%, hsl(var(--background)) 80%)",
-            }}
-          />
-
-          {/* Hero content — above the grid/mask */}
-          <div className="relative z-20 flex flex-col items-center gap-6 text-center max-w-2xl mt-8">
-            <HeroBanner />
-
-            <div className="mt-4">
-              <HeroHeading />
-            </div>
-
-            <p className="text-base sm:text-lg text-muted-foreground max-w-md leading-relaxed">
-              Pay-per-call MCP tools on Stellar.
-              <br />
-              No API keys, no subscriptions.
+          <BlurFade delay={0.15}>
+            <p className="max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+              The best way for AI to access and pay for quality tools
+              &mdash;&nbsp;no API keys, subscriptions, or package install.
             </p>
+          </BlurFade>
 
-            <InstallCommand />
+          <BlurFade delay={0.2}>
+            <div className="w-full max-w-xl">
+              <InstallCommand />
+            </div>
+          </BlurFade>
 
-            <HeroCta />
-          </div>
-        </section>
-
-        {/* Logo bar */}
-        <div className="mb-12 w-full flex justify-center">
-          <LogoBar />
+          <BlurFade delay={0.25}>
+            <div className="flex items-center gap-4">
+              <Link href="/tools">
+                <ShimmerButton
+                  shimmerColor="#ffffff"
+                  background="rgba(255,255,255,0.08)"
+                  className="border-border px-7 py-2.5 text-sm font-semibold text-foreground"
+                >
+                  Get Started
+                </ShimmerButton>
+              </Link>
+              <Link
+                href="#"
+                className="rounded-full border border-border px-7 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground hover:border-foreground/20"
+              >
+                View Docs
+              </Link>
+            </div>
+          </BlurFade>
         </div>
+      </section>
 
-        {/* Stats bar */}
-        <div className="mb-16 w-full flex justify-center">
-          <StatsBar />
-        </div>
+      {/* Logo bar */}
+      <section className="w-full px-6 pb-16">
+        <LogoBar />
+      </section>
 
-        {/* Section divider */}
-        <div className="w-full max-w-4xl mb-16 flex items-center gap-4">
-          <div className="flex-1 h-px bg-border" />
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-            How it works
-          </span>
-          <div className="flex-1 h-px bg-border" />
-        </div>
+      {/* Stats bar */}
+      <section className="w-full flex justify-center px-6 pb-20">
+        <StatsBar />
+      </section>
 
-        {/* Setup steps */}
-        <div className="mb-24 w-full flex justify-center">
-          <SetupSteps />
-        </div>
-      </main>
-    </>
+      {/* Divider */}
+      <div className="w-full max-w-4xl px-6 pb-16 flex items-center gap-4">
+        <div className="flex-1 h-px bg-border" />
+        <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+          How it works
+        </span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+
+      {/* Setup steps */}
+      <section className="w-full flex justify-center px-6 pb-32">
+        <SetupSteps />
+      </section>
+    </main>
   );
 }

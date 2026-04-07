@@ -11,18 +11,18 @@ export function StatsBar() {
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-center",
+        "flex items-center justify-center",
         "divide-x divide-border",
         "rounded-xl border border-border bg-card",
-        "w-full max-w-xl"
+        "w-full max-w-lg"
       )}
     >
       {stats.map(({ label, value, type }) => (
         <div
           key={label}
-          className="flex flex-1 flex-col items-center gap-0.5 px-6 py-4 min-w-[100px]"
+          className="flex flex-1 flex-col items-center gap-1 px-5 py-4"
         >
-          <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
+          <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
             {label}
           </span>
           <span className="font-mono text-sm font-semibold text-foreground tabular-nums">
