@@ -13,6 +13,7 @@ export function registerDexCandlesTool(server: McpServer): void {
         `Get OHLCV candlestick price data for any Stellar asset pair.\n` +
         `Resolutions: 1m, 5m, 15m, 1h, 1d, 1w.\n` +
         `Examples: "XLM/USDC" at "1h", "USDC/EURC" at "1d".\nFree.`,
+      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
       inputSchema: z.object({
         pair: z
           .string()

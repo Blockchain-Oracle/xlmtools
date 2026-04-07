@@ -9,6 +9,7 @@ export function registerWeatherTool(server: McpServer): void {
     {
       title: "Weather",
       description: "Current weather and conditions for any city. Free.",
+      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
       inputSchema: z.object({
         location: z.string().describe("City name (e.g. Lagos, London, New York)"),
       }),

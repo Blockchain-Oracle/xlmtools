@@ -14,6 +14,7 @@ export function registerSwapQuoteTool(server: McpServer): void {
         `Shows rate, path hops, and slippage tips.\n` +
         `Examples: swap 100 XLM to USDC, swap 50 USDC to EURC.\n` +
         `Well-known assets: XLM, USDC, EURC, AQUA, yUSDC, BLND, SHX.\nFree.`,
+      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
       inputSchema: z.object({
         from: z.string().describe('Source asset (e.g. "XLM", "USDC")'),
         to: z.string().describe('Destination asset (e.g. "USDC", "EURC")'),

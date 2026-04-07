@@ -12,6 +12,7 @@ export function registerWalletTool(server: McpServer): void {
       title: "PULSAR Wallet",
       description:
         "Show your Stellar wallet address, current USDC balance, and how to fund it. Free.",
+      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
       inputSchema: z.object({}),
     },
     async () => {

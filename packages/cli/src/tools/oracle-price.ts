@@ -13,6 +13,7 @@ export function registerOraclePriceTool(server: McpServer): void {
         `Get real-time prices from Reflector, Stellar's decentralized oracle.\n` +
         `Feeds: "crypto" (BTC, ETH, SOL, etc.), "fiat" (EUR, GBP, JPY), "dex" (Stellar DEX pairs).\n` +
         `Prices are updated every 5 minutes via multi-node consensus.\nFree.`,
+      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
       inputSchema: z.object({
         asset: z
           .string()

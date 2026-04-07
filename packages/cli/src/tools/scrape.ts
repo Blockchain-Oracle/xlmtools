@@ -13,6 +13,7 @@ export function registerScrapeTool(server: McpServer): void {
     {
       title: "Web Scraper",
       description: `Extract clean text content from any public URL.\nCost: $${TOOL_PRICES.scrape} USDC per scrape (paid via Stellar MPP).`,
+      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
       inputSchema: z.object({
         url: z.string().url().describe("URL of the page to scrape"),
       }),

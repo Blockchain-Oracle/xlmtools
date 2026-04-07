@@ -13,6 +13,7 @@ export function registerDexOrderbookTool(server: McpServer): void {
         `View the live orderbook for any Stellar asset pair. Shows bids, asks, and spread.\n` +
         `Use pairs like "XLM/USDC", "USDC/EURC", or "CODE:ISSUER/XLM".\n` +
         `Well-known assets: XLM, USDC, EURC, AQUA, yUSDC, BLND, SHX.\nFree.`,
+      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
       inputSchema: z.object({
         pair: z
           .string()

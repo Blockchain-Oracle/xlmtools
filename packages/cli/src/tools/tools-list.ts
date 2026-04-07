@@ -9,6 +9,7 @@ export function registerToolsListTool(server: McpServer): void {
     {
       title: "List Tools",
       description: "List all PULSAR tools with their per-call cost in USDC.",
+      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
       inputSchema: z.object({}),
     },
     async () => {

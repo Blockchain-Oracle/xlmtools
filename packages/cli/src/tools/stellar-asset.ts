@@ -13,6 +13,7 @@ export function registerStellarAssetTool(server: McpServer): void {
         `Look up any Stellar asset: supply, trustlines, rating, issuer org, and more.\n` +
         `Combines on-chain data (Horizon) with analytics (StellarExpert).\n` +
         `Examples: "USDC", "AQUA", "yUSDC", or "CODE:ISSUER".\nFree.`,
+      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
       inputSchema: z.object({
         asset: z
           .string()

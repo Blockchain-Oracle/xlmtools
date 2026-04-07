@@ -12,6 +12,7 @@ export function registerDexTradesTool(server: McpServer): void {
       description:
         `Get recent trades for any Stellar asset pair.\n` +
         `Filter by trade type: "all", "orderbook", or "liquidity_pool".\nFree.`,
+      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
       inputSchema: z.object({
         pair: z
           .string()

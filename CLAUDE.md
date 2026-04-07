@@ -9,9 +9,11 @@ Stellar Agents x402/MPP hackathon. The gap we're filling: nobody has built an MC
 server on Stellar with MPP billing. BlockRun MCP does this on EVM/Base.
 PULSAR does it on Stellar.
 
-## The 13 tools
-search, research, reddit, youtube, screenshot, scrape, image, crypto, weather,
-stocks, domain, wallet, tools
+## The tools (21 total)
+**Paid:** search, research, youtube, screenshot, scrape, image, stocks
+**Free:** crypto, weather, domain, wallet, tools, budget
+**Stellar-native (free):** dex-orderbook, dex-candles, dex-trades, swap-quote,
+stellar-asset, stellar-account, stellar-pools, oracle-price
 
 (Card tool removed — ASGCard already has their own MCP server with x402 billing.
 No point duplicating. Users can install ASGCard's MCP server alongside PULSAR.)
@@ -25,15 +27,22 @@ Soroban SAC USDC transfer → signs with local Stellar key → retries with paym
 packages/
   cli/     ← stdio MCP server (local, user's machine, @pulsar/mcp)
   api/     ← hosted Express 5 API server (verifies MPP, calls backends)
+  web/     ← Next.js 16 frontend (landing, tools, explore, stats)
+  docs/    ← Nextra 4 documentation site
 docs/superpowers/specs/2026-04-03-pulsar-design.md  ← design spec
 docs/superpowers/plans/2026-04-03-pulsar-implementation.md  ← implementation plan
 research/  ← ecosystem research notes
 ```
 
-## Current state (2026-04-03)
-- All 13 CLI tools implemented and registered
+## Current state (2026-04-07)
+- All 21 CLI tools implemented and registered (7 paid, 14 free)
 - All API routes implemented with MPP charge gating
-- Both packages build cleanly with TypeScript
+- Spending receipts: every paid call returns Stellar tx hash
+- Budget tool: per-session spending cap (CLI-side)
+- Response caching: 5-min TTL, identical queries return cached (free)
+- Stats API: in-memory call log, /stats and /stats/recent endpoints
+- Docs site: Nextra 4 at packages/docs/ with 27 pages
+- Frontend: redesigned with layered color system, live activity stream
 - Not yet deployed (API server needs hosting)
 
 ## Key rules for development
