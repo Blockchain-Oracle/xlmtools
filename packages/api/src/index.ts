@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import { logger } from "./lib/logger.js";
 import { cryptoRoute } from "./routes/crypto.js";
 import { weatherRoute } from "./routes/weather.js";
@@ -52,7 +53,7 @@ app.use("/stellar-pools", stellarPoolsRoute);
 app.use("/oracle-price", oraclePriceRoute);
 
 // Stats API (call log — in-memory, no auth)
-app.use("/stats", statsRoute);
+app.use("/stats", cors(), statsRoute);
 
 const PORT = Number(process.env.PORT ?? 3000);
 app.listen(PORT, () => {

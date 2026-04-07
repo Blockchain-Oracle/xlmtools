@@ -8,6 +8,6 @@ statsRoute.get("/", (_req, res) => {
 });
 
 statsRoute.get("/recent", (req, res) => {
-  const limit = Number(req.query.limit ?? 20);
+  const limit = Math.min(Math.max(Number(req.query.limit) || 20, 1), 100);
   res.json({ calls: getRecentCalls(limit) });
 });

@@ -35,7 +35,9 @@ export function getStatus(): {
 
 function canSpend(amount: number): boolean {
   if (maxBudget === null) return true;
-  return totalSpent + amount <= maxBudget;
+  // Round to 3 decimal places to avoid floating-point drift
+  const spent = Math.round(totalSpent * 1000) / 1000;
+  return spent + amount <= maxBudget;
 }
 
 function recordSpend(amount: number): void {

@@ -47,7 +47,7 @@ function apiToTransaction(entry: ApiCallEntry, idx: number): Transaction {
   };
 }
 
-function TransactionRow({ tx }: { tx: Transaction }) {
+function TransactionRow({ tx, isLatest }: { tx: Transaction; isLatest: boolean }) {
   const explorerUrl = tx.txHash
     ? `https://stellar.expert/explorer/testnet/tx/${tx.txHash}`
     : null;
@@ -65,7 +65,7 @@ function TransactionRow({ tx }: { tx: Transaction }) {
           {tx.time}
         </span>
         <div className="flex items-center gap-2 min-w-0">
-          <div className="size-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+          <div className={cn("size-2 rounded-full bg-emerald-500 shrink-0", isLatest && "animate-pulse")} />
           <span className="text-sm font-bold text-foreground truncate font-mono tracking-tight">
             {tx.tool}
           </span>
@@ -161,8 +161,8 @@ export function ActivityStream() {
 
       {transactions.length > 0 ? (
         <AnimatedList delay={120}>
-          {transactions.map((tx) => (
-            <TransactionRow key={tx.id} tx={tx} />
+          {transactions.map((tx, i) => (
+            <TransactionRow key={tx.id} tx={tx} isLatest={i === 0} />
           ))}
         </AnimatedList>
       ) : (

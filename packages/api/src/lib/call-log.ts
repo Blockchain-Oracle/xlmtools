@@ -32,6 +32,6 @@ export function getStats() {
     total_calls: totalCalls,
     total_usdc: totalUSDC.toFixed(3),
     tool_counts: toolCounts,
-    recent: log.slice(-20).reverse(),
+    recent: getRecentCalls(20),
   };
 }
