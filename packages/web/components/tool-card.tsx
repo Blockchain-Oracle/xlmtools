@@ -26,6 +26,7 @@ const categoryLabel: Record<ToolCategory, string> = {
 
 interface ToolCardProps {
   tool: Tool
+  featured?: boolean
 }
 
 interface BrandLogoProps {
@@ -36,10 +37,9 @@ interface BrandLogoProps {
 
 function BrandLogo({ stem, name, hasDark }: BrandLogoProps) {
   return (
-    <div className="size-7 flex items-center justify-center rounded-md bg-muted/60 shrink-0 overflow-hidden p-1">
+    <div className="size-8 flex items-center justify-center rounded-md bg-muted/60 shrink-0 overflow-hidden p-1.5">
       {hasDark ? (
         <>
-          {/* Light mode: use colored -dark variant */}
           <Image
             src={`/logos/${stem}-dark.svg`}
             alt={name}
@@ -47,7 +47,6 @@ function BrandLogo({ stem, name, hasDark }: BrandLogoProps) {
             height={20}
             className="size-full object-contain block dark:hidden"
           />
-          {/* Dark mode: use white variant */}
           <Image
             src={`/logos/${stem}.svg`}
             alt={name}
@@ -57,7 +56,6 @@ function BrandLogo({ stem, name, hasDark }: BrandLogoProps) {
           />
         </>
       ) : (
-        /* Single variant — invert in light mode to stay visible */
         <Image
           src={`/logos/${stem}.svg`}
           alt={name}
@@ -70,7 +68,7 @@ function BrandLogo({ stem, name, hasDark }: BrandLogoProps) {
   )
 }
 
-export function ToolCard({ tool }: ToolCardProps) {
+export function ToolCard({ tool, featured = false }: ToolCardProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -87,18 +85,22 @@ export function ToolCard({ tool }: ToolCardProps) {
 
   return (
     <MagicCard
+      mode="orb"
       className={cn("rounded-xl cursor-default")}
-      gradientColor="#1a1a1a"
-      gradientOpacity={1}
+      glowFrom="#6366f1"
+      glowTo="#8b5cf6"
+      glowSize={300}
+      glowBlur={50}
+      glowOpacity={0.55}
     >
-      <div className="flex flex-col gap-3 p-4">
+      <div className={cn("flex flex-col gap-3.5 p-5", featured && "pb-6")}>
         {/* Header row: brand logo / category icon + name + price */}
         <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-2.5 min-w-0">
             {hasBrandLogo ? (
               <BrandLogo stem={tool.logo!} name={tool.title} hasDark={tool.logoHasDark ?? false} />
             ) : (
-              <div className="size-7 flex items-center justify-center rounded-md bg-muted/60 shrink-0 text-muted-foreground">
+              <div className="size-8 flex items-center justify-center rounded-md bg-muted/60 shrink-0 text-muted-foreground">
                 {categoryIcon[tool.category]}
               </div>
             )}
@@ -117,7 +119,7 @@ export function ToolCard({ tool }: ToolCardProps) {
           ) : (
             <Badge
               variant="outline"
-              className="shrink-0 font-mono text-[10px] px-1.5 text-emerald-500 border-emerald-700/50 dark:text-emerald-400 dark:border-emerald-800"
+              className="shrink-0 font-mono text-[10px] px-1.5 text-emerald-600 border-emerald-300/60 dark:text-emerald-400 dark:border-emerald-800"
             >
               FREE
             </Badge>
@@ -125,13 +127,13 @@ export function ToolCard({ tool }: ToolCardProps) {
         </div>
 
         {/* Description */}
-        <p className="text-xs text-muted-foreground leading-relaxed">
+        <p className="text-xs leading-relaxed text-muted-foreground">
           {tool.description}
         </p>
 
         {/* Footer: category + copy button */}
-        <div className="flex items-center justify-between gap-2 pt-0.5">
-          <div className="flex items-center gap-1 text-muted-foreground">
+        <div className="flex items-center justify-between gap-2 pt-1">
+          <div className="flex items-center gap-1.5 text-muted-foreground/70">
             {categoryIcon[tool.category]}
             <span className="text-[10px] font-mono tracking-wider uppercase">
               {categoryLabel[tool.category]}
@@ -144,8 +146,8 @@ export function ToolCard({ tool }: ToolCardProps) {
             className={cn(
               "flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-mono transition-all",
               copied
-                ? "text-emerald-500 dark:text-emerald-400"
-                : "text-muted-foreground/60 hover:text-muted-foreground hover:bg-muted/40"
+                ? "text-emerald-600 dark:text-emerald-400"
+                : "text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/40"
             )}
           >
             {copied ? (

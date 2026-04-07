@@ -18,7 +18,7 @@ export function Navbar() {
       className={cn(
         "sticky top-0 z-50 w-full",
         "border-b border-border",
-        "bg-background/80 backdrop-blur-md"
+        "bg-background/90 backdrop-blur-md"
       )}
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
@@ -30,22 +30,22 @@ export function Navbar() {
           <Image
             src="/logos/pulsar.svg"
             alt="PULSAR"
-            width={20}
-            height={20}
-            className="size-5 dark:invert-0 invert"
+            width={18}
+            height={18}
+            className="size-[18px] dark:invert-0 invert"
           />
-          <span className="font-mono text-sm font-semibold tracking-widest text-foreground">
+          <span className="font-mono text-sm font-bold tracking-[0.18em] text-foreground">
             PULSAR
           </span>
         </Link>
 
         {/* Right: nav links + github + theme toggle + CTA */}
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-0.5">
           {navLinks.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
-              className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50"
+              className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
             >
               {label}
             </Link>
@@ -55,10 +55,10 @@ export function Navbar() {
             href="https://github.com/pulsarmcp/pulsar"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-1 flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50"
+            className="ml-1 flex items-center gap-1.5 px-2.5 py-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
+            aria-label="GitHub"
           >
             <GitFork className="size-4" />
-            <span className="hidden sm:inline">GitHub</span>
           </a>
 
           <ThemeToggle />
@@ -66,11 +66,11 @@ export function Navbar() {
           <Link
             href="/tools"
             className={cn(
-              "ml-2 hidden sm:inline-flex",
+              "ml-2 hidden sm:inline-flex items-center",
               "rounded-full border border-border bg-card px-4 py-1.5",
-              "font-mono text-[11px] tracking-[0.15em] font-semibold uppercase",
-              "text-foreground transition-colors",
-              "hover:bg-foreground hover:text-background"
+              "font-mono text-[11px] tracking-[0.12em] font-semibold uppercase",
+              "text-foreground transition-all duration-150",
+              "hover:bg-foreground hover:text-background hover:border-foreground/20"
             )}
           >
             Get Started

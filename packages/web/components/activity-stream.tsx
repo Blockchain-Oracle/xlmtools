@@ -37,43 +37,54 @@ function TransactionRow({ tx }: { tx: Transaction }) {
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4 px-4 py-3",
-        "rounded-lg border border-border bg-card/50",
-        "hover:bg-card transition-colors"
+        "grid grid-cols-[1fr_auto_auto] items-center gap-4 px-4 py-3",
+        "rounded-lg border border-border/60 bg-card/40",
+        "hover:bg-card hover:border-border transition-colors"
       )}
     >
+      {/* Left: time + tool name */}
       <div className="flex items-center gap-4 min-w-0">
-        <span className="text-xs text-muted-foreground font-mono w-20 shrink-0">
+        <span className="text-xs text-muted-foreground font-mono w-20 shrink-0 tabular-nums">
           {tx.time}
         </span>
-        <span className="text-sm font-medium text-foreground truncate">
+        <span className="text-sm font-medium text-foreground truncate font-mono">
           {tx.tool}
         </span>
       </div>
 
-      <div className="flex items-center gap-3 shrink-0">
+      {/* Amount badge */}
+      <div className="shrink-0">
         {tx.amount ? (
-          <Badge variant="secondary" className="font-mono text-xs">
+          <Badge
+            variant="secondary"
+            className="font-mono text-xs tabular-nums"
+          >
             {tx.amount}
           </Badge>
         ) : (
-          <Badge variant="outline" className="text-xs">
+          <Badge
+            variant="outline"
+            className="text-xs text-emerald-600 border-emerald-300/60 dark:text-emerald-400 dark:border-emerald-800"
+          >
             FREE
           </Badge>
         )}
+      </div>
 
+      {/* Tx link */}
+      <div className="shrink-0 w-5 flex justify-center">
         {explorerUrl ? (
           <a
             href={explorerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="text-muted-foreground/50 hover:text-foreground transition-colors"
             title="View on Stellar Expert"
           >
             <ExternalLink className="size-3.5" />
           </a>
         ) : (
-          <span className="w-3.5" />
+          <span className="size-3.5" />
         )}
       </div>
     </div>
@@ -86,15 +97,15 @@ export function ActivityStream() {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-muted-foreground">
-          Showing {MOCK_TRANSACTIONS.length} recent transactions
+        <p className="text-xs text-muted-foreground font-mono">
+          {MOCK_TRANSACTIONS.length} recent transactions
         </p>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => setAutoRefresh(!autoRefresh)}
           className={cn(
-            "gap-1.5 text-xs",
+            "gap-1.5 text-xs font-mono",
             autoRefresh && "text-foreground"
           )}
         >
@@ -103,7 +114,7 @@ export function ActivityStream() {
         </Button>
       </div>
 
-      <AnimatedList delay={150}>
+      <AnimatedList delay={120}>
         {MOCK_TRANSACTIONS.map((tx) => (
           <TransactionRow key={tx.id} tx={tx} />
         ))}

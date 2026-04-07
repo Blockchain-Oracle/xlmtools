@@ -62,27 +62,28 @@ export function ToolGrid() {
   const totalVisible = showFeatured ? featuredTools.length + filtered.length : filtered.length
 
   return (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-8 w-full">
       {/* Search + filters */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
+        {/* Prominent search bar */}
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
           <Input
             placeholder="Search tools…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="pl-9 h-10"
+            className="pl-12 h-12 text-base rounded-xl border-border bg-card focus:ring-1 focus:ring-ring"
           />
         </div>
 
         {/* Category pills */}
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-2">
           {TABS.map(({ value, label }) => (
             <button
               key={value}
               onClick={() => setActiveTab(value)}
               className={cn(
-                "rounded-full px-3 py-1 text-xs font-mono font-medium transition-colors",
+                "rounded-full px-3.5 py-1.5 text-xs font-mono font-medium transition-colors",
                 activeTab === value
                   ? "bg-foreground text-background"
                   : "border border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"
@@ -100,10 +101,10 @@ export function ToolGrid() {
           <p className="text-[10px] font-mono tracking-widest text-muted-foreground uppercase">
             Featured
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {featuredTools.map((tool, i) => (
               <BlurFade key={tool.name} delay={0.04 * i} inView>
-                <ToolCard tool={tool} />
+                <ToolCard tool={tool} featured />
               </BlurFade>
             ))}
           </div>
@@ -111,7 +112,7 @@ export function ToolGrid() {
       )}
 
       {/* Result count + section header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between -mb-2">
         <p className="text-[10px] font-mono tracking-widest text-muted-foreground uppercase">
           {showFeatured ? "All tools" : "Results"}
         </p>
@@ -120,8 +121,8 @@ export function ToolGrid() {
         </p>
       </div>
 
-      {/* Main grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {/* Main grid — 2 columns on desktop like frames.ag */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filtered.map((tool, i) => (
           <BlurFade key={tool.name} delay={0.04 * i} inView>
             <ToolCard tool={tool} />
