@@ -8,9 +8,7 @@ export function registerDomainTool(server: McpServer): void {
     "domain",
     {
       title: "Domain Availability",
-      description: "Check if a domain name is available. Free.",
-      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
-      inputSchema: z.object({
+      description: "Check if a domain name is available. Free.",      inputSchema: z.object({
         name: z.string().describe("Domain name to check (e.g. stellar-tools.xyz)"),
       }),
     },

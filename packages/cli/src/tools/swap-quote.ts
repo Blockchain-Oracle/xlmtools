@@ -13,9 +13,7 @@ export function registerSwapQuoteTool(server: McpServer): void {
         `Find the best swap path between any two Stellar assets using the native DEX.\n` +
         `Shows rate, path hops, and slippage tips.\n` +
         `Examples: swap 100 XLM to USDC, swap 50 USDC to EURC.\n` +
-        `Well-known assets: XLM, USDC, EURC, AQUA, yUSDC, BLND, SHX.\nFree.`,
-      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
-      inputSchema: z.object({
+        `Well-known assets: XLM, USDC, EURC, AQUA, yUSDC, BLND, SHX.\nFree.`,      inputSchema: z.object({
         from: z.string().describe('Source asset (e.g. "XLM", "USDC")'),
         to: z.string().describe('Destination asset (e.g. "USDC", "EURC")'),
         amount: z.string().describe("Amount to swap"),

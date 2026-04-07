@@ -11,9 +11,7 @@ export function registerStellarAccountTool(server: McpServer): void {
       title: "Stellar Account Lookup",
       description:
         `Look up any Stellar account: balances, trustlines, signers, and status.\n` +
-        `Provide a Stellar public key (starts with G, 56 characters).\nFree.`,
-      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
-      inputSchema: z.object({
+        `Provide a Stellar public key (starts with G, 56 characters).\nFree.`,      inputSchema: z.object({
         address: z
           .string()
           .describe("Stellar public key (G-address)"),

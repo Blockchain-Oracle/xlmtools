@@ -11,9 +11,7 @@ export function registerStellarPoolsTool(server: McpServer): void {
       title: "Stellar Liquidity Pools",
       description:
         `Browse Stellar liquidity pools. Optionally filter by asset.\n` +
-        `Shows reserves, shares, trustlines, and fees.\nFree.`,
-      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
-      inputSchema: z.object({
+        `Shows reserves, shares, trustlines, and fees.\nFree.`,      inputSchema: z.object({
         asset: z
           .string()
           .optional()

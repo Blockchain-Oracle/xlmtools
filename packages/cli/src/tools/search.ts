@@ -12,9 +12,7 @@ export function registerSearchTool(server: McpServer): void {
     "search",
     {
       title: "Web Search",
-      description: `Search the web and news in real-time. Returns results with source URLs.\nCost: $${TOOL_PRICES.search} USDC per search (paid via Stellar MPP).`,
-      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
-      inputSchema: z.object({
+      description: `Search the web and news in real-time. Returns results with source URLs.\nCost: $${TOOL_PRICES.search} USDC per search (paid via Stellar MPP).`,      inputSchema: z.object({
         query: z.string().describe("Search query"),
         count: z
           .number()

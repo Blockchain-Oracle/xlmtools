@@ -12,9 +12,7 @@ export function registerYoutubeTool(server: McpServer): void {
     "youtube",
     {
       title: "YouTube Search / Lookup",
-      description: `Search YouTube videos or look up a specific video by ID. Provide either query or id.\nCost: $${TOOL_PRICES.youtube} USDC per call (paid via Stellar MPP).`,
-      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
-      inputSchema: z.object({
+      description: `Search YouTube videos or look up a specific video by ID. Provide either query or id.\nCost: $${TOOL_PRICES.youtube} USDC per call (paid via Stellar MPP).`,      inputSchema: z.object({
         query: z.string().optional().describe("Search query to find videos"),
         id: z.string().optional().describe("YouTube video ID for direct lookup"),
       }),

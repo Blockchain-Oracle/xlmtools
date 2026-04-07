@@ -12,9 +12,7 @@ export function registerStocksTool(server: McpServer): void {
     "stocks",
     {
       title: "Stock Quotes",
-      description: `Get real-time stock price and market data for any ticker symbol.\nCost: $${TOOL_PRICES.stocks} USDC per query (paid via Stellar MPP).`,
-      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
-      inputSchema: z.object({
+      description: `Get real-time stock price and market data for any ticker symbol.\nCost: $${TOOL_PRICES.stocks} USDC per query (paid via Stellar MPP).`,      inputSchema: z.object({
         symbol: z
           .string()
           .describe("Stock ticker symbol (e.g. AAPL, TSLA, MSFT)"),

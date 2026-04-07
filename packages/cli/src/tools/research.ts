@@ -12,9 +12,7 @@ export function registerResearchTool(server: McpServer): void {
     "research",
     {
       title: "Deep Research",
-      description: `Deep research on any topic — returns summarized, sourced results from multiple web pages.\nCost: $${TOOL_PRICES.research} USDC per query (paid via Stellar MPP).`,
-      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
-      inputSchema: z.object({
+      description: `Deep research on any topic — returns summarized, sourced results from multiple web pages.\nCost: $${TOOL_PRICES.research} USDC per query (paid via Stellar MPP).`,      inputSchema: z.object({
         query: z.string().describe("Research query"),
         num_results: z
           .number()

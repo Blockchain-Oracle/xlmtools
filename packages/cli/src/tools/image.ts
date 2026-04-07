@@ -12,9 +12,7 @@ export function registerImageTool(server: McpServer): void {
     "image",
     {
       title: "AI Image Generation",
-      description: `Generate images from a text prompt using AI.\nCost: $${TOOL_PRICES.image} USDC per image (paid via Stellar MPP).`,
-      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
-      inputSchema: z.object({
+      description: `Generate images from a text prompt using AI.\nCost: $${TOOL_PRICES.image} USDC per image (paid via Stellar MPP).`,      inputSchema: z.object({
         prompt: z
           .string()
           .describe("Text prompt describing the image to generate"),

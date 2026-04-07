@@ -8,9 +8,7 @@ export function registerCryptoTool(server: McpServer): void {
     "crypto",
     {
       title: "Crypto Prices",
-      description: "Get real-time cryptocurrency prices, market caps, and 24h changes. Free.",
-      // @ts-expect-error -- zod 4 / MCP SDK type mismatch (runtime compatible)
-      inputSchema: z.object({
+      description: "Get real-time cryptocurrency prices, market caps, and 24h changes. Free.",      inputSchema: z.object({
         ids: z.string().describe("Comma-separated coin IDs (e.g. bitcoin,ethereum,stellar)"),
         vs_currency: z.string().default("usd").describe("Quote currency (e.g. usd, eur)"),
       }),
