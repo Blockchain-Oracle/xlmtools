@@ -3,8 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "pnpm --filter @pulsar/api --filter @pulsar/web --filter @pulsar/docs -r --parallel dev",
     "dev:api": "pnpm --filter @pulsar/api dev",
-    "dev:cli": "pnpm --filter @pulsar/cli dev",
+    "dev:cli": "pnpm --filter @pulsar/mcp dev",
+    "dev:web": "pnpm --filter @pulsar/web dev",
+    "dev:docs": "pnpm --filter @pulsar/docs dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test"
   },
