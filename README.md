@@ -18,7 +18,7 @@ On first run, PULSAR generates a Stellar testnet wallet, funds it with XLM via f
 
 Your wallet is at `~/.pulsar/config.json`. The secret key never leaves your machine.
 
-Note: PULSAR currently runs on Stellar testnet. All payments use testnet USDC with no real monetary value. Auto-funding (friendbot + trustline) is testnet-only and will not run on mainnet.
+Note: Auto-wallet funding (friendbot XLM + USDC trustline) only runs on testnet. On mainnet, fund your wallet manually.
 
 ## What this does
 
