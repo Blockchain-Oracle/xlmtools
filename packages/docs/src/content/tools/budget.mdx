@@ -1,0 +1,50 @@
+import { Callout } from 'nextra/components'
+
+# Budget
+
+Set, check, or clear a spending limit for your current session. The budget resets when the MCP server restarts.
+
+**Price:** Free
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `action` | `"set"` \| `"check"` \| `"clear"` | Yes | Action to perform |
+| `amount` | number | Only for `set` | Budget amount in USD |
+
+## Actions
+
+### Set a budget
+
+```
+Set my budget to $2.00 for this session
+```
+
+PULSAR will cap your total paid tool spending at $2.00. Any tool call that would exceed the limit is blocked with an error showing your remaining balance.
+
+### Check your budget
+
+```
+Check my remaining budget
+```
+
+Returns your max budget, amount spent, and remaining balance.
+
+### Clear the budget
+
+```
+Clear my budget limit
+```
+
+Removes the spending cap. All paid tool calls will proceed normally.
+
+## How it works
+
+- The budget is tracked **in memory on your machine** — it resets when the MCP server restarts.
+- Only successful paid calls count against the budget. Failed calls and free tools are never charged.
+- **Cached responses do not count** — if a response is served from cache, no payment happens and your budget is unaffected.
+
+<Callout type="warning">
+The budget tool prevents the *CLI from making paid calls* once the limit is reached. It does not enforce limits on the Stellar network itself — it is a client-side safety feature.
+</Callout>

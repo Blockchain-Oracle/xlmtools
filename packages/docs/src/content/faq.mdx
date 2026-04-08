@@ -6,7 +6,7 @@ import { Callout } from 'nextra/components'
 
 ### What is PULSAR?
 
-PULSAR is a Stellar-native MCP (Model Context Protocol) server that gives AI agents access to 20 real-world tools. Seven tools are paid via USDC micropayments on Stellar, and thirteen are free.
+PULSAR is a Stellar-native MCP (Model Context Protocol) server that gives AI agents access to 20 real-world tools. Seven tools are paid via USDC micropayments on Stellar, and fourteen are free.
 
 ### What is MCP?
 
@@ -34,7 +34,7 @@ No. PULSAR runs via `npx`, which downloads and runs the package on demand. No gl
 
 ### Where is my wallet stored?
 
-Your Stellar keypair is stored at `~/.pulsar/wallet.json`. This file is created automatically on first run.
+Your Stellar keypair is stored at `~/.pulsar/config.json`. This file is created automatically on first run.
 
 <Callout type="warning">
 Your wallet file contains your Stellar secret key. While this is a testnet key with no real value, treat it as you would any private key.
@@ -80,7 +80,7 @@ See the [Fund Your Wallet](/getting-started/fund-wallet) guide for detailed step
 
 ### Is my secret key safe?
 
-Yes. Your Stellar secret key is stored locally at `~/.pulsar/wallet.json` and **never leaves your machine**. Only signed transaction proofs are sent to the PULSAR API server.
+Yes. Your Stellar secret key is stored locally at `~/.pulsar/config.json` and **never leaves your machine**. Only signed transaction proofs are sent to the PULSAR API server.
 
 ### Can I verify payments on-chain?
 
@@ -105,7 +105,7 @@ Check your internet connection. The PULSAR API server needs to be reachable. If 
 Delete the wallet file and restart:
 
 ```bash
-rm ~/.pulsar/wallet.json
+rm ~/.pulsar/config.json
 ```
 
 A new keypair will be generated on the next tool call.

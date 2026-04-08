@@ -31,6 +31,34 @@ Show me my PULSAR wallet and recent payments
 
 The `wallet` tool returns your address and balance. You can then use the `stellar-account` tool to see full account details.
 
+## In-response receipts
+
+Every paid tool response includes a receipt footer with the transaction hash:
+
+```
+{
+  "query": "Stellar news",
+  "results": [...]
+}
+---
+Payment: $0.003 USDC · tx/abc123def456... · stellar testnet
+```
+
+The API response also includes a structured `receipt` object:
+
+```json
+{
+  "receipt": {
+    "tx_hash": "abc123def456...",
+    "amount": "0.003",
+    "currency": "USDC",
+    "network": "stellar:testnet"
+  }
+}
+```
+
+You can use the `tx_hash` to look up the exact transaction on Stellar Expert.
+
 ## Understanding the receipt
 
 Each PULSAR payment transaction contains:

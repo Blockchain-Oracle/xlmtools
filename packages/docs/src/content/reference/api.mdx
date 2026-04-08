@@ -12,7 +12,7 @@ You don't typically call the API directly. The PULSAR CLI handles all communicat
 
 ```
 https://api.pulsar.tools  (production — coming soon)
-http://localhost:4000      (local development)
+http://localhost:3000      (local development)
 ```
 
 ## Authentication
@@ -182,6 +182,51 @@ Oracle prices. **Free**
 | --- | --- | --- |
 | `asset` | string | Asset ticker |
 | `feed` | string | `crypto`, `fiat`, or `dex` |
+
+### GET /health
+
+Health check. **Free, no auth**
+
+Returns `{ "status": "ok", "service": "pulsar-api", "version": "0.1.0" }`.
+
+### GET /stats
+
+Usage statistics. **Free, no auth, CORS enabled**
+
+Returns aggregate call data:
+
+```json
+{
+  "total_calls": 42,
+  "total_usdc": "0.156",
+  "tool_counts": { "search": 20, "image": 5 },
+  "recent": [ /* last 20 calls */ ]
+}
+```
+
+### GET /stats/recent
+
+Recent call log. **Free, no auth, CORS enabled**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `limit` | integer | Number of entries (1-100, default 20) |
+
+Returns:
+
+```json
+{
+  "calls": [
+    {
+      "tool": "search",
+      "amount": "0.003",
+      "currency": "USDC",
+      "tx_hash": "abc123...",
+      "timestamp": "2026-04-08T12:00:00.000Z"
+    }
+  ]
+}
+```
 
 ## MPP Response Headers
 

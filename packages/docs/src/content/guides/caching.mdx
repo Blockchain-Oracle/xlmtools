@@ -1,0 +1,40 @@
+import { Callout } from 'nextra/components'
+
+# Response Caching
+
+PULSAR caches identical tool call responses for 5 minutes. If you make the same call twice within the TTL, the second call returns instantly from cache — **no API call, no payment**.
+
+## How it works
+
+1. When a paid tool call succeeds, the result is stored in an in-memory cache
+2. The cache key is the tool name + the exact parameters (e.g., `search:{"query":"Stellar","count":10}`)
+3. If the same tool is called with identical parameters within 5 minutes, the cached result is returned
+4. Cached responses are prefixed with `[cached — no charge]` so you always know when a result was free
+
+## What gets cached
+
+- All 7 paid tools: search, research, youtube, screenshot, scrape, image, stocks
+- Only **successful** responses are cached — errors are never cached
+- Free tools are not cached (they don't need to be — they're already free)
+
+## Cache behavior
+
+| Scenario | Result |
+| --- | --- |
+| First call | Calls API, pays, caches result |
+| Same call within 5 min | Returns cached result, no payment |
+| Same call after 5 min | Cache expired, calls API again, pays |
+| Different parameters | Cache miss, calls API, pays |
+| Failed call | Not cached, next call will retry |
+
+## Budget interaction
+
+Cached responses **do not count** against your session budget. If you set a $1.00 budget and make 100 identical search calls, you pay $0.003 for the first one and the other 99 are free from cache.
+
+<Callout type="info">
+The cache is in-memory and resets when the MCP server restarts. There is no persistent cache on disk.
+</Callout>
+
+## Why this matters
+
+This is a key cost differentiator. Autonomous agents often make repeated queries during a conversation — with caching, you never pay twice for the same data within a 5-minute window.

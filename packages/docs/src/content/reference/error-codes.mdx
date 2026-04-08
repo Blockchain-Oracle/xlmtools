@@ -49,7 +49,7 @@ Your wallet doesn't have enough USDC to pay for the tool call. Fund your wallet:
 
 Your Stellar account hasn't been created on the network yet. You need to fund it with testnet XLM first:
 
-1. Get your public key from `~/.pulsar/wallet.json`
+1. Get your public key from `~/.pulsar/config.json`
 2. Go to [lab.stellar.org/account/fund](https://lab.stellar.org/account/fund)
 3. Fund the account with testnet XLM
 
@@ -94,5 +94,5 @@ The PULSAR CLI process exited unexpectedly. Restart your MCP host session.
 The tool name is incorrect. Call the `tools` tool to list all available tools and their exact names.
 
 <Callout type="info">
-If you encounter persistent errors, check that you're running Node.js 22+ (`node --version`) and that your `~/.pulsar/wallet.json` file isn't corrupted. Deleting the wallet file and restarting will regenerate it.
+If you encounter persistent errors, check that you're running Node.js 22+ (`node --version`) and that your `~/.pulsar/config.json` file isn't corrupted. Deleting the wallet file and restarting will regenerate it.
 </Callout>

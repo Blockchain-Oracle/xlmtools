@@ -11,4 +11,5 @@ export default {
   weather: { title: 'Weather' },
   domain: { title: 'Domain Check' },
   'stellar-tools': { title: 'Stellar DEX & Data' },
+  budget: { title: 'Budget' },
 }

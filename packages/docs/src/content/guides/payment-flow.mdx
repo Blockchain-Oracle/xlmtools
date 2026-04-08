@@ -39,7 +39,7 @@ The `mppx` library reads the 402 headers and builds a Soroban SAC (Stellar Asset
 
 ### 4. Transaction signed locally
 
-The transaction is signed with your local Stellar secret key (stored in `~/.pulsar/wallet.json`). Your key never leaves your machine.
+The transaction is signed with your local Stellar secret key (stored in `~/.pulsar/config.json`). Your key never leaves your machine.
 
 ### 5. Request retried with proof
 
@@ -87,7 +87,7 @@ The entire flow happens in a few seconds.
 ```
 
 <Callout type="warning">
-Your Stellar secret key is stored locally at `~/.pulsar/wallet.json` and is never sent to the PULSAR API server. Only signed transaction proofs are transmitted.
+Your Stellar secret key is stored locally at `~/.pulsar/config.json` and is never sent to the PULSAR API server. Only signed transaction proofs are transmitted.
 </Callout>
 
 ## Security
