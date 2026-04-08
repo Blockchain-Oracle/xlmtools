@@ -1,4 +1,11 @@
-import { Keypair } from "@stellar/stellar-sdk";
+import {
+  Keypair,
+  Horizon,
+  TransactionBuilder,
+  Networks,
+  Operation,
+  Asset,
+} from "@stellar/stellar-sdk";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -7,10 +14,67 @@ import { logger } from "./logger.js";
 const CONFIG_DIR = join(homedir(), ".pulsar");
 const CONFIG_PATH = join(CONFIG_DIR, "config.json");
 
+// Circle USDC issuer on Stellar testnet
+const USDC_ISSUER = "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5";
+const HORIZON_TESTNET = "https://horizon-testnet.stellar.org";
+
 interface PulsarConfig {
   stellarPrivateKey: string;
   stellarPublicKey: string;
   apiUrl: string;
+}
+
+/**
+ * Fund a new wallet on Stellar testnet:
+ * 1. Friendbot → 10,000 XLM
+ * 2. Add USDC trustline so the account can receive USDC payments
+ */
+async function fundTestnetWallet(keypair: Keypair): Promise<boolean> {
+  const publicKey = keypair.publicKey();
+
+  // Step 1: Fund with friendbot
+  process.stderr.write("  Funding wallet with testnet XLM...");
+  try {
+    const res = await fetch(
+      `https://friendbot.stellar.org?addr=${publicKey}`,
+    );
+    if (!res.ok) {
+      process.stderr.write(" failed\n");
+      logger.warn({ status: res.status }, "Friendbot funding failed");
+      return false;
+    }
+    process.stderr.write(" done\n");
+  } catch (e) {
+    process.stderr.write(" failed (network error)\n");
+    logger.warn({ err: e }, "Friendbot request failed");
+    return false;
+  }
+
+  // Step 2: Add USDC trustline
+  process.stderr.write("  Adding USDC trustline...");
+  try {
+    const server = new Horizon.Server(HORIZON_TESTNET);
+    const account = await server.loadAccount(publicKey);
+    const usdcAsset = new Asset("USDC", USDC_ISSUER);
+
+    const tx = new TransactionBuilder(account, {
+      fee: "100",
+      networkPassphrase: Networks.TESTNET,
+    })
+      .addOperation(Operation.changeTrust({ asset: usdcAsset }))
+      .setTimeout(30)
+      .build();
+
+    tx.sign(keypair);
+    await server.submitTransaction(tx);
+    process.stderr.write(" done\n");
+  } catch (e) {
+    process.stderr.write(" failed\n");
+    logger.warn({ err: e }, "USDC trustline failed");
+    return false;
+  }
+
+  return true;
 }
 
 export function loadOrCreateWallet(): PulsarConfig {
@@ -28,18 +92,40 @@ export function loadOrCreateWallet(): PulsarConfig {
   mkdirSync(CONFIG_DIR, { recursive: true });
   writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), { mode: 0o600 });
 
-  // Human-readable banner — use process.stderr.write (pino is JSON)
-  process.stderr.write("\n╔══════════════════════════════════════════════════╗\n");
-  process.stderr.write("║           PULSAR — First Run Setup               ║\n");
-  process.stderr.write("╚══════════════════════════════════════════════════╝\n");
-  process.stderr.write(`\nYour Stellar wallet: ${config.stellarPublicKey}\n`);
-  process.stderr.write("Fund it with testnet USDC to use paid tools:\n");
-  process.stderr.write("  1. https://lab.stellar.org/account/fund  (get testnet XLM)\n");
-  process.stderr.write("  2. https://faucet.circle.com             (get testnet USDC)\n");
-  process.stderr.write(`\nConfig saved to: ${CONFIG_PATH}\n`);
-  process.stderr.write("─".repeat(52) + "\n\n");
+  process.stderr.write(
+    "\n" +
+      "PULSAR — First Run Setup\n" +
+      "─".repeat(40) + "\n\n" +
+      `  Wallet: ${config.stellarPublicKey}\n\n`,
+  );
 
-  logger.info({ publicKey: config.stellarPublicKey }, "New Stellar wallet generated");
+  // Auto-fund on testnet (non-blocking — don't break startup if it fails)
+  fundTestnetWallet(keypair)
+    .then((funded) => {
+      if (funded) {
+        process.stderr.write(
+          "\n  Wallet funded and ready.\n" +
+            "  Get testnet USDC: https://faucet.circle.com\n" +
+            "  (paste your wallet address above)\n\n" +
+            "─".repeat(40) + "\n\n",
+        );
+      } else {
+        process.stderr.write(
+          "\n  Auto-funding failed. Fund manually:\n" +
+            "  1. https://lab.stellar.org/account/fund  (testnet XLM)\n" +
+            "  2. https://faucet.circle.com             (testnet USDC)\n\n" +
+            "─".repeat(40) + "\n\n",
+        );
+      }
+    })
+    .catch(() => {
+      // Silently handle — wallet is still created, just unfunded
+    });
+
+  logger.info(
+    { publicKey: config.stellarPublicKey },
+    "New Stellar wallet generated",
+  );
   return config;
 }
 

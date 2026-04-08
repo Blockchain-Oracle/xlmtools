@@ -1,188 +1,186 @@
 # PULSAR
 
-**Stellar-native MCP server for Claude Code. 12 tools. Billed via Stellar USDC.**
+Stellar-native MCP server with pay-per-call tools for AI agents. One-line install. No subscriptions. Every payment settles on-chain.
 
-One-line install:
+Built for the Stellar Agents x402/MPP hackathon.
+
+## Quick start
 
 ```bash
 claude mcp add pulsar npx @pulsar/mcp
 ```
 
-## What is this?
+On first run, PULSAR generates a Stellar testnet wallet, funds it with XLM, and adds a USDC trustline automatically. The only manual step is getting testnet USDC:
 
-PULSAR gives Claude Code 12 useful tools — web search, research, image generation, and more — all billed through MPP (Machine Payment Protocol) on Stellar. Fund once with testnet USDC. Every tool call pays automatically via an on-chain USDC transfer. No subscriptions. No API keys to manage.
+1. Run the install command above and make any tool call to trigger wallet setup
+2. Go to [faucet.circle.com](https://faucet.circle.com), select Stellar, paste your wallet address
+3. Done — all paid tools will now work
 
-**The name:** A pulsar is a rapidly rotating neutron star that emits precise, regular pulses. That's what this does — precise micropayment pulses on Stellar, one per tool call.
+Your wallet is at `~/.pulsar/config.json`. The secret key never leaves your machine.
 
-## Why this exists
+## What this does
 
-| | EVM (BlockRun MCP) | Stellar (PULSAR) |
-|---|---|---|
-| Payment | x402 per-call on Base | MPP charge on Stellar |
-| 100 tool calls | 100 on-chain txs | 100 on-chain txs (charge mode) |
-| Tools | 9 | 12 |
-| Network | Base (EVM) | Stellar testnet |
-
-No Stellar equivalent of this existed before PULSAR.
+PULSAR gives AI agents (Claude, Cursor, Windsurf) access to 21 tools. Paid tools cost $0.001 to $0.04 per call in USDC via Stellar's Micropayment Protocol. Free tools have no cost. No API keys needed. No accounts to create.
 
 ## Tools
 
 ### Paid (USDC via Stellar MPP)
 
-| Tool | Cost | What it does |
-|------|------|-------------|
-| `search` | $0.003 | Web + news search (Brave) |
-| `research` | $0.010 | Deep neural research (Exa) |
-| `youtube` | $0.002 | Video search + captions |
-| `screenshot` | $0.010 | Screenshot any URL |
-| `scrape` | $0.002 | Extract webpage content (Jina) |
-| `image` | $0.040 | Generate images (DALL-E 3) |
-| `stocks` | $0.001 | Stock prices (Alpha Vantage) |
+| Tool | Price | What it does |
+| --- | --- | --- |
+| search | $0.003 | Web and news search |
+| research | $0.010 | Multi-source deep research with summaries |
+| youtube | $0.002 | Video search and lookup |
+| screenshot | $0.010 | Capture a screenshot of any URL |
+| scrape | $0.002 | Extract clean text from any URL |
+| image | $0.040 | AI image generation from text prompts |
+| stocks | $0.001 | Real-time stock quotes |
 
 ### Free
 
 | Tool | What it does |
-|------|-------------|
-| `crypto` | Crypto prices + market cap (CoinGecko) |
-| `weather` | Current weather anywhere (OpenWeatherMap) |
-| `domain` | Check domain availability (DNS) |
-| `wallet` | Your Stellar USDC balance + fund instructions |
-| `tools` | List all tools with pricing |
+| --- | --- |
+| crypto | Cryptocurrency prices and market data |
+| weather | Current weather for any city |
+| domain | Domain availability check |
+| budget | Set/check/clear session spending limits |
+| wallet | Your Stellar wallet address and balance |
+| tools | List all available tools and prices |
+| dex-orderbook | Stellar DEX live orderbook |
+| dex-candles | OHLCV candlestick data |
+| dex-trades | Recent DEX trade history |
+| swap-quote | Best swap path between assets |
+| stellar-asset | Asset info, supply, trustlines |
+| stellar-account | Account balances and signers |
+| stellar-pools | Liquidity pool data |
+| oracle-price | Reflector oracle prices |
 
-## Setup (2 minutes, once)
-
-```bash
-# 1. Add to Claude Code
-claude mcp add pulsar npx @pulsar/mcp
-
-# 2. Start Claude Code — first run generates your Stellar wallet
-claude
-
-# 3. Fund your wallet with testnet USDC:
-#    a. Get testnet XLM: https://lab.stellar.org/account/fund
-#    b. Get testnet USDC: https://faucet.circle.com (select Stellar Testnet)
-#    c. Send USDC to the address PULSAR printed
-```
-
-That's it. No API keys, no accounts, no configuration.
-
-## How payments work
-
-PULSAR uses [MPP charge mode](https://stellar.org/mpp) — a direct payment protocol on Stellar. No external facilitator needed.
+## How payment works
 
 ```
-You: "Search for the latest Stellar news"
-
-1. CLI sends request to PULSAR API server
-2. Server responds: 402 Payment Required — "pay 0.003 USDC to G..."
-3. Mppx (fetch polyfill on CLI) auto-builds a Soroban SAC USDC transfer
-4. Signs it with your LOCAL Stellar private key (never leaves your machine)
-5. Sends signed transaction back to server
-6. Server verifies via simulation, broadcasts to Stellar network
-7. 0.003 USDC settles on-chain from your wallet → server wallet
-8. Server calls Brave Search API, returns results
-9. Results appear in Claude Code
-
-Cost: $0.003 USDC — deducted automatically
+You ask Claude to search for something
+  -> CLI sends request to PULSAR API
+  -> API returns 402 Payment Required
+  -> mppx auto-builds a Soroban USDC transfer on Stellar
+  -> Your local key signs it (key never leaves your machine)
+  -> API verifies payment, calls the backend, returns results
+  -> Response includes a Stellar transaction hash for verification
 ```
 
-**Key security points:**
-- Your private key lives in `~/.pulsar/config.json` on YOUR machine only
-- The server never sees your private key — only the signed transaction
-- The server only needs a public key (to receive payments) and a random secret (for mppx credential verification)
-- Every payment is a real on-chain Stellar USDC transfer you can verify
+No manual steps. Every paid response includes a receipt:
+
+```
+Payment: $0.003 USDC · tx/8f3a1b2c... · stellar testnet
+```
+
+Verify any transaction at [stellar.expert](https://stellar.expert/explorer/testnet).
+
+## Cost management
+
+**Budget** — set a per-session spending cap so agents cannot overspend:
+
+```
+Set my budget to $2.00
+```
+
+Calls that would exceed the limit are blocked. Use `budget check` to see remaining balance.
+
+**Caching** — identical queries within 5 minutes return cached results at no charge. You never pay twice for the same data.
 
 ## Architecture
 
 ```
-Claude Code (MCP client)
-    │
-    │ stdio (local process)
-    ▼
-PULSAR CLI  (~/.pulsar/config.json)
-    │  - auto-generated Stellar keypair (private key stays local)
-    │  - Mppx polyfills fetch to handle 402 payments transparently
-    │  - 12 MCP tools registered
-    │
-    │ HTTPS + signed MPP payment credentials
-    ▼
-PULSAR API Server  (Express)
-    │  - STELLAR_RECIPIENT: public key receiving USDC
-    │  - MPP_SECRET_KEY: random string for mppx verification
-    │  - verifies signed tx via Soroban simulation
-    │  - broadcasts to Stellar network
-    │  - calls backend APIs with server-side API keys
-    │  - users never need API keys
-    │
-    ├── Brave Search    ├── Exa AI
-    ├── YouTube Data    ├── ScreenshotOne
-    ├── Jina Reader     ├── OpenAI DALL-E
-    ├── Alpha Vantage   ├── CoinGecko
-    ├── OpenWeatherMap  └── DNS (domain)
+Claude / Cursor / Windsurf (MCP client)
+    |
+    | stdio
+    v
+PULSAR CLI (@pulsar/mcp, runs locally)
+    |  - auto-generated Stellar wallet
+    |  - mppx handles 402 payments transparently
+    |  - budget tracking + response caching
+    |
+    | HTTPS + signed MPP credentials
+    v
+PULSAR API Server (Express, hosted)
+    |  - verifies payments via Soroban simulation
+    |  - calls backend APIs (Brave, Exa, OpenAI, etc.)
+    |  - users never need backend API keys
+    |  - in-memory call log for stats
+    |
+    v
+Stellar Testnet (USDC settlement)
 ```
 
-## Server deployment
+## Project structure
 
-### Docker
+```
+packages/
+  cli/   - MCP server (local, user's machine)
+  api/   - Express API (hosted, verifies MPP, calls backends)
+  web/   - Next.js frontend (landing page, tools, explorer)
+  docs/  - Nextra documentation site (29 pages)
+```
+
+## Documentation
+
+Full documentation covering installation, all 21 tools, payment flow, MCP host setup for Claude/Cursor/Windsurf, API reference, and FAQ.
 
 ```bash
-# 1. Copy and fill in your env
-cp .env.example packages/api/.env
-
-# 2. Run
-docker-compose up -d
+cd packages/docs && pnpm dev
 ```
-
-### Environment variables (server only)
-
-| Variable | What it is |
-|----------|-----------|
-| `STELLAR_RECIPIENT` | Your Stellar public key (G...) — receives USDC payments |
-| `MPP_SECRET_KEY` | Any random string — used by mppx for credential verification (NOT a Stellar key) |
-| `BRAVE_API_KEY` | Server's Brave Search key — users never see this |
-| `EXA_API_KEY` | Server's Exa key |
-| `YOUTUBE_API_KEY` | Server's YouTube Data API key |
-| `SCREENSHOTONE_KEY` | Server's ScreenshotOne key |
-| `OPENAI_API_KEY` | Server's OpenAI key (for DALL-E 3) |
-| `ALPHA_VANTAGE_KEY` | Server's Alpha Vantage key |
-| `OPENWEATHER_API_KEY` | Server's OpenWeatherMap key |
-
-Users don't configure any of these. They just install, fund their wallet, and use tools.
-
-## Tech Stack
-
-- **Runtime:** Node.js 22+, TypeScript, ES modules
-- **MCP:** `@modelcontextprotocol/sdk`
-- **Payments:** `@stellar/mpp` + `mppx` (MPP charge mode — no facilitator needed)
-- **Stellar:** `@stellar/stellar-sdk` (testnet, mainnet-ready)
-- **API Server:** Express 5
-- **Logging:** pino
 
 ## Development
 
 ```bash
-# Install deps
 pnpm install
 
-# Start API server
+# API server (needs .env with backend API keys)
 pnpm dev:api
 
-# Start CLI in dev mode
+# CLI in dev mode
 pnpm dev:cli
 
-# Build both
-pnpm build
+# Frontend
+cd packages/web && pnpm dev
 
-# Docker
-docker-compose up -d
+# Docs
+cd packages/docs && pnpm dev
 ```
 
-## Hackathon
+### Environment variables (API server only)
 
-Built for the **Stellar Agents x402 / Stripe / MPP** hackathon.
+| Variable | Purpose |
+| --- | --- |
+| STELLAR_RECIPIENT | Stellar public key receiving USDC payments |
+| MPP_SECRET_KEY | Random string for mppx credential verification |
+| BRAVE_API_KEY | Brave Search API |
+| EXA_API_KEY | Exa research API |
+| YOUTUBE_API_KEY | YouTube Data API |
+| SCREENSHOTONE_KEY | ScreenshotOne API |
+| OPENAI_API_KEY | OpenAI (DALL-E 3) |
+| ALPHA_VANTAGE_KEY | Alpha Vantage stock data |
+| OPENWEATHER_API_KEY | OpenWeatherMap |
 
-**Novel contributions:**
+Users never configure these. They install, fund their wallet, and use tools.
+
+## Tech stack
+
+- TypeScript, Node.js 22+, ES modules
+- @modelcontextprotocol/sdk (MCP)
+- @stellar/stellar-sdk, @stellar/mpp, mppx (Stellar MPP payments)
+- Express 5 (API), Next.js 16 (frontend), Nextra 4 (docs)
+- Zod 4 (validation), pino (logging)
+- Stellar testnet, USDC
+
+## What makes this different
+
 1. First MCP server on Stellar with MPP billing
-2. Pay-per-query model — no API keys, no subscriptions for users
-3. 12 tools Claude Code actually needs daily
-4. Direct settlement via MPP charge — no external facilitator required
+2. Pay per call, not per month. No API keys for users to manage
+3. 21 tools covering web, media, finance, and the full Stellar DEX
+4. Response caching and budget enforcement built in
+5. Every payment verifiable on-chain with a real Stellar transaction hash
+6. Direct settlement via MPP charge mode on Soroban
+
+## License
+
+MIT
