@@ -10,13 +10,15 @@ Built for the Stellar Agents x402/MPP hackathon.
 claude mcp add pulsar npx @pulsar/mcp
 ```
 
-On first run, PULSAR generates a Stellar testnet wallet, funds it with XLM, and adds a USDC trustline automatically. The only manual step is getting testnet USDC:
+On first run, PULSAR generates a Stellar testnet wallet, funds it with XLM via friendbot, and adds a USDC trustline — all automatically. This only happens on testnet. The only manual step is getting testnet USDC:
 
 1. Run the install command above and make any tool call to trigger wallet setup
 2. Go to [faucet.circle.com](https://faucet.circle.com), select Stellar, paste your wallet address
 3. Done — all paid tools will now work
 
 Your wallet is at `~/.pulsar/config.json`. The secret key never leaves your machine.
+
+Note: PULSAR currently runs on Stellar testnet. All payments use testnet USDC with no real monetary value. Auto-funding (friendbot + trustline) is testnet-only and will not run on mainnet.
 
 ## What this does
 

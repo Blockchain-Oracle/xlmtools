@@ -25,11 +25,19 @@ interface PulsarConfig {
 }
 
 /**
- * Fund a new wallet on Stellar testnet:
- * 1. Friendbot → 10,000 XLM
- * 2. Add USDC trustline so the account can receive USDC payments
+ * Auto-fund a new wallet on Stellar TESTNET only.
+ * This uses the public friendbot (free testnet XLM) and adds a USDC
+ * trustline so the account can receive payments. This function must
+ * never be called on mainnet — friendbot does not exist there.
  */
 async function fundTestnetWallet(keypair: Keypair): Promise<boolean> {
+  // Safety: only run on testnet
+  const network = process.env.STELLAR_NETWORK ?? "testnet";
+  if (network !== "testnet") {
+    logger.info({ network }, "Skipping auto-fund — not on testnet");
+    return false;
+  }
+
   const publicKey = keypair.publicKey();
 
   // Step 1: Fund with friendbot
@@ -94,9 +102,10 @@ export function loadOrCreateWallet(): PulsarConfig {
 
   process.stderr.write(
     "\n" +
-      "PULSAR — First Run Setup\n" +
-      "─".repeat(40) + "\n\n" +
-      `  Wallet: ${config.stellarPublicKey}\n\n`,
+      "PULSAR — First Run Setup (Stellar Testnet)\n" +
+      "─".repeat(44) + "\n\n" +
+      `  Wallet:  ${config.stellarPublicKey}\n` +
+      `  Network: Stellar Testnet\n\n`,
   );
 
   // Auto-fund on testnet (non-blocking — don't break startup if it fails)
