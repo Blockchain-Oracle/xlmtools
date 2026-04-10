@@ -22,6 +22,7 @@ import { stellarAccountRoute } from "./routes/stellar-account.js";
 import { stellarPoolsRoute } from "./routes/stellar-pools.js";
 import { oraclePriceRoute } from "./routes/oracle-price.js";
 import { statsRoute } from "./routes/stats.js";
+import { discoveryRoute } from "./routes/discovery.js";
 
 const app = express();
 app.use(express.json());
@@ -29,6 +30,10 @@ app.use(express.json());
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "pulsar-api", version: "0.1.0" });
 });
+
+// Agent discovery endpoints
+app.use("/.well-known", cors(), discoveryRoute);
+app.use("/llms.txt", cors(), discoveryRoute);
 
 app.use("/crypto", cryptoRoute);
 app.use("/weather", weatherRoute);
