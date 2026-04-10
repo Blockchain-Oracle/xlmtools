@@ -2,107 +2,270 @@ import { Callout } from 'nextra/components'
 
 # MCP Host Setup
 
-PULSAR works with any MCP-compatible host. Here's how to set it up in each supported editor and application.
+PULSAR works with any MCP-compatible host. Here is how to install it in each supported client.
+
+All clients use the same npm package: `@pulsar/mcp`.
+
+<Callout type="info">
+The `-y` flag on `npx` auto-confirms the install prompt. Without it, `npx` will ask for confirmation on first run.
+</Callout>
 
 ## Claude Code
 
-The simplest setup — one command:
+One command, no config file needed:
 
 ```bash
 claude mcp add pulsar npx @pulsar/mcp
 ```
 
-Claude Code will automatically download and run the PULSAR server when you start a new session.
+Optional scope flags:
+- `-s user` — install globally for your user
+- `-s project` — write to shared `.mcp.json` for your team
 
-To verify:
-
+Verify:
 ```bash
 claude mcp list
 ```
 
-You should see `pulsar` listed with transport `stdio`.
-
 ## Claude Desktop
 
-### macOS
+Config file location:
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+- Linux: `~/.config/Claude/claude_desktop_config.json`
 
-1. Open the config file:
-   ```bash
-   open ~/Library/Application\ Support/Claude/claude_desktop_config.json
-   ```
+Or via the app: Claude menu → Settings → Developer → Edit Config.
 
-2. Add PULSAR to the `mcpServers` object:
-   ```json
-   {
-     "mcpServers": {
-       "pulsar": {
-         "command": "npx",
-         "args": ["@pulsar/mcp"]
-       }
-     }
-   }
-   ```
+```json
+{
+  "mcpServers": {
+    "pulsar": {
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"]
+    }
+  }
+}
+```
 
-3. Save and restart Claude Desktop.
-
-### Windows
-
-1. Open `%APPDATA%\Claude\claude_desktop_config.json` in your editor.
-2. Add the same `mcpServers` entry.
-3. Save and restart Claude Desktop.
+Fully quit and restart Claude Desktop after saving.
 
 ## Cursor
 
-1. Open Settings (`Cmd+,` or `Ctrl+,`)
-2. Search for "MCP" in the settings search bar
-3. Under **MCP Servers**, click **Add Server**
-4. Configure:
-   - **Name**: `pulsar`
-   - **Command**: `npx`
-   - **Args**: `@pulsar/mcp`
-   - **Transport**: `stdio`
-5. Save and restart Cursor
+Config file:
+- Global: `~/.cursor/mcp.json`
+- Per-project: `.cursor/mcp.json` in your workspace root
+
+Or via UI: Settings → Tools & MCP → Add new MCP server.
+
+```json
+{
+  "mcpServers": {
+    "pulsar": {
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"]
+    }
+  }
+}
+```
+
+A green dot in the Tools & MCP panel means PULSAR is running.
 
 ## Windsurf
 
-1. Open the Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`)
-2. Search for "MCP: Add Server"
-3. Configure:
-   - **Name**: `pulsar`
-   - **Command**: `npx @pulsar/mcp`
-   - **Transport**: `stdio`
-4. Save
+Config file:
+- macOS/Linux: `~/.codeium/windsurf/mcp_config.json`
+- Windows: `%USERPROFILE%\.codeium\windsurf\mcp_config.json`
+
+Or via UI: Cascade panel → MCPs icon (top-right) → Configure.
+
+```json
+{
+  "mcpServers": {
+    "pulsar": {
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"]
+    }
+  }
+}
+```
+
+## VS Code (GitHub Copilot)
+
+VS Code Copilot has native MCP support. Note the root key is `servers`, not `mcpServers`.
+
+Config: `.vscode/mcp.json` in your workspace, or via Command Palette → `MCP: Open User Configuration`.
+
+```json
+{
+  "servers": {
+    "pulsar": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"]
+    }
+  }
+}
+```
+
+Copilot Chat must be in **Agent mode** for MCP tools to appear.
+
+## Cline (VS Code extension)
+
+In VS Code, click the MCP Servers icon in Cline's top nav → Installed → Configure MCP Servers.
+
+```json
+{
+  "mcpServers": {
+    "pulsar": {
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+## Zed
+
+Config file:
+- macOS/Linux: `~/.config/zed/settings.json`
+- Windows: `%APPDATA%\Zed\settings.json`
+
+Zed uses a different schema — note `context_servers` and `source: "custom"`:
+
+```json
+{
+  "context_servers": {
+    "pulsar": {
+      "source": "custom",
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"],
+      "env": {}
+    }
+  }
+}
+```
+
+## Continue (VS Code / JetBrains)
+
+Create `.continue/mcpServers/pulsar.yaml` in your workspace:
+
+```yaml
+name: Pulsar MCP
+version: 0.0.1
+schema: v1
+mcpServers:
+  - name: Pulsar
+    type: stdio
+    command: npx
+    args:
+      - "-y"
+      - "@pulsar/mcp"
+```
+
+<Callout type="warning">
+MCP only works in Continue's **Agent mode**, not Chat or Edit modes.
+</Callout>
+
+## Goose (Block)
+
+Easiest: run the interactive configurator:
+
+```bash
+goose configure
+```
+
+Then choose: Add Extension → Command-line Extension (stdio). Fill in:
+- Name: `pulsar`
+- Command: `npx -y @pulsar/mcp`
+- Timeout: `300`
+
+Or edit the config directly at `~/.config/goose/config.yaml`:
+
+```yaml
+extensions:
+  pulsar:
+    name: pulsar
+    type: stdio
+    enabled: true
+    cmd: npx
+    args:
+      - "-y"
+      - "@pulsar/mcp"
+    timeout: 300
+```
+
+## 5ire
+
+Use the Tools page in the app: Tools → Add Server. Fill in:
+- Command: `npx`
+- Args: `-y @pulsar/mcp`
+
+## Roo Code (VS Code extension)
+
+Roo Code → MCP Servers → Edit Global MCP, or create `.roo/mcp.json` in your workspace:
+
+```json
+{
+  "mcpServers": {
+    "pulsar": {
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"],
+      "disabled": false,
+      "alwaysAllow": [],
+      "timeout": 60
+    }
+  }
+}
+```
+
+## LibreChat
+
+Add to your `librechat.yaml`:
+
+```yaml
+mcpServers:
+  pulsar:
+    type: stdio
+    command: npx
+    args:
+      - "-y"
+      - "@pulsar/mcp"
+```
+
+Restart LibreChat for the server to load.
+
+## Config schemas at a glance
+
+Three schemas exist across the ecosystem:
+
+| Schema | Root key | Used by |
+| --- | --- | --- |
+| Standard MCP | `mcpServers` | Claude Desktop, Claude Code, Cursor, Windsurf, Cline, Roo Code, 5ire, LibreChat |
+| VS Code Copilot | `servers` + `type: "stdio"` | VS Code GitHub Copilot |
+| Zed | `context_servers` + `source: "custom"` | Zed |
+| Continue YAML | `mcpServers` array + `name`/`type` | Continue |
+| Goose YAML | `extensions` + `cmd` (not `command`) | Goose |
 
 ## Verifying the connection
 
-After setup, ask your AI agent:
+After setup, ask your agent:
 
 ```
 List all available PULSAR tools
 ```
 
-The agent should call the `tools` tool and return a list of all 20 PULSAR tools with their prices. If you see the tool list, PULSAR is connected and working.
-
-<Callout type="info">
-If the server fails to start, make sure you have Node.js 22+ installed. Run `node --version` to check.
-</Callout>
+The agent should call the `tools` tool and return a list of all 21 PULSAR tools with their prices.
 
 ## Troubleshooting
 
-### "Command not found: npx"
+**Command not found: npx** — Install Node.js 22+ from [nodejs.org](https://nodejs.org).
 
-Install Node.js 22+ from [nodejs.org](https://nodejs.org).
+**Server starts but no tools appear** — Update your MCP host to the latest version. Some clients require Agent mode (Continue, VS Code Copilot).
 
-### Server starts but no tools appear
-
-Check that your MCP host supports the MCP protocol version used by PULSAR. Update your host to the latest version.
-
-### Wallet errors
-
-On first run, PULSAR creates a wallet at `~/.pulsar/config.json`. If this file is corrupted, delete it and restart:
-
+**Wallet errors** — On first run, PULSAR creates a wallet at `~/.pulsar/config.json`. If corrupted, delete it:
 ```bash
 rm ~/.pulsar/config.json
 ```
-
-A new wallet will be generated automatically.
+A new wallet will be generated and auto-funded on testnet.

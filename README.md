@@ -6,9 +6,21 @@ Built for the Stellar Agents x402/MPP hackathon.
 
 ## Quick start
 
+PULSAR works with any MCP-compatible client, and also ships as a standalone CLI. Pick your flavour:
+
 ```bash
+# Claude Code
 claude mcp add pulsar npx @pulsar/mcp
+
+# Standalone CLI (works without any MCP host)
+npm install -g @pulsar/mcp
+
+# Cursor, Windsurf, Claude Desktop, VS Code, Zed, Cline, Goose, 5ire, Continue, Roo, LibreChat
+# Add to the client's MCP config:
+#   { "command": "npx", "args": ["-y", "@pulsar/mcp"] }
 ```
+
+See the [MCP Host Setup guide](/guides/mcp-setup) for exact config for each client.
 
 On first run, PULSAR generates a Stellar testnet wallet, funds it with XLM via friendbot, and adds a USDC trustline — all automatically. This only happens on testnet. The only manual step is getting testnet USDC:
 
@@ -22,7 +34,9 @@ Note: Auto-wallet funding (friendbot XLM + USDC trustline) only runs on testnet.
 
 ## What this does
 
-PULSAR gives AI agents (Claude, Cursor, Windsurf) access to 21 tools. Paid tools cost $0.001 to $0.04 per call in USDC via Stellar's Micropayment Protocol. Free tools have no cost. No API keys needed. No accounts to create.
+PULSAR gives AI agents access to 21 tools. Paid tools cost $0.001 to $0.04 per call in USDC via Stellar's Micropayment Protocol. Free tools have no cost. No API keys needed. No accounts to create.
+
+Works with every major MCP client (Claude Code, Claude Desktop, Cursor, Windsurf, VS Code Copilot, Cline, Zed, Continue, Goose, 5ire, Roo Code, LibreChat) and as a standalone `pulsar-cli` for direct terminal use.
 
 ## Tools
 
@@ -56,6 +70,23 @@ PULSAR gives AI agents (Claude, Cursor, Windsurf) access to 21 tools. Paid tools
 | stellar-account | Account balances and signers |
 | stellar-pools | Liquidity pool data |
 | oracle-price | Reflector oracle prices |
+
+## Standalone CLI
+
+PULSAR also ships as a terminal tool. Same wallet, same payments, no MCP host needed.
+
+```bash
+npm install -g @pulsar/mcp
+
+pulsar-cli wallet
+pulsar-cli crypto bitcoin,stellar
+pulsar-cli weather Lagos
+pulsar-cli search "Stellar MPP" --count 5
+pulsar-cli dex-orderbook XLM/USDC --limit 3
+pulsar-cli --help
+```
+
+Every paid call prints a Stellar transaction hash you can verify on-chain.
 
 ## How payment works
 

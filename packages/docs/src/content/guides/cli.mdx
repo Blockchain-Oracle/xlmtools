@@ -1,0 +1,114 @@
+import { Callout } from 'nextra/components'
+
+# Standalone CLI
+
+PULSAR also ships as a standalone command-line tool. Use it directly from your terminal without needing an MCP host. Same wallet, same payments, same tools.
+
+## Install
+
+```bash
+npm install -g @pulsar/mcp
+```
+
+This installs two binaries:
+- `pulsar` — the MCP stdio server (used by Claude, Cursor, etc.)
+- `pulsar-cli` — the standalone terminal CLI
+
+## Usage
+
+```bash
+pulsar-cli <tool> [args] [--flag value]
+```
+
+### Free tools
+
+```bash
+pulsar-cli wallet
+pulsar-cli tools
+pulsar-cli crypto bitcoin,ethereum,stellar
+pulsar-cli weather Lagos
+pulsar-cli domain pulsar-mcp.xyz
+pulsar-cli dex-orderbook XLM/USDC --limit 5
+pulsar-cli oracle-price BTC
+pulsar-cli stellar-account GDJIFRCNKCYINRP3FCPGEOWB4L3JBU3LN4Y2AZNXCV7CK7MEGZTNG5NG
+```
+
+### Paid tools
+
+Paid tools automatically handle the MPP payment — you just need testnet USDC in your wallet.
+
+```bash
+pulsar-cli search "Stellar MPP micropayments" --count 5
+pulsar-cli research "Soroban smart contracts" --num-results 3
+pulsar-cli stocks AAPL
+pulsar-cli screenshot https://stellar.org --format png
+pulsar-cli scrape https://stellar.org
+pulsar-cli image "A pulsar in deep space" --size 1024x1024
+pulsar-cli youtube "Stellar development"
+```
+
+Every paid response prints a receipt line showing the Stellar transaction hash:
+
+```
+  Payment: $0.003 USDC · tx/8f3a1b2c4d5e... · stellar testnet
+```
+
+## How it differs from the MCP server
+
+| Feature | MCP server (`pulsar`) | Standalone CLI (`pulsar-cli`) |
+| --- | --- | --- |
+| Usage | Via Claude, Cursor, Windsurf | Direct terminal commands |
+| Interface | stdin/stdout JSON-RPC | `process.argv` parsing |
+| Persistence | Long-running process | One-shot (exits after each command) |
+| Budget tracking | Yes (session-scoped) | No (resets per invocation) |
+| Response caching | Yes (5-min TTL) | No (each call is fresh) |
+| Wallet | Shared (`~/.pulsar/config.json`) | Shared (same file) |
+| Payments | MPP via mppx | MPP via mppx (same flow) |
+
+Both modes share the same Stellar keypair and API endpoint. You can install once and use both.
+
+## All available commands
+
+### Paid
+
+| Command | Cost | Example |
+| --- | --- | --- |
+| `search <query>` | $0.003 | `pulsar-cli search "Stellar news"` |
+| `research <query>` | $0.010 | `pulsar-cli research "Soroban"` |
+| `youtube <query>` | $0.002 | `pulsar-cli youtube "Stellar dev"` |
+| `screenshot <url>` | $0.010 | `pulsar-cli screenshot https://stellar.org` |
+| `scrape <url>` | $0.002 | `pulsar-cli scrape https://stellar.org` |
+| `image <prompt>` | $0.040 | `pulsar-cli image "pulsar in space"` |
+| `stocks <symbol>` | $0.001 | `pulsar-cli stocks AAPL` |
+
+### Free
+
+| Command | Example |
+| --- | --- |
+| `wallet` | Your address and balances |
+| `tools` | List all 21 tools |
+| `crypto <ids>` | `pulsar-cli crypto bitcoin,stellar` |
+| `weather <location>` | `pulsar-cli weather "New York"` |
+| `domain <name>` | `pulsar-cli domain stellar.org` |
+| `dex-orderbook <pair>` | `pulsar-cli dex-orderbook XLM/USDC` |
+| `dex-candles <pair>` | `pulsar-cli dex-candles XLM/USDC --resolution 1h` |
+| `dex-trades <pair>` | `pulsar-cli dex-trades XLM/USDC` |
+| `swap-quote <from> <to> <amount>` | `pulsar-cli swap-quote XLM USDC 100` |
+| `stellar-asset <asset>` | `pulsar-cli stellar-asset USDC` |
+| `stellar-account <address>` | `pulsar-cli stellar-account G...` |
+| `stellar-pools` | `pulsar-cli stellar-pools --limit 5` |
+| `oracle-price <asset>` | `pulsar-cli oracle-price BTC` |
+
+## Help
+
+```bash
+pulsar-cli --help
+```
+
+<Callout type="info">
+Output is JSON by default so you can pipe it to tools like `jq`:
+
+```bash
+pulsar-cli crypto bitcoin | jq '.bitcoin.usd'
+```
+</Callout>
