@@ -131,6 +131,22 @@ Full documentation covering installation, all 21 tools, payment flow, MCP host s
 cd packages/docs && pnpm dev
 ```
 
+## Docker
+
+```bash
+# 1. Copy and configure env
+cp packages/api/.env.example packages/api/.env
+# Edit packages/api/.env with your API keys
+
+# 2. Run
+docker compose up -d
+
+# 3. Verify
+curl http://localhost:3000/health
+```
+
+The Docker setup runs the API server only. The CLI (`@pulsar/mcp`) runs locally on the user's machine via `npx`.
+
 ## Development
 
 ```bash

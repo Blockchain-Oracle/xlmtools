@@ -43,6 +43,15 @@ OPENWEATHER_API_KEY=      # weather tool (free tool, but needs key)
 
 Users never see or configure these. They install the CLI and use tools — the API handles everything server-side.
 
+## Docker
+
+```bash
+# From the monorepo root
+cp packages/api/.env.example packages/api/.env
+# Edit .env with your keys
+docker compose up -d
+```
+
 ## Development
 
 ```bash
