@@ -5,6 +5,14 @@ export interface CallLogEntry {
   tool: string;
   paid: boolean;
   timestamp: string;
+  /**
+   * Stellar G-address that made the call, read from the
+   * `X-XLMTools-Client` request header. Self-declared for free calls;
+   * for paid calls the Stellar tx in `tx_hash` is the cryptographic
+   * ground truth. May be `undefined` for requests from clients that
+   * don't stamp the header (e.g. raw curl, older CLI versions).
+   */
+  client?: string;
   // Only present when paid === true
   amount?: string;
   currency?: string;
@@ -14,6 +22,20 @@ export interface CallLogEntry {
 const log: CallLogEntry[] = [];
 const MAX_ENTRIES = 1000;
 
+const CLIENT_HEADER = "x-xlmtools-client";
+
+/** Extract and validate the X-XLMTools-Client header off a request. */
+export function getClient(req: Request): string | undefined {
+  const raw = req.headers[CLIENT_HEADER];
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  if (!value) return undefined;
+  // Light validation — Stellar G-addresses are 56 chars starting with G.
+  // We don't reject missing matches (the log still takes whatever was
+  // sent), but we refuse bogus values that would pollute the index.
+  if (typeof value !== "string" || value.length > 120) return undefined;
+  return value;
+}
+
 /**
  * Record a paid tool call with its Stellar tx hash.
  * Called from withReceiptBody() after a successful MPP-gated response.
@@ -22,7 +44,7 @@ export function recordCall(entry: Omit<CallLogEntry, "paid">): void {
   log.push({ ...entry, paid: true });
   if (log.length > MAX_ENTRIES) log.shift();
   logger.debug(
-    { tool: entry.tool, amount: entry.amount },
+    { tool: entry.tool, amount: entry.amount, client: entry.client },
     "paid call logged",
   );
 }
@@ -32,14 +54,15 @@ export function recordCall(entry: Omit<CallLogEntry, "paid">): void {
  * Called from the withFreeStats middleware on any 2xx response from a
  * free-tool route.
  */
-export function recordFreeCall(tool: string): void {
+export function recordFreeCall(tool: string, client?: string): void {
   log.push({
     tool,
     paid: false,
     timestamp: new Date().toISOString(),
+    client,
   });
   if (log.length > MAX_ENTRIES) log.shift();
-  logger.debug({ tool }, "free call logged");
+  logger.debug({ tool, client }, "free call logged");
 }
 
 /**
@@ -48,25 +71,17 @@ export function recordFreeCall(tool: string): void {
  *   app.use("/crypto", withFreeStats("crypto"), cryptoRoute);
  */
 export function withFreeStats(tool: string) {
-  return (_req: Request, res: Response, next: NextFunction): void => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const client = getClient(req);
     res.on("finish", () => {
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        recordFreeCall(tool);
+        recordFreeCall(tool, client);
       }
     });
     next();
   };
 }
 
-/**
- * Get a window of calls from the log, newest-first.
- *
- * offset = 0 returns the most recent `limit` calls.
- * offset = limit returns the next page (older), and so on.
- *
- * Page math is done against the raw (append-only) log, so we can slice
- * without reversing the entire array on every request.
- */
 export function getRecentCalls(limit = 20, offset = 0): CallLogEntry[] {
   const total = log.length;
   const end = Math.max(0, total - offset);
@@ -76,6 +91,35 @@ export function getRecentCalls(limit = 20, offset = 0): CallLogEntry[] {
 
 export function getTotalCalls(): number {
   return log.length;
+}
+
+/**
+ * Paginated history for a single client (Stellar G-address).
+ *
+ * Same semantics as getRecentCalls (newest first, offset 0 = newest)
+ * but filtered to entries where `client === address`. Used by the
+ * `/stats/by-client` endpoint that powers the Stats page.
+ */
+export function getCallsByClient(
+  address: string,
+  limit = 20,
+  offset = 0,
+): CallLogEntry[] {
+  const filtered = log.filter((e) => e.client === address);
+  // filtered is already in append order (oldest → newest). Apply
+  // offset/limit from the newest end, then reverse for display.
+  const total = filtered.length;
+  const end = Math.max(0, total - offset);
+  const start = Math.max(0, end - limit);
+  return filtered.slice(start, end).reverse();
+}
+
+export function countCallsByClient(address: string): number {
+  let count = 0;
+  for (const entry of log) {
+    if (entry.client === address) count += 1;
+  }
+  return count;
 }
 
 export function getStats() {

@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { okPaid, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 import { TOOL_PRICES } from "../lib/config.js";
@@ -30,8 +31,9 @@ export function registerYoutubeTool(server: McpServer): void {
             const qs = new URLSearchParams();
             if (query) qs.set("q", query);
             if (id) qs.set("id", id);
-            const res = await fetch(
-              `${config.apiUrl}/youtube?${qs.toString()}`,
+            const res = await apiFetch(
+              config,
+              `/youtube?${qs.toString()}`,
             );
             if (!res.ok) {
               const body = await res.text();

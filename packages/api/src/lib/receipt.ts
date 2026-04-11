@@ -1,6 +1,7 @@
+import type { Request } from "express";
 import { Receipt } from "mppx";
 import { TOOL_PRICES, type PaidTool } from "./pricing.js";
-import { recordCall } from "./call-log.js";
+import { recordCall, getClient } from "./call-log.js";
 
 export interface ReceiptInfo {
   tx_hash: string;
@@ -37,8 +38,13 @@ export function extractReceipt(
  * Wraps a JSON body with receipt data, producing a new web Response
  * that preserves the Payment-Receipt header and includes the receipt
  * in the JSON body.
+ *
+ * The original Express request is passed in so we can stamp the call
+ * log with the X-XLMTools-Client header (client attribution for the
+ * /stats/by-client endpoint).
  */
 export function withReceiptBody(
+  req: Request,
   webRes: globalThis.Response,
   body: Record<string, unknown>,
   tool: PaidTool,
@@ -54,6 +60,7 @@ export function withReceiptBody(
       currency: receipt.currency,
       tx_hash: receipt.tx_hash,
       timestamp: new Date().toISOString(),
+      client: getClient(req),
     });
   }
 

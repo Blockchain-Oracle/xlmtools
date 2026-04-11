@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { ok, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 
@@ -36,7 +37,7 @@ export function registerDexTradesTool(server: McpServer): void {
           limit: String(limit),
           trade_type,
         });
-        const res = await fetch(`${config.apiUrl}/dex-trades?${params}`);
+        const res = await apiFetch(config, `/dex-trades?${params}`);
         if (!res.ok) {
           const body = await res.text();
           return err(`Trades error ${res.status}: ${body}`);

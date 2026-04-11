@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { ok, err } from "../lib/format.js";
 
 export function registerDomainTool(server: McpServer): void {
@@ -15,7 +16,7 @@ export function registerDomainTool(server: McpServer): void {
     async ({ name }) => {
       try {
         const config = loadOrCreateWallet();
-        const res = await fetch(`${config.apiUrl}/domain?name=${encodeURIComponent(name)}`);
+        const res = await apiFetch(config, `/domain?name=${encodeURIComponent(name)}`);
         if (!res.ok) return err(`Domain API error: ${res.status}`);
         return ok(await res.json());
       } catch (e) { return err(String(e)); }

@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { ok, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 
@@ -37,7 +38,7 @@ export function registerDexCandlesTool(server: McpServer): void {
           resolution,
           limit: String(limit),
         });
-        const res = await fetch(`${config.apiUrl}/dex-candles?${params}`);
+        const res = await apiFetch(config, `/dex-candles?${params}`);
         if (!res.ok) {
           const body = await res.text();
           return err(`Candles error ${res.status}: ${body}`);

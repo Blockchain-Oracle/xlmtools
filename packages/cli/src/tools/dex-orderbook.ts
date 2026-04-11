@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { ok, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 
@@ -28,8 +29,9 @@ export function registerDexOrderbookTool(server: McpServer): void {
       logger.debug({ pair, limit }, "dex-orderbook invoked");
       try {
         const config = loadOrCreateWallet();
-        const res = await fetch(
-          `${config.apiUrl}/dex-orderbook?pair=${encodeURIComponent(pair)}&limit=${limit}`
+        const res = await apiFetch(
+          config,
+          `/dex-orderbook?pair=${encodeURIComponent(pair)}&limit=${limit}`,
         );
         if (!res.ok) {
           const body = await res.text();

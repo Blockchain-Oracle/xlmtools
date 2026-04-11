@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { apiError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
-import { horizonUrl } from "../lib/stellar.js";
+import { accountHorizonUrl } from "../lib/stellar.js";
 
 export const stellarAccountRoute = Router();
 
@@ -20,7 +20,7 @@ stellarAccountRoute.get("/", async (req, res) => {
 
   logger.info({ address }, "fetching account");
 
-  const response = await fetch(`${horizonUrl()}/accounts/${address}`);
+  const response = await fetch(`${accountHorizonUrl()}/accounts/${address}`);
 
   if (response.status === 404) {
     apiError(res, 404, "Account not found — it may not be funded yet on the Stellar network");

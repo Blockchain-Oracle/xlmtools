@@ -65,6 +65,6 @@ screenshotRoute.get("/", async (req, res) => {
 
   const body = { url, screenshot_url: data.screenshot_url, format };
   const wrapped = result.withReceipt(Response.json(body));
-  const webRes = withReceiptBody(wrapped as globalThis.Response, body, "screenshot");
+  const webRes = withReceiptBody(req, wrapped as globalThis.Response, body, "screenshot");
   await sendWebResponse(webRes, res);
 });

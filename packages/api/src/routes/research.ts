@@ -80,6 +80,6 @@ researchRoute.get("/", async (req, res) => {
 
   const body = { query, results, count: results.length };
   const wrapped = result.withReceipt(Response.json(body));
-  const webRes = withReceiptBody(wrapped as globalThis.Response, body, "research");
+  const webRes = withReceiptBody(req, wrapped as globalThis.Response, body, "research");
   await sendWebResponse(webRes, res);
 });

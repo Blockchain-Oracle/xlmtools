@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { ok, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 
@@ -22,8 +23,9 @@ export function registerStellarAssetTool(server: McpServer): void {
       logger.debug({ asset }, "stellar-asset invoked");
       try {
         const config = loadOrCreateWallet();
-        const res = await fetch(
-          `${config.apiUrl}/stellar-asset?asset=${encodeURIComponent(asset)}`
+        const res = await apiFetch(
+          config,
+          `/stellar-asset?asset=${encodeURIComponent(asset)}`,
         );
         if (!res.ok) {
           const body = await res.text();

@@ -100,14 +100,30 @@ export function formatAsset(asset: ResolvedAsset): string {
   return `${asset.asset_code}:${asset.asset_issuer?.slice(0, 4)}…${asset.asset_issuer?.slice(-4)}`;
 }
 
-/** Horizon base URL */
+/** Horizon base URL. Defaults to mainnet since DEX/asset data lives there. */
 export function horizonUrl(testnet = false): string {
   return testnet ? HORIZON_TESTNET : HORIZON_PUBLIC;
 }
 
-/** StellarExpert base URL */
+/** StellarExpert base URL. Defaults to mainnet since asset analytics live there. */
 export function stellarExpertUrl(testnet = false): string {
   return testnet ? STELLAR_EXPERT_TESTNET : STELLAR_EXPERT_PUBLIC;
+}
+
+/**
+ * Horizon URL for account-scoped lookups (e.g. /accounts/<G-address>).
+ *
+ * Unlike `horizonUrl()`, this one respects `STELLAR_NETWORK` and
+ * defaults to **testnet** — matching the project's testnet-first
+ * stance (auto-funded wallets, friendbot, Circle testnet faucet).
+ *
+ * Do NOT use this for DEX/asset queries — those should stay on
+ * mainnet where the liquidity actually lives.
+ */
+export function accountHorizonUrl(): string {
+  return process.env.STELLAR_NETWORK === "mainnet"
+    ? HORIZON_PUBLIC
+    : HORIZON_TESTNET;
 }
 
 /** StellarExpert asset ID format: CODE-ISSUER-TYPE */

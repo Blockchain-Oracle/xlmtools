@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { ok, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 
@@ -30,7 +31,7 @@ export function registerStellarPoolsTool(server: McpServer): void {
         const config = loadOrCreateWallet();
         const params = new URLSearchParams({ limit: String(limit) });
         if (asset) params.set("asset", asset);
-        const res = await fetch(`${config.apiUrl}/stellar-pools?${params}`);
+        const res = await apiFetch(config, `/stellar-pools?${params}`);
         if (!res.ok) {
           const body = await res.text();
           return err(`Pools error ${res.status}: ${body}`);

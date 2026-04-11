@@ -77,6 +77,6 @@ imageRoute.post("/", async (req, res) => {
 
   const body = { prompt, image_url: image.url, revised_prompt: image.revised_prompt };
   const wrapped = result.withReceipt(Response.json(body));
-  const webRes = withReceiptBody(wrapped as globalThis.Response, body, "image");
+  const webRes = withReceiptBody(req, wrapped as globalThis.Response, body, "image");
   await sendWebResponse(webRes, res);
 });

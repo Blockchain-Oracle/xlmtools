@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { okPaid, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 import { TOOL_PRICES } from "../lib/config.js";
@@ -27,8 +28,9 @@ export function registerScreenshotTool(server: McpServer): void {
           try {
             const config = loadOrCreateWallet();
             const params = new URLSearchParams({ url, format });
-            const res = await fetch(
-              `${config.apiUrl}/screenshot?${params.toString()}`,
+            const res = await apiFetch(
+              config,
+              `/screenshot?${params.toString()}`,
             );
             if (!res.ok) {
               const body = await res.text();

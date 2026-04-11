@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { okPaid, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 import { TOOL_PRICES } from "../lib/config.js";
@@ -28,8 +29,9 @@ export function registerSearchTool(server: McpServer): void {
         withBudget("search", async () => {
           try {
             const config = loadOrCreateWallet();
-            const res = await fetch(
-              `${config.apiUrl}/search?q=${encodeURIComponent(query)}&count=${count}`,
+            const res = await apiFetch(
+              config,
+              `/search?q=${encodeURIComponent(query)}&count=${count}`,
             );
             if (!res.ok) {
               const body = await res.text();

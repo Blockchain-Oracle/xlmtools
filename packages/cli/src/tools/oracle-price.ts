@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { ok, err } from "../lib/format.js";
 import { logger } from "../lib/logger.js";
 
@@ -27,7 +28,7 @@ export function registerOraclePriceTool(server: McpServer): void {
       try {
         const config = loadOrCreateWallet();
         const params = new URLSearchParams({ asset, feed });
-        const res = await fetch(`${config.apiUrl}/oracle-price?${params}`);
+        const res = await apiFetch(config, `/oracle-price?${params}`);
         if (!res.ok) {
           const body = await res.text();
           return err(`Oracle error ${res.status}: ${body}`);

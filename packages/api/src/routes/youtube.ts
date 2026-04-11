@@ -71,7 +71,7 @@ youtubeRoute.get("/", async (req, res) => {
 
     const captionBody = { videoId, captions, count: captions.length };
     const captionWrapped = result.withReceipt(Response.json(captionBody));
-    const captionWebRes = withReceiptBody(captionWrapped as globalThis.Response, captionBody, "youtube");
+    const captionWebRes = withReceiptBody(req, captionWrapped as globalThis.Response, captionBody, "youtube");
     await sendWebResponse(captionWebRes, res);
     return;
   }
@@ -122,6 +122,6 @@ youtubeRoute.get("/", async (req, res) => {
 
   const searchBody = { query, results, count: results.length };
   const searchWrapped = result.withReceipt(Response.json(searchBody));
-  const searchWebRes = withReceiptBody(searchWrapped as globalThis.Response, searchBody, "youtube");
+  const searchWebRes = withReceiptBody(req, searchWrapped as globalThis.Response, searchBody, "youtube");
   await sendWebResponse(searchWebRes, res);
 });

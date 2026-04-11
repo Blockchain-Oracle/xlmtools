@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { loadOrCreateWallet } from "../lib/wallet.js";
+import { apiFetch } from "../lib/api-fetch.js";
 import { ok, err } from "../lib/format.js";
 
 export function registerCryptoTool(server: McpServer): void {
@@ -16,7 +17,7 @@ export function registerCryptoTool(server: McpServer): void {
     async ({ ids, vs_currency }) => {
       try {
         const config = loadOrCreateWallet();
-        const res = await fetch(`${config.apiUrl}/crypto?ids=${encodeURIComponent(ids)}&vs_currency=${vs_currency}`);
+        const res = await apiFetch(config, `/crypto?ids=${encodeURIComponent(ids)}&vs_currency=${vs_currency}`);
         if (!res.ok) return err(`Crypto API error: ${res.status}`);
         return ok(await res.json());
       } catch (e) { return err(String(e)); }

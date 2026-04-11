@@ -53,6 +53,6 @@ scrapeRoute.get("/", async (req, res) => {
 
   const body = { url, content, truncated };
   const wrapped = result.withReceipt(Response.json(body));
-  const webRes = withReceiptBody(wrapped as globalThis.Response, body, "scrape");
+  const webRes = withReceiptBody(req, wrapped as globalThis.Response, body, "scrape");
   await sendWebResponse(webRes, res);
 });

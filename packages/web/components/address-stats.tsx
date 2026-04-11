@@ -1,169 +1,190 @@
 "use client";
 
-import useSWR from "swr";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { NumberTicker } from "@/components/ui/number-ticker";
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Loader2, Wallet, Coins, Layers, Users } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, ExternalLink, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  TransactionRow,
+  apiToTransaction,
+  type ApiCallEntry,
+  type Transaction,
+} from "@/components/transaction-row";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
+const PAGE_SIZE = 7;
 
-interface StatCardProps {
-  label: string;
-  value: number;
-  suffix?: string;
-  prefix?: string;
-  icon: React.ElementType;
-}
-
-function StatCard({ label, value, suffix, prefix, icon: Icon }: StatCardProps) {
-  return (
-    <Card className="border border-border/50 bg-card">
-      <CardContent className="p-6 flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
-            {label}
-          </p>
-          <div className="size-8 flex items-center justify-center rounded-lg bg-muted/50 text-muted-foreground border border-border/50">
-            <Icon className="size-4" />
-          </div>
-        </div>
-        <p className="text-3xl font-bold text-foreground tracking-tight">
-          {prefix}
-          <NumberTicker value={value} className="text-foreground" />
-          {suffix}
-        </p>
-      </CardContent>
-    </Card>
-  );
-}
-
-interface BalanceEntry {
-  asset: string;
-  balance: string;
-  asset_code?: string;
-}
-
-interface AccountData {
+interface ByClientResponse {
   address: string;
-  xlm_balance: string;
-  total_assets: number;
-  balances: BalanceEntry[];
-  home_domain?: string | null;
-  signers: number;
-  error?: string;
+  calls: ApiCallEntry[];
+  total: number;
+  limit: number;
+  offset: number;
 }
 
 export function AddressStats({ address }: { address: string }) {
-  const { data, error, isLoading } = useSWR<AccountData>(
-    `${API_URL}/stellar-account?address=${address}`,
-    fetcher
-  );
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(0);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [connected, setConnected] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
+  const isLivePage = page === 0;
+  const liveRefresh = autoRefresh && isLivePage;
   const explorerUrl = `https://stellar.expert/explorer/testnet/account/${address}`;
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-32">
-        <Loader2 className="size-8 animate-spin text-muted-foreground/40" />
-      </div>
-    );
-  }
+  const fetchCalls = useCallback(
+    async (pageToFetch: number) => {
+      try {
+        const offset = pageToFetch * PAGE_SIZE;
+        const res = await fetch(
+          `${API_URL}/stats/by-client?address=${encodeURIComponent(
+            address,
+          )}&limit=${PAGE_SIZE}&offset=${offset}`,
+        );
+        if (!res.ok) return;
+        const data = (await res.json()) as ByClientResponse;
+        setTransactions(data.calls.map(apiToTransaction));
+        setTotal(data.total);
+        setConnected(true);
+        setLoaded(true);
+      } catch {
+        setConnected(false);
+        setLoaded(true);
+      }
+    },
+    [address],
+  );
 
-  if (error || data?.error) {
-    return (
-      <Card className="border-destructive/20 bg-destructive/5">
-        <CardContent className="p-6">
-          <p className="text-sm text-destructive font-medium text-center">
-            {data?.error ?? "Failed to load account data. Is the API server running?"}
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
+  // Reset to page 0 whenever the address changes (navigating between addresses)
+  useEffect(() => {
+    setPage(0);
+  }, [address]);
 
-  if (!data) return null;
+  useEffect(() => {
+    fetchCalls(page);
+  }, [fetchCalls, page]);
 
-  const xlmBalance = parseFloat(data.xlm_balance) || 0;
-  const usdcBalance =
-    data.balances.find(
-      (b: BalanceEntry) => b.asset === "USDC" || b.asset_code === "USDC"
-    );
-  const usdcAmount = usdcBalance ? parseFloat(usdcBalance.balance) || 0 : 0;
+  useEffect(() => {
+    if (!liveRefresh) return;
+    const id = setInterval(() => fetchCalls(0), 5000);
+    return () => clearInterval(id);
+  }, [liveRefresh, fetchCalls]);
+
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const canPrev = page > 0;
+  const canNext = page < totalPages - 1;
+  const windowStart = total === 0 ? 0 : page * PAGE_SIZE + 1;
+  const windowEnd = Math.min(total, (page + 1) * PAGE_SIZE);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Address header */}
-      <div className="flex items-center justify-between gap-4 flex-wrap border-b border-border/40 pb-6">
-        <div className="flex flex-col gap-1.5">
+      <div className="flex items-start justify-between gap-4 flex-wrap border-b border-border/40 pb-6">
+        <div className="flex flex-col gap-1.5 min-w-0">
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
-            Account Address
+            Account
           </span>
-          <div className="flex items-center gap-2">
-            <code className="text-sm font-mono text-foreground font-medium bg-muted/50 px-2 py-0.5 rounded border border-border/50 break-all">
+          <div className="flex items-center gap-2 flex-wrap">
+            <code className="text-xs sm:text-sm font-mono text-foreground font-medium bg-muted/50 px-2 py-0.5 rounded border border-border/50 break-all">
               {address}
             </code>
             <a
               href={explorerUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors p-1 hover:bg-muted rounded-md"
+              className="text-muted-foreground hover:text-foreground transition-colors p-1 hover:bg-muted rounded-md shrink-0"
+              title="View on Stellar Expert"
             >
               <ExternalLink className="size-4" />
             </a>
           </div>
         </div>
-        {data.home_domain && (
-          <Badge variant="secondary" className="px-3 py-1 font-mono text-[11px] bg-muted/80 text-muted-foreground border border-border/50 uppercase tracking-wider">
-            {data.home_domain}
-          </Badge>
-        )}
       </div>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="XLM Balance" value={Math.floor(xlmBalance)} suffix=" XLM" icon={Coins} />
-        <StatCard label="USDC Balance" value={Math.floor(usdcAmount)} prefix="$" icon={Wallet} />
-        <StatCard label="Assets Held" value={data.total_assets} icon={Layers} />
-        <StatCard label="Signers" value={data.signers} icon={Users} />
+      {/* Summary + Live toggle */}
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs text-muted-foreground font-mono">
+          {!loaded
+            ? "Loading..."
+            : !connected
+              ? "Waiting for API connection..."
+              : total > 0
+                ? `${windowStart}–${windowEnd} of ${total} calls`
+                : "No activity yet"}
+        </p>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setAutoRefresh(!autoRefresh)}
+          disabled={!isLivePage}
+          className={cn(
+            "gap-1.5 text-xs font-mono",
+            liveRefresh && "text-foreground",
+          )}
+          title={
+            isLivePage
+              ? "Toggle live updates"
+              : "Live updates pause on history pages"
+          }
+        >
+          <RefreshCw className={cn("size-3", liveRefresh && "animate-spin")} />
+          {liveRefresh ? "Live" : "Paused"}
+        </Button>
       </div>
 
-      {/* Balance list */}
-      <Card className="border border-border/50 bg-card overflow-hidden">
-        <CardHeader className="bg-muted/30 border-b border-border/40 px-6 py-4">
-          <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-            <Layers className="size-3.5" />
-            All Balances
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="divide-y divide-border/40">
-            {data.balances.map((b: BalanceEntry, i: number) => (
-              <div
-                key={i}
-                className={cn(
-                  "flex items-center justify-between px-6 py-4",
-                  "hover:bg-muted/20 transition-colors"
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="size-7 flex items-center justify-center rounded bg-muted/50 text-[10px] font-bold font-mono text-muted-foreground border border-border/50">
-                    { (b.asset ?? b.asset_code ?? "XLM").slice(0, 3).toUpperCase() }
-                  </div>
-                  <span className="text-sm font-semibold text-foreground tracking-tight">
-                    {b.asset ?? b.asset_code ?? "XLM"}
-                  </span>
-                </div>
-                <span className="text-sm font-mono font-medium text-muted-foreground bg-muted/30 px-2 py-0.5 rounded">
-                  {b.balance}
-                </span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* History list or empty state */}
+      {transactions.length > 0 ? (
+        <div className="flex flex-col gap-3">
+          {transactions.map((tx, i) => (
+            <TransactionRow
+              key={tx.id}
+              tx={tx}
+              isLatest={isLivePage && i === 0}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-xl border border-border/40 bg-card/50 px-6 py-16 text-center">
+          <p className="text-sm text-muted-foreground">
+            {loaded && connected
+              ? "No activity yet for this address. Run any tool to see it here."
+              : "Loading history..."}
+          </p>
+        </div>
+      )}
+
+      {/* Pagination controls */}
+      {totalPages > 1 && (
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={!canPrev}
+            className="gap-1.5 text-xs font-mono"
+          >
+            <ChevronLeft className="size-3.5" />
+            Prev
+          </Button>
+
+          <span className="text-xs text-muted-foreground font-mono tabular-nums">
+            Page {page + 1} of {totalPages}
+          </span>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+            disabled={!canNext}
+            className="gap-1.5 text-xs font-mono"
+          >
+            Next
+            <ChevronRight className="size-3.5" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

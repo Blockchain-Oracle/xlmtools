@@ -79,6 +79,6 @@ stocksRoute.get("/", async (req, res) => {
     latest_trading_day: quote["07. latest trading day"],
   };
   const wrapped = result.withReceipt(Response.json(body));
-  const webRes = withReceiptBody(wrapped as globalThis.Response, body, "stocks");
+  const webRes = withReceiptBody(req, wrapped as globalThis.Response, body, "stocks");
   await sendWebResponse(webRes, res);
 });

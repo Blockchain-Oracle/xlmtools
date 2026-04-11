@@ -211,6 +211,11 @@ async function main() {
     process.stderr.write(`  Tool: ${tool} · Cost: $${TOOL_PRICES[tool]} USDC\n`);
   }
 
+  // Attribute the call to this wallet for /stats/by-client lookups
+  init.headers = {
+    ...(init.headers as Record<string, string> | undefined),
+    "X-XLMTools-Client": config.stellarPublicKey,
+  };
   const res = await fetch(url, init);
 
   if (!res.ok) {
