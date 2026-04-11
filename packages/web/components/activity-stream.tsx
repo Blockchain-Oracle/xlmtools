@@ -55,18 +55,18 @@ function TransactionRow({ tx, isLatest }: { tx: Transaction; isLatest: boolean }
   return (
     <div
       className={cn(
-        "grid grid-cols-[1fr_auto_auto] items-center gap-6 px-5 py-4",
+        "grid grid-cols-[1fr_auto_auto] items-center gap-3 sm:gap-6 px-3 sm:px-5 py-3 sm:py-4",
         "rounded-xl border border-border/40 bg-card/50",
         "hover:bg-card hover:border-foreground/10 transition-all duration-200 group",
       )}
     >
-      <div className="flex items-center gap-6 min-w-0">
-        <span className="text-[11px] text-muted-foreground/60 font-mono w-20 shrink-0 tabular-nums font-medium uppercase tracking-wider">
+      <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+        <span className="text-[10px] sm:text-[11px] text-muted-foreground/60 font-mono w-14 sm:w-20 shrink-0 tabular-nums font-medium uppercase tracking-wider">
           {tx.time}
         </span>
         <div className="flex items-center gap-2 min-w-0">
           <div className={cn("size-2 rounded-full bg-emerald-500 shrink-0", isLatest && "animate-pulse")} />
-          <span className="text-sm font-bold text-foreground truncate font-mono tracking-tight">
+          <span className="text-xs sm:text-sm font-bold text-foreground truncate font-mono tracking-tight">
             {tx.tool}
           </span>
         </div>

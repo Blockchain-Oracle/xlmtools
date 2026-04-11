@@ -5,7 +5,7 @@ const stats = [
   {
     label: "Tools",
     display: "number" as const,
-    numValue: 20,
+    numValue: 21,
     textValue: "",
   },
   {
@@ -29,21 +29,21 @@ export function StatsBar() {
         <div
           key={label}
           className={cn(
-            "flex flex-col items-center gap-3 py-16 px-8",
-            index > 0 && "border-l border-border"
+            "flex flex-col items-center gap-2 sm:gap-3 py-10 sm:py-16 px-3 sm:px-8",
+            index > 0 && "border-l border-border",
           )}
         >
-          <div className="font-mono text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tighter text-foreground tabular-nums leading-none">
+          <div className="font-mono text-3xl sm:text-5xl lg:text-7xl font-bold tracking-tighter text-foreground tabular-nums leading-none">
             {display === "number" ? (
               <NumberTicker
                 value={numValue}
-                className="font-mono text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tighter text-foreground tabular-nums"
+                className="font-mono text-3xl sm:text-5xl lg:text-7xl font-bold tracking-tighter text-foreground tabular-nums"
               />
             ) : (
               textValue
             )}
           </div>
-          <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground text-center">
+          <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.15em] sm:tracking-[0.25em] uppercase text-muted-foreground text-center">
             {label}
           </span>
         </div>

@@ -84,7 +84,7 @@ export function ToolCard({ tool, featured = false }: ToolCardProps) {
       onClick={handleCopy}
       title={`Copy prompt: ${tool.title}`}
       className={cn(
-        "group w-full text-left flex items-center gap-3.5 px-4 py-3.5 rounded-xl border transition-all duration-200 cursor-pointer",
+        "group w-full text-left flex items-center gap-3 sm:gap-3.5 px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border transition-all duration-200 cursor-pointer min-w-0",
         copied
           ? "border-emerald-500/50 bg-emerald-500/5 dark:bg-emerald-500/5"
           : featured

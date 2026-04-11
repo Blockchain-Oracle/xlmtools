@@ -87,7 +87,7 @@ function RotatingCard<T extends { command: string; hue: number }>({
 
   return (
     <div
-      className="flex flex-col h-full"
+      className="flex flex-col lg:h-full gap-5 lg:gap-0"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -96,7 +96,7 @@ function RotatingCard<T extends { command: string; hue: number }>({
         <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-muted-foreground/60">
           {eyebrow}
         </span>
-        <h3 className="text-2xl font-bold text-foreground tracking-tight mt-1">
+        <h3 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight mt-1">
           {title}
         </h3>
         <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
@@ -104,8 +104,8 @@ function RotatingCard<T extends { command: string; hue: number }>({
         </p>
       </div>
 
-      {/* Spacer — pushes command group to bottom for alignment */}
-      <div className="flex-1 min-h-6" />
+      {/* Spacer — pushes command group to bottom for alignment ON DESKTOP ONLY */}
+      <div className="hidden lg:block lg:flex-1 lg:min-h-6" />
 
       {/* Current option label */}
       <div className="flex items-center gap-2 h-4 mb-3">
@@ -139,7 +139,7 @@ function RotatingCard<T extends { command: string; hue: number }>({
           borderColor: `oklch(0.7 0.08 ${current.hue} / 0.4)`,
         }}
         transition={{ duration: 0.8 }}
-        className="relative flex items-center justify-between gap-3 rounded-xl border bg-card px-5 py-4 overflow-hidden"
+        className="relative flex items-start lg:items-center justify-between gap-2 sm:gap-3 rounded-xl border bg-card px-3 sm:px-5 py-3 sm:py-4 overflow-hidden min-w-0"
       >
         <motion.div
           className="absolute inset-0 pointer-events-none"
@@ -149,7 +149,7 @@ function RotatingCard<T extends { command: string; hue: number }>({
           transition={{ duration: 1.2 }}
         />
 
-        <div className="flex-1 min-w-0 overflow-hidden relative z-10">
+        <div className="flex-1 min-w-0 relative z-10">
           <AnimatePresence mode="wait">
             <motion.code
               key={current.command}
@@ -157,7 +157,7 @@ function RotatingCard<T extends { command: string; hue: number }>({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.2 }}
-              className="font-mono text-sm text-foreground select-all block truncate"
+              className="font-mono text-[11px] sm:text-sm text-foreground select-all block break-all lg:break-normal lg:truncate leading-snug"
             >
               {current.command}
             </motion.code>
@@ -167,7 +167,7 @@ function RotatingCard<T extends { command: string; hue: number }>({
         <button
           onClick={handleCopy}
           className={cn(
-            "relative z-10 shrink-0 flex items-center gap-1.5 font-mono text-[11px] tracking-wider uppercase px-2.5 py-1 rounded-md transition-all",
+            "relative z-10 shrink-0 flex items-center justify-center gap-1.5 font-mono text-[10px] sm:text-[11px] tracking-wider uppercase size-8 sm:size-auto sm:px-2.5 sm:py-1 rounded-md transition-all",
             copied
               ? "text-emerald-500"
               : "text-muted-foreground hover:text-foreground hover:bg-muted/60",
@@ -177,12 +177,12 @@ function RotatingCard<T extends { command: string; hue: number }>({
           {copied ? (
             <>
               <Check className="size-3.5" />
-              Copied
+              <span className="hidden sm:inline">Copied</span>
             </>
           ) : (
             <>
               <Copy className="size-3.5" />
-              Copy
+              <span className="hidden sm:inline">Copy</span>
             </>
           )}
         </button>

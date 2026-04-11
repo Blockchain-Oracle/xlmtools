@@ -24,11 +24,11 @@ export default async function SkillPage() {
     <main className="flex flex-1 flex-col">
       {/* Header */}
       <div className="w-full bg-secondary border-b border-border">
-        <div className="max-w-4xl mx-auto px-6 py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <span className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase">
             Agent Skill
           </span>
-          <h1 className="mt-3 text-5xl sm:text-6xl font-bold tracking-tighter text-foreground leading-[0.9]">
+          <h1 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-foreground leading-[0.9]">
             The skill.
           </h1>
           <p className="mt-4 text-sm text-muted-foreground max-w-lg">
@@ -41,7 +41,7 @@ export default async function SkillPage() {
       </div>
 
       {/* Skill content */}
-      <div className="max-w-4xl mx-auto w-full px-6 py-12">
+      <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 py-10 sm:py-12">
         <SkillContent content={content} />
       </div>
     </main>
