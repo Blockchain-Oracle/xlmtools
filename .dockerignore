@@ -1,12 +1,16 @@
-# Dependencies
+# Dependencies — never ship, Docker reinstalls fresh
 node_modules
 packages/*/node_modules
+.pnpm-store
 
-# Build output
+# Build output — nixpacks/Docker generates these inside the image
 dist
 packages/*/dist
+**/.next
+**/.turbo
+packages/docs/public/_pagefind
 
-# Environment files
+# Environment files — secrets live in Coolify, not the tarball
 .env
 *.env
 packages/**/.env
@@ -15,11 +19,14 @@ packages/**/*.env
 # Version control
 .git
 .gitignore
+.github
 
 # Editor and OS
 .DS_Store
 .vscode
+.idea
 *.log
+pnpm-debug.log
 
 # Test artifacts
 coverage
@@ -27,3 +34,15 @@ packages/*/coverage
 
 # Local dev
 *.local
+deployment.md
+
+# Internal assets / notes — not needed at runtime, just bloat the image
+screenshots
+research
+docs/superpowers
+.agents
+.claude
+.mcp.json
+skills-lock.json
+tests
+VIDEO-SCRIPT.md
