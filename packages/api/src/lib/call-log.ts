@@ -7,10 +7,25 @@ export interface CallLogEntry {
   timestamp: string;
   /**
    * Stellar G-address that made the call, read from the
-   * `X-XLMTools-Client` request header. Self-declared for free calls;
-   * for paid calls the Stellar tx in `tx_hash` is the cryptographic
-   * ground truth. May be `undefined` for requests from clients that
-   * don't stamp the header (e.g. raw curl, older CLI versions).
+   * `X-XLMTools-Client` request header.
+   *
+   * **This field is spoofable for BOTH free and paid calls** — anyone
+   * can set `X-XLMTools-Client` to any address on any request. For
+   * free calls there's no economic value to spoof. For paid calls,
+   * `tx_hash` is the cryptographic ground truth (the Stellar tx
+   * source account is the real payer) — but an attacker paying with
+   * their own wallet and stamping a victim's address will have the
+   * entry appear in the victim's /stats/by-client history, linked to
+   * a legitimate-looking tx whose actual source account on Stellar
+   * Expert is the attacker's, not the victim's.
+   *
+   * Always cross-check against `tx_hash` source account on-chain
+   * when integrity matters. For the demo/hackathon use case this
+   * tradeoff is fine (the feature is a convenience audit log, not
+   * an authoritative billing record).
+   *
+   * May be `undefined` for requests from clients that don't stamp
+   * the header (raw curl, older CLI versions).
    */
   client?: string;
   // Only present when paid === true
@@ -42,6 +57,10 @@ export function getClient(req: Request): string | undefined {
  */
 export function recordCall(entry: Omit<CallLogEntry, "paid">): void {
   log.push({ ...entry, paid: true });
+  // FIFO cap: older entries age out once we hit MAX_ENTRIES. Note that
+  // once the log is at capacity, pagination `offset` values against
+  // /stats/recent become approximate — entries scroll off under the
+  // cursor. Live refresh on page 1 masks this for the main view.
   if (log.length > MAX_ENTRIES) log.shift();
   logger.debug(
     { tool: entry.tool, amount: entry.amount, client: entry.client },
@@ -69,6 +88,13 @@ export function recordFreeCall(tool: string, client?: string): void {
  * Express middleware that records a free tool call on 2xx responses.
  * Attach before each free-tool route mount:
  *   app.use("/crypto", withFreeStats("crypto"), cryptoRoute);
+ *
+ * Timing note: `res.on("finish", ...)` fires after the response is
+ * fully flushed to the socket, which happens AFTER any async route
+ * handler resolves — so this works for async handlers too. The
+ * statusCode check inside the listener gates logging to only 2xx
+ * responses, so `apiError(res, 400, ...)` calls correctly do NOT
+ * land in the call log.
  */
 export function withFreeStats(tool: string) {
   return (req: Request, res: Response, next: NextFunction): void => {

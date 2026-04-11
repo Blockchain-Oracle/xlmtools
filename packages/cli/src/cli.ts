@@ -4,6 +4,7 @@ import { Mppx } from "mppx/client";
 import { stellar } from "@stellar/mpp/charge/client";
 import { Horizon } from "@stellar/stellar-sdk";
 import { loadOrCreateWallet, getKeypair } from "./lib/wallet.js";
+import { apiFetch } from "./lib/api-fetch.js";
 import { TOOL_PRICES } from "./lib/config.js";
 import { logger } from "./lib/logger.js";
 
@@ -211,12 +212,11 @@ async function main() {
     process.stderr.write(`  Tool: ${tool} · Cost: $${TOOL_PRICES[tool]} USDC\n`);
   }
 
-  // Attribute the call to this wallet for /stats/by-client lookups
-  init.headers = {
-    ...(init.headers as Record<string, string> | undefined),
-    "X-XLMTools-Client": config.stellarPublicKey,
-  };
-  const res = await fetch(url, init);
+  // Route through apiFetch so the X-XLMTools-Client header (and any
+  // future cross-cutting concerns like retries / user-agent) are
+  // applied consistently with the MCP tools. apiFetch detects the
+  // full-URL form and passes it straight through.
+  const res = await apiFetch(config, url, init);
 
   if (!res.ok) {
     const text = await res.text();

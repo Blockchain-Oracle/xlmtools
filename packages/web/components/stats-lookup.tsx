@@ -15,8 +15,10 @@ export function StatsLookup() {
     const trimmed = address.trim();
     if (!trimmed) return;
     // No format validation — the empty state on the history page handles
-    // typos (shows "No activity yet for this address").
-    router.push(`/stats/${trimmed}`);
+    // typos (shows "No activity yet for this address"). Encode the
+    // segment so stray "/", "?", "#" in a pasted address don't break
+    // Next.js routing or silently truncate the value.
+    router.push(`/stats/${encodeURIComponent(trimmed)}`);
   }
 
   return (

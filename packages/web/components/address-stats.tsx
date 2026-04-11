@@ -43,7 +43,14 @@ export function AddressStats({ address }: { address: string }) {
             address,
           )}&limit=${PAGE_SIZE}&offset=${offset}`,
         );
-        if (!res.ok) return;
+        if (!res.ok) {
+          // Don't leave `loaded` false on non-2xx — otherwise the UI
+          // stays stuck on "Loading..." forever when the API is up
+          // but returning errors.
+          setConnected(false);
+          setLoaded(true);
+          return;
+        }
         const data = (await res.json()) as ByClientResponse;
         setTransactions(data.calls.map(apiToTransaction));
         setTotal(data.total);
@@ -57,9 +64,13 @@ export function AddressStats({ address }: { address: string }) {
     [address],
   );
 
-  // Reset to page 0 whenever the address changes (navigating between addresses)
+  // Reset view state when the address changes so the user doesn't
+  // briefly see the previous address's data under the new header.
   useEffect(() => {
     setPage(0);
+    setTransactions([]);
+    setTotal(0);
+    setLoaded(false);
   }, [address]);
 
   useEffect(() => {
