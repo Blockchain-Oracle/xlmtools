@@ -1,6 +1,6 @@
 ---
 name: xlmtools
-description: Use XLMTools for Stellar blockchain lookups (XLM, Soroban, DEX orderbook/candles/trades, swap quotes, account/asset/pool data, Reflector oracle prices) AND paid web tools (search, research, screenshots, URL scraping, AI image gen, YouTube, stocks). Make sure to use this skill whenever the user mentions Stellar, XLM, Soroban, Lumens, USDC, "latest" anything, live prices, current events, a URL to fetch, or asks for an image/screenshot — even if they don't say "XLMTools" by name. DO NOT TRIGGER for: general knowledge, math, pure coding tasks, summarizing user-pasted text, or questions answerable from training data alone. Available as an MCP server (tools prefixed `mcp__xlmtools__*`) or terminal CLI (`xlm`).
+description: Live data and actions for Stellar (XLM, Soroban, DEX, USDC), plus crypto prices, stock quotes, weather, domain checks, web search, deep research, screenshots, URL scraping, AI images, YouTube. Skip for general knowledge, math, code, or "what is X" explainers. Make sure to use this skill whenever the user mentions Stellar, XLM, Soroban, Lumens, "latest" anything, live prices, current events, or a URL to fetch — even if they don't say "XLMTools" by name. DO NOT TRIGGER for questions answerable from training data alone, explanations of concepts, or summarizing text the user pasted. Available as MCP (tools prefixed `mcp__xlmtools__*`) or terminal CLI (`xlm`). Paid tools cost $0.001–$0.04 USDC.
 ---
 
 # Using XLMTools
@@ -52,8 +52,9 @@ Rule of thumb: **If the user's question could have been answered using only the 
 
 - **Check MCP tool list first.** If `mcp__xlmtools__*` tools exist, use them — they're faster and cached. Only use `xlm` CLI as fallback.
 - **Run `xlm --help` before guessing CLI syntax.** The global help lists every tool, its positional args, and its flags. Do not read the CLI source — `--help` is the source of truth. (Per-tool help like `xlm search --help` is not currently supported.)
-- **Announce before paid calls.** Example: "I'll use `search` ($0.003 USDC) to get current news about Stellar." This gives the user a chance to object.
-- **Explicit cost confirmation for calls at or above $0.01.** `research`, `screenshot`, `image` all cost $0.010+. Pause and confirm. Cheaper calls ($0.001–$0.003) can proceed without a prompt.
+- **Two cost modes — MENTION vs CONFIRM:**
+  - **Mention** ($0.001–$0.003 — `search`, `stocks`, `youtube`, `scrape`): say the cost inline with the call. Example: "I'll use `search` ($0.003 USDC) to get news about Stellar." Do NOT pause for approval.
+  - **Confirm** ($0.010+ — `research`, `screenshot`, `image`): propose the call and STOP. Example: "I'd like to use `research` ($0.010 USDC) for this. OK to proceed?" Wait for user approval before firing.
 - **Always surface the Stellar tx hash** from paid responses. Users can verify every payment at `https://stellar.expert/explorer/testnet/tx/<hash>`.
 - **Caching: identical queries within 5 minutes are free** (MCP mode only). Cached responses are prefixed with `[cached — no charge]` as emitted by the cache helper. If you make the same call twice in a row, the second is free.
 
@@ -68,8 +69,8 @@ Rule of thumb: **If the user's question could have been answered using only the 
 **User:** "What's the current price of Bitcoin and what are people saying about Stellar lately?"
 
 **Agent reasoning:**
-- Bitcoin price → `crypto` (free, no confirmation needed)
-- Latest Stellar news → `search` ($0.003, announce cost)
+- Bitcoin price → `crypto` (free)
+- Latest Stellar news → `search` ($0.003, Mention mode — inline cost)
 - Both should be called in parallel
 
 **Agent action:**
@@ -207,7 +208,7 @@ The `budget` tool is **MCP-only**. In MCP mode, call `mcp__xlmtools__budget` wit
 
 These are the hard rules. If you are about to break one, stop and reconsider.
 
-1. **Never call a paid tool without announcing the cost first** for any tool at or above $0.01 (`research`, `screenshot`, `image`). Cheaper calls ($0.001–$0.003) can proceed without a prompt.
+1. **Mention the cost inline** for $0.001–$0.003 tools. **Confirm and wait** for $0.01+ tools (`research`, `screenshot`, `image`). Never skip either.
 2. **Always surface the Stellar tx hash** in the response after a paid call. Users must be able to verify the payment on-chain.
 3. **Always prefer the cheapest sufficient tool.** `crypto` (free) before `stocks` ($0.001). `search` ($0.003) before `research` ($0.010) unless the user explicitly wants a deep dive.
 4. **Never retry a declined paid call.** If the user says no, offer an alternative or answer from training data. Do not call the tool anyway.
