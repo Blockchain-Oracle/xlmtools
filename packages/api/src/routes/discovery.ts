@@ -59,7 +59,7 @@ discoveryRoute.get("/pulsar.json", (_req, res) => {
       "Auto-wallet — testnet wallet created and funded on first run",
     ],
     links: {
-      github: "https://github.com/pulsarmcp/pulsar",
+      github: "https://github.com/Blockchain-Oracle/pulsar",
       docs: "/docs",
       stats: "/stats",
       health: "/health",
@@ -99,7 +99,7 @@ ${free.map((t) => `- ${t.name}: ${t.description}`).join("\n")}
 ## Links
 - API: /health, /stats, /stats/recent
 - Discovery: /.well-known/pulsar.json
-- GitHub: https://github.com/pulsarmcp/pulsar
+- GitHub: https://github.com/Blockchain-Oracle/pulsar
 `;
 
   res.type("text/plain").send(text);

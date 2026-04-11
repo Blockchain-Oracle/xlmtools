@@ -50,11 +50,11 @@ export default async function RootLayout({
           navbar={
             <Navbar
               logo={<Logo />}
-              projectLink="https://github.com/pulsarmcp/pulsar"
+              projectLink="https://github.com/Blockchain-Oracle/pulsar"
             />
           }
           pageMap={pageMap}
-          docsRepositoryBase="https://github.com/pulsarmcp/pulsar/tree/main/packages/docs"
+          docsRepositoryBase="https://github.com/Blockchain-Oracle/pulsar/tree/main/packages/docs"
           editLink="Edit this page on GitHub"
           sidebar={{ defaultMenuCollapseLevel: 1 }}
           footer={

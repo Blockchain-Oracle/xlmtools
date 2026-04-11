@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 // TODO: point docs link to deployed docs URL once live (e.g. docs.pulsar.tools)
-const DOCS_URL = "https://github.com/pulsarmcp/pulsar/tree/main/packages/docs";
+const DOCS_URL = "https://github.com/Blockchain-Oracle/pulsar/tree/main/packages/docs";
 
 const navLinks = [
   { href: "/tools", label: "Tools" },
@@ -82,7 +82,7 @@ export function Navbar() {
           )}
 
           <a
-            href="https://github.com/pulsarmcp/pulsar"
+            href="https://github.com/Blockchain-Oracle/pulsar"
             target="_blank"
             rel="noopener noreferrer"
             className="ml-1 flex items-center gap-1.5 px-2.5 py-2 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"

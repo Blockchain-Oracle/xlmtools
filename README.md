@@ -41,7 +41,7 @@ pulsar-cli --help
 Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.
 
 # Or via CLI
-npx skills add github:pulsarmcp/pulsar --skill pulsar
+npx skills add github:Blockchain-Oracle/pulsar --skill pulsar
 ```
 
 The skill works natively in Claude Code, Cursor 2.4+, Windsurf, VS Code Copilot, Codex CLI, Gemini CLI, Goose, and Cline.
@@ -101,7 +101,7 @@ PULSAR also ships as an Agent Skill — procedural instructions that teach Claud
 
 ```bash
 # 1. Via the community skills CLI
-pnpm dlx skills add github:pulsarmcp/pulsar --skill pulsar
+pnpm dlx skills add github:Blockchain-Oracle/pulsar --skill pulsar
 
 # 2. Via prompt — paste into any agent
 Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.

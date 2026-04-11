@@ -39,9 +39,9 @@ interface SkillOption {
 
 const SKILL_OPTIONS: SkillOption[] = [
   { label: "Prompt", command: "Read https://pulsar.tools/skill.md and follow the instructions.", hue: 180 },
-  { label: "pnpm dlx", command: "pnpm dlx skills add github:pulsarmcp/pulsar --skill pulsar", hue: 20 },
-  { label: "npx", command: "npx skills add github:pulsarmcp/pulsar --skill pulsar", hue: 300 },
-  { label: "bunx", command: "bunx skills add github:pulsarmcp/pulsar --skill pulsar", hue: 80 },
+  { label: "pnpm dlx", command: "pnpm dlx skills add github:Blockchain-Oracle/pulsar --skill pulsar", hue: 20 },
+  { label: "npx", command: "npx skills add github:Blockchain-Oracle/pulsar --skill pulsar", hue: 300 },
+  { label: "bunx", command: "bunx skills add github:Blockchain-Oracle/pulsar --skill pulsar", hue: 80 },
 ];
 
 const ROTATE_MS = 3500;

@@ -18,7 +18,7 @@ const INSTALL_METHODS = [
     label: "CLI install",
     description:
       "Uses the vercel-labs/skills CLI to install to the right path for whichever agents you have.",
-    command: "pnpm dlx skills add github:pulsarmcp/pulsar --skill pulsar",
+    command: "pnpm dlx skills add github:Blockchain-Oracle/pulsar --skill pulsar",
   },
   {
     id: "manual",

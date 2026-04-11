@@ -3,7 +3,7 @@ import { BookOpen } from "lucide-react";
 const year = new Date().getFullYear();
 
 // TODO: point to deployed docs URL once live (e.g. docs.pulsar.tools)
-const DOCS_URL = "https://github.com/pulsarmcp/pulsar/tree/main/packages/docs";
+const DOCS_URL = "https://github.com/Blockchain-Oracle/pulsar/tree/main/packages/docs";
 
 const links = [
   {
