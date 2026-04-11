@@ -15,10 +15,10 @@ RUN pnpm install --frozen-lockfile
 
 # Copy source and build only the API package
 COPY packages/api/ ./packages/api/
-RUN pnpm --filter @pulsar/api build
+RUN pnpm --filter @xlmtools/api build
 
 # Prune dev dependencies before copying to production stage
-RUN pnpm --filter @pulsar/api --prod deploy /app/prod
+RUN pnpm --filter @xlmtools/api --prod deploy /app/prod
 
 # Stage 2: Production
 FROM node:22-alpine AS production

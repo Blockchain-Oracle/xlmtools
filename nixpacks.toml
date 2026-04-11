@@ -1,0 +1,54 @@
+# XLMTools monorepo — Nixpacks build config for Coolify / Railway / Render
+#
+# One config, three deployable services. Set the APP_NAME env var per Coolify
+# service so each deploy builds and runs the right workspace:
+#
+#   api   → APP_NAME=@xlmtools/api    (Express 5 API server, port $PORT)
+#   web   → APP_NAME=@xlmtools/web    (Next.js 16 frontend)
+#   docs  → APP_NAME=@xlmtools/docs   (Nextra 4 docs site)
+#
+# The CLI (packages/cli) is NOT deployed here — it's published to npm as
+# @xlmtools/cli and installed locally by users. Ignore it in Coolify.
+#
+# IMPORTANT: In Coolify, set "Base Directory" to / (repo root), NOT
+# packages/<name>. Nixpacks needs to see the workspace root so pnpm can
+# resolve the monorepo. The APP_NAME filter picks the target workspace.
+
+# ── Install phase ────────────────────────────────────────────────
+# onlyIncludeFiles is a cache-invalidation trick: nixpacks will only
+# rebuild the install layer when one of these files changes. Anything
+# else (source edits, README tweaks, SKILL.md) won't bust the install
+# cache, which keeps Coolify rebuilds fast.
+#
+# We need: root manifest + lockfile + workspace config + every deployable
+# package.json (so pnpm can resolve the workspace graph). If you add a
+# new workspace package, list it here.
+[phases.install]
+cmds = ["NODE_ENV=development pnpm install --frozen-lockfile"]
+cacheDirectories = [".pnpm-store"]
+onlyIncludeFiles = [
+  "package.json",
+  "pnpm-lock.yaml",
+  "pnpm-workspace.yaml",
+  "packages/api/package.json",
+  "packages/web/package.json",
+  "packages/docs/package.json",
+  "packages/cli/package.json",
+  "packages/skills/package.json"
+]
+
+# ── Build phase ──────────────────────────────────────────────────
+# pnpm --filter builds only the target workspace. None of api/web/docs
+# depend on each other, so no topological ordering is needed.
+# (docs' build script also runs pagefind --site .next/server/app → that
+# happens automatically via the package.json script, not here.)
+[phases.build]
+dependsOn = ["install"]
+cmds = ["pnpm --filter ${APP_NAME:-@xlmtools/api} build"]
+
+# ── Start ────────────────────────────────────────────────────────
+# api   → node dist/index.js     (respects $PORT, defaults to 3000)
+# web   → next start -p $PORT
+# docs  → next start -p $PORT
+[start]
+cmd = "pnpm --filter ${APP_NAME:-@xlmtools/api} start"
