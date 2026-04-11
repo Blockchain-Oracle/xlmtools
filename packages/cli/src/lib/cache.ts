@@ -28,12 +28,19 @@ export async function withCache(
 
     const original = cached.result;
     if (original.content[0]?.type === "text") {
+      // Strip the "---\nPayment: ..." footer from cached text — no
+      // payment happened on this call, so the original tx hash would
+      // contradict the [cached — no charge] prefix.
+      const stripped = original.content[0].text.replace(
+        /\n---\nPayment: .*$/s,
+        "",
+      );
       return {
         ...original,
         content: [
           {
             type: "text" as const,
-            text: `[cached — no charge]\n\n${original.content[0].text}`,
+            text: `[cached — no charge]\n\n${stripped}`,
           },
         ],
       };

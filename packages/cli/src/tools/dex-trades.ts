@@ -15,8 +15,7 @@ export function registerDexTradesTool(server: McpServer): void {
         pair: z
           .string()
           .describe('Asset pair (e.g. "XLM/USDC")'),
-        limit: z
-          .number()
+        limit: z.coerce.number()
           .int()
           .min(1)
           .max(200)

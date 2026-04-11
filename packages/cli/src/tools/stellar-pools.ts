@@ -16,8 +16,7 @@ export function registerStellarPoolsTool(server: McpServer): void {
           .string()
           .optional()
           .describe('Filter by asset (e.g. "XLM", "USDC"). Omit for all pools.'),
-        limit: z
-          .number()
+        limit: z.coerce.number()
           .int()
           .min(1)
           .max(200)

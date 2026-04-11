@@ -14,8 +14,7 @@ export function registerSearchTool(server: McpServer): void {
       title: "Web Search",
       description: `Search the web and news in real-time. Returns results with source URLs.\nCost: $${TOOL_PRICES.search} USDC per search (paid via Stellar MPP).`,      inputSchema: z.object({
         query: z.string().describe("Search query"),
-        count: z
-          .number()
+        count: z.coerce.number()
           .int()
           .min(1)
           .max(20)

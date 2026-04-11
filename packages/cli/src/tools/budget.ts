@@ -17,8 +17,7 @@ export function registerBudgetTool(server: McpServer): void {
         action: z
           .enum(["set", "check", "clear"])
           .describe("Action: set a limit, check status, or clear limit"),
-        amount: z
-          .number()
+        amount: z.coerce.number()
           .positive()
           .optional()
           .describe("Budget amount in USD (required for 'set')"),

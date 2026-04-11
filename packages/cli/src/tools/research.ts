@@ -14,8 +14,7 @@ export function registerResearchTool(server: McpServer): void {
       title: "Deep Research",
       description: `Deep research on any topic — returns summarized, sourced results from multiple web pages.\nCost: $${TOOL_PRICES.research} USDC per query (paid via Stellar MPP).`,      inputSchema: z.object({
         query: z.string().describe("Research query"),
-        num_results: z
-          .number()
+        num_results: z.coerce.number()
           .int()
           .min(1)
           .max(20)

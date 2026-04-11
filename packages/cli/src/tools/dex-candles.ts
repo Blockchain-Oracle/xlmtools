@@ -20,8 +20,7 @@ export function registerDexCandlesTool(server: McpServer): void {
           .enum(["1m", "5m", "15m", "1h", "1d", "1w"])
           .default("1h")
           .describe("Candle interval"),
-        limit: z
-          .number()
+        limit: z.coerce.number()
           .int()
           .min(1)
           .max(200)
