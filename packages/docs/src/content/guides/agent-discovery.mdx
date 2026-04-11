@@ -1,0 +1,79 @@
+import { Callout } from 'nextra/components'
+
+# Agent Discovery
+
+XLMTools exposes machine-readable service metadata so **any autonomous agent can find and understand it without a human in the loop**. No API key. No signup. No docs to read. Just a URL.
+
+This matters because the agent economy can't depend on humans to wire services together. Agents need to crawl, parse, and decide — in real time, at runtime.
+
+## How an agent discovers XLMTools
+
+```
+Agent encounters a URL (e.g. api.xlmtools.com)
+   ↓
+Fetches /.well-known/xlmtools.json
+   ↓
+Reads: 21 tools, 7 paid, prices, payment protocol, install command
+   ↓
+Decides: is this service useful for my current task?
+   ↓
+If yes → install the MCP server OR call the HTTP endpoint directly
+```
+
+Three endpoints power this flow:
+
+| Endpoint | Format | For |
+| --- | --- | --- |
+| [`/.well-known/xlmtools.json`](/reference/api#get-well-knownxlmtoolsjson) | Structured JSON | Agents that want machine-parseable metadata |
+| [`/llms.txt`](/reference/api#get-llmstxt) | Plain text | Agents that prefer prose |
+| [`/health`](/reference/api#get-health) | JSON ping | Registry crawlers checking uptime |
+
+## Try it yourself
+
+```bash
+curl https://api.xlmtools.com/.well-known/xlmtools.json | jq
+```
+
+Returns the full service manifest — all 21 tools, prices, payment details, install command, and feature list.
+
+```bash
+curl https://api.xlmtools.com/llms.txt
+```
+
+Returns the same information as human-readable text — an LLM can paste it directly into its context window.
+
+## Why this matters for the agent economy
+
+Every major registry and discovery platform in the MCP/agent ecosystem depends on this pattern:
+
+- **[x402scout](https://x402scout.com)** — crawls `/.well-known/` for x402-compatible services every 15 minutes
+- **[Glama MCP](https://glama.ai/mcp)** — uses discovery endpoints to index MCP servers
+- **[402index](https://402index.io)** — directory of HTTP 402 services
+- **[agentskills.io](https://agentskills.io)** — cross-client skill registry
+
+By shipping these endpoints, XLMTools can be auto-listed in registries without any manual submission. When a registry crawls our URL, it learns everything it needs: tool names, prices, payment method, install command.
+
+<Callout type="info">
+Following the `/.well-known/` convention is part of [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615). The `llms.txt` convention is a newer, LLM-specific standard pioneered at [llmstxt.org](https://llmstxt.org).
+</Callout>
+
+## What an autonomous agent can do with this
+
+An agent that has never heard of XLMTools before can:
+
+1. **Hit `/.well-known/xlmtools.json`** — learn about all 21 tools in one HTTP call
+2. **Parse the `tools` array** — find a tool matching its current task (e.g. "I need stock prices → `stocks` tool at $0.001")
+3. **Read the `payment.install` field** — run `claude mcp add xlmtools npx @xlmtools/cli` and gain access
+4. **Check `features`** — understand that responses include tx hashes, there's a budget tool, and caching is free
+
+All without a human reading docs or setting up API keys. That's the whole point.
+
+## CORS enabled
+
+All three discovery endpoints have CORS enabled (`Access-Control-Allow-Origin: *`) so browser-based agents and web crawlers can reach them from any origin.
+
+## See also
+
+- [API Reference](/reference/api) — full endpoint specs
+- [Payment Flow](/guides/payment-flow) — how MPP micropayments work
+- [Agent Skill](/guides/skill) — install XLMTools as a cross-client skill

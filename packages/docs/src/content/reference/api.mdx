@@ -235,6 +235,80 @@ Returns:
 }
 ```
 
+## Agent Discovery
+
+Machine-readable service metadata for autonomous agents. These endpoints let any AI agent discover XLMTools without human intervention.
+
+### GET /.well-known/xlmtools.json
+
+Structured JSON manifest. **Free, no auth, CORS enabled**
+
+Returns a complete service descriptor with all 21 tools, pricing, payment protocol details, features, and links. Agents can crawl this endpoint to learn the full API surface in one request.
+
+```json
+{
+  "name": "XLMTools",
+  "version": "0.1.0",
+  "description": "Stellar-native MCP server with 21 pay-per-call tools for AI agents",
+  "protocol": "MCP (Model Context Protocol)",
+  "install": "claude mcp add xlmtools npx @xlmtools/cli",
+  "payment": {
+    "protocol": "MPP (Machine Payment Protocol)",
+    "network": "stellar:testnet",
+    "currency": "USDC",
+    "settlement": "~5 seconds",
+    "pattern": "HTTP 402 challenge-response with Soroban SAC transfer"
+  },
+  "tools": [
+    {
+      "name": "search",
+      "description": "Real-time web and news search",
+      "price_usdc": "0.003",
+      "free": false,
+      "method": "GET",
+      "path": "/search",
+      "params": ["q", "count"]
+    }
+    // ... 20 more
+  ],
+  "features": [
+    "Spending receipts — Stellar tx hash in every paid response",
+    "Session budget — per-session spending cap",
+    "Response caching — 5-min TTL, identical queries free",
+    "Auto-wallet — testnet wallet created and funded on first run"
+  ],
+  "links": {
+    "github": "https://github.com/Blockchain-Oracle/xlmtools",
+    "docs": "/docs",
+    "stats": "/stats",
+    "health": "/health"
+  }
+}
+```
+
+### GET /llms.txt
+
+Plain-text service description. **Free, no auth, CORS enabled**
+
+Follows the emerging [llms.txt convention](https://llmstxt.org) — a `robots.txt`-style file that tells LLMs what a service offers. Agents that prefer reading prose over JSON can fetch this.
+
+```
+# XLMTools — Stellar-Native MCP Tools
+
+XLMTools is an MCP server that gives AI agents access to 21 tools, paid via USDC micropayments on Stellar.
+
+## Install
+claude mcp add xlmtools npx @xlmtools/cli
+
+## Payment
+Paid tools use Stellar's Micropayment Protocol (MPP). Each call triggers an automatic USDC payment on-chain. No API keys or subscriptions needed.
+
+## Paid Tools (7)
+- search: Real-time web and news search ($0.003 USDC)
+- research: Multi-source deep research with summaries ($0.010 USDC)
+...
+```
+
 ## MPP Response Headers
 
 When a paid endpoint returns `402`, the response includes these headers:
