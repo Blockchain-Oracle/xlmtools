@@ -19,7 +19,7 @@ export default function ExplorePage() {
             Explorer
           </h1>
           <p className="mt-4 text-sm text-muted-foreground max-w-md">
-            Every paid tool call leaves a verifiable receipt on Stellar.
+            Every tool call the API handles lands here in real time. Paid calls carry a Stellar receipt; free calls show a <span className="font-mono text-[10px] tracking-wider text-emerald-600 dark:text-emerald-400">FREE</span> badge.
           </p>
         </div>
       </div>

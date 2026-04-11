@@ -23,6 +23,7 @@ import { stellarPoolsRoute } from "./routes/stellar-pools.js";
 import { oraclePriceRoute } from "./routes/oracle-price.js";
 import { statsRoute } from "./routes/stats.js";
 import { discoveryRoute } from "./routes/discovery.js";
+import { withFreeStats } from "./lib/call-log.js";
 
 const app = express();
 app.use(express.json());
@@ -35,12 +36,16 @@ app.get("/health", (_req, res) => {
 app.use("/.well-known", cors(), discoveryRoute);
 app.use("/llms.txt", cors(), discoveryRoute);
 
-app.use("/crypto", cryptoRoute);
-app.use("/weather", weatherRoute);
-app.use("/domain", domainRoute);
+// Free tools — withFreeStats records successful calls in the in-memory
+// call log so /stats and the Explore stream show every tool call, not
+// just the paid ones.
+app.use("/crypto", withFreeStats("crypto"), cryptoRoute);
+app.use("/weather", withFreeStats("weather"), weatherRoute);
+app.use("/domain", withFreeStats("domain"), domainRoute);
+
+// Paid tools (MPP-gated; recordCall fires inside withReceiptBody)
 app.use("/search", searchRoute);
 app.use("/research", researchRoute);
-
 app.use("/youtube", youtubeRoute);
 app.use("/screenshot", screenshotRoute);
 app.use("/scrape", scrapeRoute);
@@ -48,14 +53,14 @@ app.use("/image", imageRoute);
 app.use("/stocks", stocksRoute);
 
 // Stellar-native tools (free — no MPP gate)
-app.use("/dex-orderbook", dexOrderbookRoute);
-app.use("/dex-candles", dexCandlesRoute);
-app.use("/dex-trades", dexTradesRoute);
-app.use("/swap-quote", swapQuoteRoute);
-app.use("/stellar-asset", stellarAssetRoute);
-app.use("/stellar-account", stellarAccountRoute);
-app.use("/stellar-pools", stellarPoolsRoute);
-app.use("/oracle-price", oraclePriceRoute);
+app.use("/dex-orderbook", withFreeStats("dex-orderbook"), dexOrderbookRoute);
+app.use("/dex-candles", withFreeStats("dex-candles"), dexCandlesRoute);
+app.use("/dex-trades", withFreeStats("dex-trades"), dexTradesRoute);
+app.use("/swap-quote", withFreeStats("swap-quote"), swapQuoteRoute);
+app.use("/stellar-asset", withFreeStats("stellar-asset"), stellarAssetRoute);
+app.use("/stellar-account", withFreeStats("stellar-account"), stellarAccountRoute);
+app.use("/stellar-pools", withFreeStats("stellar-pools"), stellarPoolsRoute);
+app.use("/oracle-price", withFreeStats("oracle-price"), oraclePriceRoute);
 
 // Stats API (call log — in-memory, no auth)
 app.use("/stats", cors(), statsRoute);
