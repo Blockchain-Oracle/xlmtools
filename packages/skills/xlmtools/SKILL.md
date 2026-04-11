@@ -248,5 +248,3 @@ Include the transaction link so the user can verify the payment on-chain.
 **API server unreachable** — XLMTools tools require the API server to be running. If every call hangs or times out, the API is either down or unreachable. Report to the user and stop retrying.
 
 **"Is this site up / accessible?"** — There's no dedicated uptime tool. Closest approximation: `domain` (checks if DNS resolves) or `scrape` (fails loudly if the site is down, returns content if it's up). Note: `domain` does WHOIS availability, not HTTP reachability — a registered domain could still be offline.
-
-**Budget `set` doesn't reset session spend** — Calling `budget` with `action: "set"` only updates the cap. Previous spending this session still counts. To reset both the cap and the spend counter, use `action: "clear"` first, then `set`.

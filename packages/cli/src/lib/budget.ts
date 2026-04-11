@@ -9,6 +9,10 @@ let totalSpent = 0;
 
 export function setBudget(max: number): void {
   maxBudget = max;
+  // Reset spent counter so the new cap starts fresh. Users expect
+  // "I just set a $1.00 budget" to mean they have $1.00 to spend
+  // from now — not "$1.00 minus whatever I spent before setting it".
+  totalSpent = 0;
   logger.info({ max }, "session budget set");
 }
 
