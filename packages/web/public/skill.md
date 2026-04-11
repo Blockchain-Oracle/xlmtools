@@ -1,27 +1,95 @@
 ---
 name: xlmtools
-description: Use XLMTools for real-time web search, deep research, crypto prices, stock quotes, weather, YouTube lookups, screenshots, web scraping, AI image generation, and Stellar DEX/asset/account/oracle/liquidity-pool queries. Use this skill whenever the user asks for current information, market data, news, web content, crypto or stock prices, or anything related to the Stellar blockchain — even if they don't mention XLMTools by name. XLMTools is both an MCP server (tools prefixed `mcp__xlmtools__*`) and a standalone terminal CLI (`xlm`). Paid tools cost $0.001-$0.04 USDC per call, auto-paid on Stellar via MPP micropayments.
-version: 0.1.0
+description: Use XLMTools when the user needs live external data or an action the assistant cannot perform itself — real-time web search, multi-source research, screenshots, URL scraping, AI image generation, YouTube lookups, or current crypto/stock/weather/domain data. Also use it for Stellar blockchain lookups — DEX orderbook/candles/trades, swap quotes, account/asset/pool data, Reflector oracle prices. Trigger when the user mentions current events, live prices, "latest" X, a URL to fetch, or Stellar/XLM/Soroban data. Skip for general knowledge, math, code the assistant can write, or anything already answerable from training data. XLMTools is both an MCP server (tools prefixed `mcp__xlmtools__*`) and a terminal CLI (`xlm`). Paid tools cost $0.001-$0.04 USDC per call, auto-paid on Stellar via MPP.
 ---
 
 # Using XLMTools
 
-XLMTools gives you access to 21 tools: 7 paid (via USDC micropayments on Stellar), 14 free. It works in two modes — always prefer MCP if available.
+XLMTools gives an AI agent 21 tools — 7 paid via USDC micropayments on Stellar, 14 free. It works in two modes: prefer MCP if available, fall back to the `xlm` CLI otherwise.
+
+## Required host tools
+
+This skill assumes the agent host grants **Bash** (for the `xlm` CLI fallback) and **WebFetch** (for runtime discovery). Without those, only MCP tools are usable.
+
+## Install (if not already available)
+
+If the user needs to install XLMTools:
+
+```bash
+# MCP server (for Claude Code, Cursor, Windsurf, etc.)
+claude mcp add xlmtools npx @xlmtools/cli
+
+# Standalone CLI
+npm install -g @xlmtools/cli
+```
+
+On first run, XLMTools auto-generates a Stellar testnet wallet at `~/.xlmtools/config.json`, funds it with XLM via Stellar's friendbot, and adds a USDC trustline — fully automatic. The user only needs to grab testnet USDC from [faucet.circle.com](https://faucet.circle.com) to use paid tools.
+
+If neither MCP nor CLI is installed, tell the user which command to run — don't try to proceed.
 
 ## Mode priority
 
-1. **MCP tools first.** If you see tools named `mcp__xlmtools__*` or `mcp__xlmtools-dev__*` in your tool list, use those directly. They're faster and handle payment automatically.
-2. **CLI fallback.** If no MCP tools are available, use `xlm` via the Bash tool. Same wallet, same tools, same payment flow.
+1. **MCP tools first.** If tools named `mcp__xlmtools__*` are in your tool list, call them directly. They handle payment automatically and benefit from response caching.
+2. **CLI fallback.** If no MCP tools are available, run `xlm` via the Bash tool. Same wallet, same backend, same payment flow.
+3. **Runtime discovery (optional).** If you're an autonomous agent encountering XLMTools for the first time, you may fetch `https://api.xlmtools.com/.well-known/xlmtools.json` (JSON manifest) or `https://api.xlmtools.com/llms.txt` (plain text) for service metadata. If those URLs are unreachable (the hackathon demo may not be deployed yet), fall back to **this SKILL.md file** — every tool, price, and command documented here is authoritative.
 
-Check for MCP availability first. Only shell out to `xlm` as fallback.
+## When NOT to use this skill
+
+XLMTools is for **external data and actions**, not general reasoning. Skip it entirely when:
+
+- **General knowledge** — "What is photosynthesis?", "Who wrote Hamlet?", "Explain recursion." The assistant already knows these.
+- **Math or computation** — "What's 2 + 2?", "Convert 50 kg to pounds." Just answer directly.
+- **Code you can write** — "Write a Python for loop", "Refactor this function." Don't call `research` for things you can write from training data.
+- **Summarizing content the user already gave you** — If the user pasted the text, summarize it directly. No `search` needed.
+- **The assistant already has the answer** — If you're confident the answer is in your training data and doesn't need to be up-to-date, skip XLMTools.
+- **"What is X?" for well-known concepts** — "What is XLM?" or "What is Stellar?" are explainable from training data. Only reach for XLMTools if the user wants *live* data about X, not an explanation of X.
+
+Rule of thumb: **If the user's question could have been answered using only the assistant's brain, don't use XLMTools.** If the answer depends on "what's happening right now" or "what's at this URL", use XLMTools.
 
 ## First principles
 
-- **Always run `xlm --help` before guessing syntax** when using CLI mode. Never read the CLI source — just invoke `--help`.
-- **Tell the user which tool you're about to call and why**, especially before paid calls. Example: "I'll use `search` ($0.003 USDC) to get current news about Stellar."
-- **Confirm before expensive calls** (`research` $0.010, `screenshot` $0.010, `image` $0.040). Cheap calls ($0.001-$0.003) can proceed.
-- **Every paid response includes a Stellar transaction hash** — surface it to the user so they can verify on stellar.expert.
-- **Identical queries within 5 minutes are cached** (MCP mode only). If you call the same tool twice with the same params, the second call is free. The response will be prefixed with `[cached — no charge]`.
+- **Check MCP tool list first.** If `mcp__xlmtools__*` tools exist, use them — they're faster and cached. Only use `xlm` CLI as fallback.
+- **Run `xlm --help` before guessing CLI syntax.** The global help lists every tool, its positional args, and its flags. Do not read the CLI source — `--help` is the source of truth. (Per-tool help like `xlm search --help` is not currently supported.)
+- **Announce before paid calls.** Example: "I'll use `search` ($0.003 USDC) to get current news about Stellar." This gives the user a chance to object.
+- **Explicit cost confirmation for calls at or above $0.01.** `research`, `screenshot`, `image` all cost $0.010+. Pause and confirm. Cheaper calls ($0.001–$0.003) can proceed without a prompt.
+- **Always surface the Stellar tx hash** from paid responses. Users can verify every payment at `https://stellar.expert/explorer/testnet/tx/<hash>`.
+- **Caching: identical queries within 5 minutes are free** (MCP mode only). Cached responses are prefixed with `[cached — no charge]` as emitted by the cache helper. If you make the same call twice in a row, the second is free.
+
+## If the user declines a paid call
+
+- **Do not retry the same tool.** Acknowledge and offer alternatives: a free tool (e.g. `crypto` instead of `stocks`), a cheaper tool (`search` $0.003 instead of `research` $0.010), or answering from training data if the question allows it.
+- Never call the paid tool anyway "just in case." A declined call is final for that turn.
+- If the user's intent is clearly blocked without the paid call, say so plainly: "I can't answer that without calling `research` ($0.010). Want me to proceed?"
+
+## Worked example
+
+**User:** "What's the current price of Bitcoin and what are people saying about Stellar lately?"
+
+**Agent reasoning:**
+- Bitcoin price → `crypto` (free, no confirmation needed)
+- Latest Stellar news → `search` ($0.003, announce cost)
+- Both should be called in parallel
+
+**Agent action:**
+
+```
+I'll get the BTC price (free) and search for recent Stellar news ($0.003 USDC).
+```
+
+Calls `mcp__xlmtools__crypto(ids="bitcoin")` and `mcp__xlmtools__search(query="Stellar blockchain news", count=5)` in parallel.
+
+**Agent response to user:**
+
+> **Bitcoin price**: $67,432 (+2.3% 24h)
+>
+> **Recent Stellar news**:
+> 1. [Stellar Foundation announces Q2 roadmap](https://...)
+> 2. [Soroban TPS benchmarks hit 5,000](https://...)
+> 3. [MPP micropayments go live on testnet](https://...)
+>
+> *Paid $0.003 USDC for the search. Transaction: [`a3f9c28d…b8e14d7c`](https://stellar.expert/explorer/testnet/tx/a3f9c28d71e0bb542f1e6a3c9d7e8f12b4a6c0d98a3f71b5c4e6d8f2b8e14d7c)*
+
+Notice: the free `crypto` call didn't need cost disclosure. The paid `search` did. The tx hash is linked at the bottom and is a full 64-char hex (Stellar tx hashes are always 64 hex chars).
 
 ## Decision tree — user intent to tool
 
@@ -47,7 +115,7 @@ Check for MCP availability first. Only shell out to `xlm` as fallback.
 | Reflector oracle price for BTC/ETH/fiat | `oracle-price` | Free |
 | "Show me my wallet" | `wallet` | Free |
 | "What XLMTools tools are available?" | `tools` | Free |
-| "Set a spending cap" | `budget` | Free |
+| "Set a spending cap" (MCP only) | `budget` | Free |
 
 ## Tool catalog
 
@@ -55,32 +123,32 @@ Check for MCP availability first. Only shell out to `xlm` as fallback.
 
 | Tool | Price | Params | Description |
 | --- | --- | --- | --- |
-| `search` | $0.003 | `query`, `count` (1-20, default 10) | Web + news search |
-| `research` | $0.010 | `query`, `num_results` (1-20, default 5) | Deep multi-source research |
-| `youtube` | $0.002 | `query` or `id` | Video search or lookup |
-| `screenshot` | $0.010 | `url`, `format` (png/jpg/webp) | Capture a URL screenshot |
+| `search` | $0.003 | `query`, `count` (1-20, def 10) | Web + news search |
+| `research` | $0.010 | `query`, `num_results` (1-20, def 5) | Deep multi-source research |
+| `youtube` | $0.002 | `query` or `id` (one required) | Video search or lookup |
+| `screenshot` | $0.010 | `url`, `format` (png/jpg/webp, def png) | Capture a URL screenshot |
 | `scrape` | $0.002 | `url` | Clean text extraction |
-| `image` | $0.040 | `prompt`, `size` (1024x1024/1024x1792/1792x1024) | AI image generation |
+| `image` | $0.040 | `prompt`, `size` (1024x1024/1024x1792/1792x1024, def 1024x1024) | AI image generation |
 | `stocks` | $0.001 | `symbol` | Real-time stock quotes |
 
 ### Free tools
 
 | Tool | Params | Description |
 | --- | --- | --- |
-| `crypto` | `ids`, `vs_currency` | Crypto prices from CoinGecko |
+| `crypto` | `ids`, `vs_currency` (def usd) | Crypto prices from CoinGecko |
 | `weather` | `location` | Current weather for any city |
 | `domain` | `name` | Domain availability check |
 | `wallet` | — | Your Stellar wallet address + balance |
 | `tools` | — | List all 21 XLMTools tools |
-| `budget` | `action` (set/check/clear), `amount` | Session spending cap |
-| `dex-orderbook` | `pair`, `limit` | Stellar DEX orderbook |
-| `dex-candles` | `pair`, `resolution`, `limit` | OHLCV candles |
-| `dex-trades` | `pair`, `limit`, `trade_type` | Recent DEX trades |
-| `swap-quote` | `from`, `to`, `amount`, `mode` | Best swap path |
+| `budget` (MCP only) | `action` (set/check/clear), `amount` | Session spending cap |
+| `dex-orderbook` | `pair`, `limit` (1-200, def 10) | Stellar DEX orderbook |
+| `dex-candles` | `pair`, `resolution` (1m/5m/15m/1h/1d/1w, def 1h), `limit` (1-200, def 20) | OHLCV candles |
+| `dex-trades` | `pair`, `limit` (1-200, def 10), `trade_type` (all/orderbook/liquidity_pool, def all) | Recent DEX trades |
+| `swap-quote` | `from`, `to`, `amount`, `mode` (send/receive, def send) | Best swap path |
 | `stellar-asset` | `asset` | Asset supply, trustlines |
 | `stellar-account` | `address` | Account balances and signers |
-| `stellar-pools` | `asset`, `limit` | Liquidity pool data |
-| `oracle-price` | `asset`, `feed` (crypto/fiat/dex) | Reflector oracle price |
+| `stellar-pools` | `asset` (optional), `limit` (1-200, def 10) | Liquidity pool data |
+| `oracle-price` | `asset`, `feed` (crypto/fiat/dex, def crypto) | Reflector oracle price |
 
 ## CLI invocation examples
 
@@ -98,11 +166,10 @@ xlm dex-orderbook XLM/USDC --limit 5
 xlm search "Stellar MPP micropayments" --count 5
 xlm stocks AAPL
 xlm research "Soroban smart contracts" --num-results 3
-xlm image "a pulsar star in deep space" --size 1024x1024
+xlm image "a stingray gliding over a coral reef at dusk" --size 1024x1024
 
 # Help
 xlm --help
-xlm <tool> --help
 ```
 
 Output is JSON. Pipe to `jq` for filtering:
@@ -117,31 +184,29 @@ Every paid response ends with a line like:
 
 ```
 ---
-Payment: $0.003 USDC · tx/8f3a1b2c4d5e... · stellar testnet
+Payment: $0.003 USDC · tx/a3f9c28d71e0... · stellar testnet
 ```
 
-The `tx_hash` is a real on-chain Stellar transaction. Users can verify any call at `https://stellar.expert/explorer/testnet/tx/<hash>`. **Always surface the tx hash to the user** when showing results from a paid tool.
+The `tx_hash` is a real 64-character Stellar transaction hash. Users can verify any call at `https://stellar.expert/explorer/testnet/tx/<hash>`. **Always surface the tx hash to the user** when showing results from a paid tool.
 
 ## Budget management
 
-If the user asks to set spending limits, use the `budget` tool:
+The `budget` tool is **MCP-only**. In MCP mode, call `mcp__xlmtools__budget` with:
 
-```bash
-xlm budget set 2.00     # cap at $2 for this session
-xlm budget check        # see remaining
-xlm budget clear        # remove the cap
-```
+- `action: "set"` + `amount: 2.00` — cap spending at $2 for the session
+- `action: "check"` — see remaining balance
+- `action: "clear"` — remove the cap
 
-Budget is session-scoped (resets when the MCP server restarts). Cached responses don't count against it.
+**Scoping:**
+- **MCP mode**: budget is session-scoped. The cap persists until the MCP server restarts. Cached responses never count against it.
+- **CLI mode**: budget is not implemented. Because each `xlm` invocation is a fresh process, a per-call cap has no meaning there. If you need a cap in CLI mode, track spend externally by parsing the tx hash footer of each response.
 
-## Safety checklist before paid calls
+## Before calling a paid tool — verify
 
-Before spending USDC, confirm with the user:
-
-- [ ] Is this tool the best fit for the task? (Check the decision tree)
-- [ ] Is there a free alternative? (e.g., `crypto` is free, `stocks` costs $0.001)
-- [ ] Does the user know the cost? (Mention it explicitly for calls over $0.005)
-- [ ] Is the query cacheable? (Identical queries within 5 min are free)
+- Is this tool the best fit for the task? (Cross-check the decision tree.)
+- Is there a free alternative? `crypto` is free, `stocks` is $0.001 — pick the cheapest sufficient one.
+- Does the user know the cost for calls at or above $0.01? Say it explicitly.
+- Is the query identical to a recent one? It'll be cached and free (MCP mode only).
 
 ## What to tell the user after a paid call
 
@@ -151,7 +216,7 @@ Good response pattern:
 >
 > [results...]
 >
-> *Paid $0.003 USDC. Transaction: [tx/abc123...](https://stellar.expert/explorer/testnet/tx/abc123...)*
+> *Paid $0.003 USDC. Transaction: [`a3f9c28d…`](https://stellar.expert/explorer/testnet/tx/<full-64-char-hash>)*
 
 Include the transaction link so the user can verify the payment on-chain.
 
@@ -159,8 +224,12 @@ Include the transaction link so the user can verify the payment on-chain.
 
 **"Command not found: xlm"** — User needs to install: `npm install -g @xlmtools/cli`
 
-**"Account not found" / payment errors** — Wallet needs funding. Direct user to `https://faucet.circle.com` for testnet USDC. The XLM is auto-funded via friendbot on first run.
+**"Account not found" / payment errors** — Wallet needs funding. Direct user to `https://faucet.circle.com` for testnet USDC. XLM is auto-funded via friendbot on first wallet creation — but if the wallet already exists and is out of XLM, it won't re-fund. In that case, ask the user to visit `https://lab.stellar.org/account/fund` manually.
 
-**"Budget limit reached"** — Ask user to either clear the budget or raise it.
+**"Unknown tool: budget" (in CLI mode)** — The CLI doesn't implement `budget`. Budget is MCP-only. Use an MCP-compatible host, or track spend externally.
 
-**MCP tools not appearing** — User may need to install XLMTools as an MCP server: `claude mcp add xlmtools npx @xlmtools/cli`. Fall back to CLI mode in the meantime.
+**"Budget limit reached"** — Only appears in MCP mode. Ask user to either clear the budget (`mcp__xlmtools__budget` with `action: "clear"`) or raise the cap (`action: "set"` with a higher `amount`).
+
+**MCP tools not appearing** — User may need to install XLMTools as an MCP server: `claude mcp add xlmtools npx @xlmtools/cli`. Fall back to CLI mode in the meantime if `xlm` is installed.
+
+**API server unreachable** — XLMTools tools require the API server to be running. If every call hangs or times out, the API is either down or unreachable. Report to the user and stop retrying.

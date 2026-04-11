@@ -112,8 +112,10 @@ function handleTools() {
     name,
     price: `$${price}`,
   }));
+  // Note: `budget` is MCP-only — the CLI is a fresh process per invocation
+  // so a session-scoped cap is meaningless. Excluded from the CLI's free list.
   const free = [
-    "crypto", "weather", "domain", "wallet", "tools", "budget",
+    "crypto", "weather", "domain", "wallet", "tools",
     "dex-orderbook", "dex-candles", "dex-trades", "swap-quote",
     "stellar-asset", "stellar-account", "stellar-pools", "oracle-price",
   ];
