@@ -94,7 +94,7 @@ export function loadOrCreateWallet(): XLMToolsConfig {
   const config: XLMToolsConfig = {
     stellarPrivateKey: keypair.secret(),
     stellarPublicKey: keypair.publicKey(),
-    apiUrl: process.env.XLMTools_API_URL ?? "http://localhost:3000",
+    apiUrl: process.env.XLMTOOLS_API_URL ?? "https://api.xlmtools.com",
   };
 
   mkdirSync(CONFIG_DIR, { recursive: true });

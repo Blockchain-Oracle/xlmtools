@@ -1,9 +1,8 @@
-import { BookOpen } from "lucide-react";
+import { ArrowUpRight, BookOpen } from "lucide-react";
 
 const year = new Date().getFullYear();
 
-// TODO: point to deployed docs URL once live (e.g. docs.xlmtools.com)
-const DOCS_URL = "https://github.com/Blockchain-Oracle/xlmtools/tree/main/packages/docs";
+const DOCS_URL = "https://docs.xlmtools.com";
 
 const links = [
   {
@@ -37,6 +36,7 @@ export function Footer() {
               >
                 {icon}
                 {label}
+                <ArrowUpRight className="size-3 opacity-60" aria-hidden="true" />
               </a>
             ) : (
               <a

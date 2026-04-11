@@ -9,7 +9,10 @@ import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import { WordRotate } from "@/components/ui/word-rotate";
 import { Terminal, TypingAnimation, AnimatedSpan } from "@/components/ui/terminal";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+
+const DOCS_URL = "https://docs.xlmtools.com";
 
 const TAGLINES = [
   "Pay per call.",
@@ -193,6 +196,27 @@ export default function Home() {
             </h2>
           </div>
           <SetupSteps />
+
+          {/* Docs CTA — visually obvious external link */}
+          <div className="mt-12 sm:mt-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 rounded-2xl border border-border bg-card px-6 py-6 sm:px-8 sm:py-7">
+            <div className="flex flex-col gap-1">
+              <span className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase">
+                Need more detail?
+              </span>
+              <p className="text-sm sm:text-base text-foreground">
+                Full guides, tool reference, and the MPP payment flow are in the docs.
+              </p>
+            </div>
+            <a
+              href={DOCS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 rounded-full border border-border bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-all hover:opacity-90 shrink-0"
+            >
+              View documentation
+              <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+          </div>
         </div>
       </section>
 

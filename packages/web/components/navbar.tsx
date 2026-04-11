@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { GitFork, Menu, X } from "lucide-react";
+import { ArrowUpRight, GitFork, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-// TODO: point docs link to deployed docs URL once live (e.g. docs.xlmtools.com)
-const DOCS_URL =
-  "https://github.com/Blockchain-Oracle/xlmtools/tree/main/packages/docs";
+const DOCS_URL = "https://docs.xlmtools.com";
 const GITHUB_URL = "https://github.com/Blockchain-Oracle/xlmtools";
 
 const navLinks = [
@@ -88,9 +86,10 @@ export function Navbar() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
+                className="inline-flex items-center gap-1 px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
               >
                 {label}
+                <ArrowUpRight className="size-3 opacity-60" aria-hidden="true" />
               </a>
             ) : (
               <Link
