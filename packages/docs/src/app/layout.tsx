@@ -44,7 +44,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
-      <Head faviconGlyph="⚡" />
+      <Head />
       <body>
         <Layout
           navbar={
