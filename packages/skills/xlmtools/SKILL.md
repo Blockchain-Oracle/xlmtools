@@ -1,23 +1,23 @@
 ---
-name: pulsar
-description: Use PULSAR for real-time web search, deep research, crypto prices, stock quotes, weather, YouTube lookups, screenshots, web scraping, AI image generation, and Stellar DEX/asset/account/oracle/liquidity-pool queries. Use this skill whenever the user asks for current information, market data, news, web content, crypto or stock prices, or anything related to the Stellar blockchain — even if they don't mention PULSAR by name. PULSAR is both an MCP server (tools prefixed `mcp__pulsar__*`) and a standalone terminal CLI (`pulsar-cli`). Paid tools cost $0.001-$0.04 USDC per call, auto-paid on Stellar via MPP micropayments.
+name: xlmtools
+description: Use XLMTools for real-time web search, deep research, crypto prices, stock quotes, weather, YouTube lookups, screenshots, web scraping, AI image generation, and Stellar DEX/asset/account/oracle/liquidity-pool queries. Use this skill whenever the user asks for current information, market data, news, web content, crypto or stock prices, or anything related to the Stellar blockchain — even if they don't mention XLMTools by name. XLMTools is both an MCP server (tools prefixed `mcp__xlmtools__*`) and a standalone terminal CLI (`xlm`). Paid tools cost $0.001-$0.04 USDC per call, auto-paid on Stellar via MPP micropayments.
 version: 0.1.0
 ---
 
-# Using PULSAR
+# Using XLMTools
 
-PULSAR gives you access to 21 tools: 7 paid (via USDC micropayments on Stellar), 14 free. It works in two modes — always prefer MCP if available.
+XLMTools gives you access to 21 tools: 7 paid (via USDC micropayments on Stellar), 14 free. It works in two modes — always prefer MCP if available.
 
 ## Mode priority
 
-1. **MCP tools first.** If you see tools named `mcp__pulsar__*` or `mcp__pulsar-dev__*` in your tool list, use those directly. They're faster and handle payment automatically.
-2. **CLI fallback.** If no MCP tools are available, use `pulsar-cli` via the Bash tool. Same wallet, same tools, same payment flow.
+1. **MCP tools first.** If you see tools named `mcp__xlmtools__*` or `mcp__xlmtools-dev__*` in your tool list, use those directly. They're faster and handle payment automatically.
+2. **CLI fallback.** If no MCP tools are available, use `xlm` via the Bash tool. Same wallet, same tools, same payment flow.
 
-Check for MCP availability first. Only shell out to `pulsar-cli` as fallback.
+Check for MCP availability first. Only shell out to `xlm` as fallback.
 
 ## First principles
 
-- **Always run `pulsar-cli --help` before guessing syntax** when using CLI mode. Never read the CLI source — just invoke `--help`.
+- **Always run `xlm --help` before guessing syntax** when using CLI mode. Never read the CLI source — just invoke `--help`.
 - **Tell the user which tool you're about to call and why**, especially before paid calls. Example: "I'll use `search` ($0.003 USDC) to get current news about Stellar."
 - **Confirm before expensive calls** (`research` $0.010, `screenshot` $0.010, `image` $0.040). Cheap calls ($0.001-$0.003) can proceed.
 - **Every paid response includes a Stellar transaction hash** — surface it to the user so they can verify on stellar.expert.
@@ -46,7 +46,7 @@ Check for MCP availability first. Only shell out to `pulsar-cli` as fallback.
 | Liquidity pool data | `stellar-pools` | Free |
 | Reflector oracle price for BTC/ETH/fiat | `oracle-price` | Free |
 | "Show me my wallet" | `wallet` | Free |
-| "What PULSAR tools are available?" | `tools` | Free |
+| "What XLMTools tools are available?" | `tools` | Free |
 | "Set a spending cap" | `budget` | Free |
 
 ## Tool catalog
@@ -71,7 +71,7 @@ Check for MCP availability first. Only shell out to `pulsar-cli` as fallback.
 | `weather` | `location` | Current weather for any city |
 | `domain` | `name` | Domain availability check |
 | `wallet` | — | Your Stellar wallet address + balance |
-| `tools` | — | List all 21 PULSAR tools |
+| `tools` | — | List all 21 XLMTools tools |
 | `budget` | `action` (set/check/clear), `amount` | Session spending cap |
 | `dex-orderbook` | `pair`, `limit` | Stellar DEX orderbook |
 | `dex-candles` | `pair`, `resolution`, `limit` | OHLCV candles |
@@ -84,31 +84,31 @@ Check for MCP availability first. Only shell out to `pulsar-cli` as fallback.
 
 ## CLI invocation examples
 
-When MCP is unavailable, use `pulsar-cli` via Bash:
+When MCP is unavailable, use `xlm` via Bash:
 
 ```bash
 # Free tools
-pulsar-cli crypto bitcoin,ethereum,stellar
-pulsar-cli weather Lagos
-pulsar-cli wallet
-pulsar-cli oracle-price BTC
-pulsar-cli dex-orderbook XLM/USDC --limit 5
+xlm crypto bitcoin,ethereum,stellar
+xlm weather Lagos
+xlm wallet
+xlm oracle-price BTC
+xlm dex-orderbook XLM/USDC --limit 5
 
 # Paid tools
-pulsar-cli search "Stellar MPP micropayments" --count 5
-pulsar-cli stocks AAPL
-pulsar-cli research "Soroban smart contracts" --num-results 3
-pulsar-cli image "A pulsar in deep space" --size 1024x1024
+xlm search "Stellar MPP micropayments" --count 5
+xlm stocks AAPL
+xlm research "Soroban smart contracts" --num-results 3
+xlm image "a pulsar star in deep space" --size 1024x1024
 
 # Help
-pulsar-cli --help
-pulsar-cli <tool> --help
+xlm --help
+xlm <tool> --help
 ```
 
 Output is JSON. Pipe to `jq` for filtering:
 
 ```bash
-pulsar-cli crypto bitcoin | jq '.bitcoin.usd'
+xlm crypto bitcoin | jq '.bitcoin.usd'
 ```
 
 ## Payment receipts
@@ -127,9 +127,9 @@ The `tx_hash` is a real on-chain Stellar transaction. Users can verify any call 
 If the user asks to set spending limits, use the `budget` tool:
 
 ```bash
-pulsar-cli budget set 2.00     # cap at $2 for this session
-pulsar-cli budget check        # see remaining
-pulsar-cli budget clear        # remove the cap
+xlm budget set 2.00     # cap at $2 for this session
+xlm budget check        # see remaining
+xlm budget clear        # remove the cap
 ```
 
 Budget is session-scoped (resets when the MCP server restarts). Cached responses don't count against it.
@@ -147,7 +147,7 @@ Before spending USDC, confirm with the user:
 
 Good response pattern:
 
-> Here's what I found about [topic] from PULSAR search:
+> Here's what I found about [topic] from XLMTools search:
 >
 > [results...]
 >
@@ -157,10 +157,10 @@ Include the transaction link so the user can verify the payment on-chain.
 
 ## Troubleshooting
 
-**"Command not found: pulsar-cli"** — User needs to install: `npm install -g @pulsar/mcp`
+**"Command not found: xlm"** — User needs to install: `npm install -g @xlmtools/cli`
 
 **"Account not found" / payment errors** — Wallet needs funding. Direct user to `https://faucet.circle.com` for testnet USDC. The XLM is auto-funded via friendbot on first run.
 
 **"Budget limit reached"** — Ask user to either clear the budget or raise it.
 
-**MCP tools not appearing** — User may need to install PULSAR as an MCP server: `claude mcp add pulsar npx @pulsar/mcp`. Fall back to CLI mode in the meantime.
+**MCP tools not appearing** — User may need to install XLMTools as an MCP server: `claude mcp add xlmtools npx @xlmtools/cli`. Fall back to CLI mode in the meantime.

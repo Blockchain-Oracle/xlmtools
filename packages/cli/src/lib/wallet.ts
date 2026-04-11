@@ -11,14 +11,14 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 import { logger } from "./logger.js";
 
-const CONFIG_DIR = join(homedir(), ".pulsar");
+const CONFIG_DIR = join(homedir(), ".xlmtools");
 const CONFIG_PATH = join(CONFIG_DIR, "config.json");
 
 // Circle USDC issuer on Stellar testnet
 const USDC_ISSUER = "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5";
 const HORIZON_TESTNET = "https://horizon-testnet.stellar.org";
 
-interface PulsarConfig {
+interface XLMToolsConfig {
   stellarPrivateKey: string;
   stellarPublicKey: string;
   apiUrl: string;
@@ -85,16 +85,16 @@ async function fundTestnetWallet(keypair: Keypair): Promise<boolean> {
   return true;
 }
 
-export function loadOrCreateWallet(): PulsarConfig {
+export function loadOrCreateWallet(): XLMToolsConfig {
   if (existsSync(CONFIG_PATH)) {
-    return JSON.parse(readFileSync(CONFIG_PATH, "utf-8")) as PulsarConfig;
+    return JSON.parse(readFileSync(CONFIG_PATH, "utf-8")) as XLMToolsConfig;
   }
 
   const keypair = Keypair.random();
-  const config: PulsarConfig = {
+  const config: XLMToolsConfig = {
     stellarPrivateKey: keypair.secret(),
     stellarPublicKey: keypair.publicKey(),
-    apiUrl: process.env.PULSAR_API_URL ?? "http://localhost:3000",
+    apiUrl: process.env.XLMTools_API_URL ?? "http://localhost:3000",
   };
 
   mkdirSync(CONFIG_DIR, { recursive: true });
@@ -102,7 +102,7 @@ export function loadOrCreateWallet(): PulsarConfig {
 
   process.stderr.write(
     "\n" +
-      "PULSAR — First Run Setup (Stellar Testnet)\n" +
+      "XLMTools — First Run Setup (Stellar Testnet)\n" +
       "─".repeat(44) + "\n\n" +
       `  Wallet:  ${config.stellarPublicKey}\n` +
       `  Network: Stellar Testnet\n\n`,
@@ -138,6 +138,6 @@ export function loadOrCreateWallet(): PulsarConfig {
   return config;
 }
 
-export function getKeypair(config: PulsarConfig): Keypair {
+export function getKeypair(config: XLMToolsConfig): Keypair {
   return Keypair.fromSecret(config.stellarPrivateKey);
 }

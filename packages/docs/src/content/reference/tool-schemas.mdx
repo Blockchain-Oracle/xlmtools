@@ -2,10 +2,10 @@ import { Callout } from 'nextra/components'
 
 # Tool Schemas
 
-Each PULSAR tool is registered as an MCP tool with a typed input schema (using Zod) and structured output. Below are the complete schemas for all 21 tools.
+Each XLMTools tool is registered as an MCP tool with a typed input schema (using Zod) and structured output. Below are the complete schemas for all 21 tools.
 
 <Callout type="info">
-These schemas match the MCP `tools/list` response. Your MCP host uses these schemas to validate inputs before sending tool calls to PULSAR.
+These schemas match the MCP `tools/list` response. Your MCP host uses these schemas to validate inputs before sending tool calls to XLMTools.
 </Callout>
 
 ## Paid tools
@@ -148,7 +148,7 @@ These schemas match the MCP `tools/list` response. Your MCP host uses these sche
 ```typescript
 {
   name: "wallet",
-  title: "PULSAR Wallet",
+  title: "XLMTools Wallet",
   inputSchema: {}   // No parameters
 }
 ```

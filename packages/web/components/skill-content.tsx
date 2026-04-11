@@ -11,14 +11,14 @@ const INSTALL_METHODS = [
     description:
       "The simplest install — works in any agent that can fetch URLs. Paste this sentence and the agent installs itself.",
     command:
-      "Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.",
+      "Read https://xlmtools.com/skill.md and follow the instructions to install XLMTools.",
   },
   {
     id: "cli",
     label: "CLI install",
     description:
       "Uses the vercel-labs/skills CLI to install to the right path for whichever agents you have.",
-    command: "pnpm dlx skills add github:Blockchain-Oracle/pulsar --skill pulsar",
+    command: "pnpm dlx skills add github:Blockchain-Oracle/xlmtools --skill xlmtools",
   },
   {
     id: "manual",
@@ -31,14 +31,14 @@ const INSTALL_METHODS = [
 
 // Skills are a cross-client standard. Each supported client has its own path.
 const CLIENT_PATHS = [
-  { client: "Claude Code", path: "~/.claude/skills/pulsar/SKILL.md" },
-  { client: "Cursor (2.4+)", path: "~/.cursor/skills/pulsar/SKILL.md" },
-  { client: "Windsurf", path: "~/.codeium/windsurf/skills/pulsar/SKILL.md" },
-  { client: "VS Code Copilot", path: "~/.copilot/skills/pulsar/SKILL.md" },
-  { client: "OpenAI Codex CLI", path: "~/.agents/skills/pulsar/SKILL.md" },
-  { client: "Gemini CLI", path: "~/.gemini/skills/pulsar/SKILL.md" },
-  { client: "Goose", path: "~/.config/agents/skills/pulsar/SKILL.md" },
-  { client: "Cline (3.48+)", path: "~/.cline/skills/pulsar/SKILL.md" },
+  { client: "Claude Code", path: "~/.claude/skills/xlmtools/SKILL.md" },
+  { client: "Cursor (2.4+)", path: "~/.cursor/skills/xlmtools/SKILL.md" },
+  { client: "Windsurf", path: "~/.codeium/windsurf/skills/xlmtools/SKILL.md" },
+  { client: "VS Code Copilot", path: "~/.copilot/skills/xlmtools/SKILL.md" },
+  { client: "OpenAI Codex CLI", path: "~/.agents/skills/xlmtools/SKILL.md" },
+  { client: "Gemini CLI", path: "~/.gemini/skills/xlmtools/SKILL.md" },
+  { client: "Goose", path: "~/.config/agents/skills/xlmtools/SKILL.md" },
+  { client: "Cline (3.48+)", path: "~/.cline/skills/xlmtools/SKILL.md" },
 ];
 
 interface SkillContentProps {
@@ -93,7 +93,7 @@ export function SkillContent({ content }: SkillContentProps) {
             Pick your flavor.
           </h2>
           <p className="mt-2 text-xs text-muted-foreground">
-            PULSAR's skill is a plain SKILL.md file — the cross-client Agent Skills format. It works natively in Claude Code, Cursor 2.4+, Windsurf, VS Code Copilot, Codex CLI, Gemini CLI, Goose, and Cline.
+            XLMTools's skill is a plain SKILL.md file — the cross-client Agent Skills format. It works natively in Claude Code, Cursor 2.4+, Windsurf, VS Code Copilot, Codex CLI, Gemini CLI, Goose, and Cline.
           </p>
         </div>
 

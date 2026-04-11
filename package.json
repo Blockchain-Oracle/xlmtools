@@ -1,13 +1,13 @@
 {
-  "name": "pulsar",
+  "name": "xlmtools",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @pulsar/api --filter @pulsar/web --filter @pulsar/docs -r --parallel dev",
-    "dev:api": "pnpm --filter @pulsar/api dev",
-    "dev:cli": "pnpm --filter @pulsar/mcp dev",
-    "dev:web": "pnpm --filter @pulsar/web dev",
-    "dev:docs": "pnpm --filter @pulsar/docs dev",
+    "dev": "pnpm --filter @xlmtools/api --filter @xlmtools/web --filter @xlmtools/docs -r --parallel dev",
+    "dev:api": "pnpm --filter @xlmtools/api dev",
+    "dev:cli": "pnpm --filter @xlmtools/cli dev",
+    "dev:web": "pnpm --filter @xlmtools/web dev",
+    "dev:docs": "pnpm --filter @xlmtools/docs dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test"
   },

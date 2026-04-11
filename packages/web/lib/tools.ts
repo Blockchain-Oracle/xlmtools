@@ -213,15 +213,15 @@ export const tools: Tool[] = [
     price: null,
     category: "utility",
     free: true,
-    prompt: "check my PULSAR wallet balance and payment channel status",
+    prompt: "check my XLMTools wallet balance and payment channel status",
   },
   {
     name: "tools",
     title: "List Tools",
-    description: "List all available PULSAR tools and their prices.",
+    description: "List all available XLMTools tools and their prices.",
     price: null,
     category: "utility",
     free: true,
-    prompt: "list all available PULSAR tools with their prices",
+    prompt: "list all available XLMTools tools with their prices",
   },
 ]

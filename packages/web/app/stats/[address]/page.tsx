@@ -7,7 +7,7 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
   const { address } = await params;
   return {
-    title: `${address.slice(0, 8)}… — PULSAR Stats`,
+    title: `${address.slice(0, 8)}… — XLMTools Stats`,
     description: `Usage statistics for Stellar address ${address}`,
   };
 }

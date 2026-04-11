@@ -1,16 +1,16 @@
-# @pulsar/api
+# @xlmtools/api
 
-PULSAR API server — hosted Express 5 server that verifies MPP payments, calls backend services, and returns results with spending receipts.
+XLMTools API server — hosted Express 5 server that verifies MPP payments, calls backend services, and returns results with spending receipts.
 
 ## How it works
 
 The API server sits between the CLI and third-party services. It gates paid tools behind MPP payment verification and holds all backend API keys so users never need their own.
 
 ```
-@pulsar/mcp (user's machine)
+@xlmtools/cli (user's machine)
     |  HTTPS + MPP payment credentials
     v
-@pulsar/api (this package, hosted)
+@xlmtools/api (this package, hosted)
     |  - mppx verifies signed payment proofs
     |  - extracts Payment-Receipt header (tx hash)
     |  - logs every paid call to in-memory call log

@@ -46,7 +46,7 @@ Mppx.create({
 
 // { logging: {} } enables ctx.mcpReq.log() in tool handlers
 const server = new McpServer(
-  { name: "pulsar", version: "0.1.0" },
+  { name: "xlmtools", version: "0.1.0" },
   { capabilities: { tools: {}, logging: {} } }
 );
 
@@ -81,7 +81,7 @@ registerOraclePriceTool(server);
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  logger.info("PULSAR MCP server running");
+  logger.info("XLMTools MCP server running");
 }
 
 main().catch((error) => {

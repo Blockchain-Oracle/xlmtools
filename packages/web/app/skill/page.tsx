@@ -3,9 +3,9 @@ import path from "node:path";
 import { SkillContent } from "@/components/skill-content";
 
 export const metadata = {
-  title: "Skill — PULSAR",
+  title: "Skill — XLMTools",
   description:
-    "Install the PULSAR skill in Claude, Cursor, or any MCP-compatible agent. Three install methods.",
+    "Install the XLMTools skill in Claude, Cursor, or any MCP-compatible agent. Three install methods.",
 };
 
 async function loadSkillContent(): Promise<string> {
@@ -32,9 +32,9 @@ export default async function SkillPage() {
             The skill.
           </h1>
           <p className="mt-4 text-sm text-muted-foreground max-w-lg">
-            Install PULSAR as an Agent Skill in Claude, Cursor, Windsurf, or
+            Install XLMTools as an Agent Skill in Claude, Cursor, Windsurf, or
             any MCP-compatible host. The skill teaches your agent when and how
-            to use PULSAR tools — including paid tool warnings, decision trees,
+            to use XLMTools tools — including paid tool warnings, decision trees,
             and receipt handling.
           </p>
         </div>

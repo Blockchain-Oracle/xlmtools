@@ -8,7 +8,7 @@ const steps = [
     title: "Install",
     description: "One command. Zero config.",
     detail:
-      "Run the install command and PULSAR is immediately available as an MCP tool in Claude, Cursor, or any MCP-compatible host.",
+      "Run the install command and XLMTools is immediately available as an MCP tool in Claude, Cursor, or any MCP-compatible host.",
   },
   {
     step: "02",
@@ -24,7 +24,7 @@ const steps = [
     title: "Use",
     description: "Call any tool — payment is automatic.",
     detail:
-      "Ask your agent to use any PULSAR tool. MPP handles the micropayment on Stellar instantly. Every call is on-chain.",
+      "Ask your agent to use any XLMTools tool. MPP handles the micropayment on Stellar instantly. Every call is on-chain.",
   },
 ];
 

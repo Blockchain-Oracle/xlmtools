@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PULSAR — Stellar-Native MCP Tools",
+  title: "XLMTools — Stellar-Native MCP Tools",
   description: "Pay-per-call tools for AI agents on Stellar.",
 };
 

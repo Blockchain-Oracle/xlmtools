@@ -2,16 +2,16 @@ import { Callout } from 'nextra/components'
 
 # API Reference
 
-The PULSAR API server is an Express 5 HTTP server that handles tool execution and MPP payment verification. The CLI client communicates with this server on every tool call.
+The XLMTools API server is an Express 5 HTTP server that handles tool execution and MPP payment verification. The CLI client communicates with this server on every tool call.
 
 <Callout type="warning">
-You don't typically call the API directly. The PULSAR CLI handles all communication automatically. This reference is for developers who want to understand the internals or build custom integrations.
+You don't typically call the API directly. The XLMTools CLI handles all communication automatically. This reference is for developers who want to understand the internals or build custom integrations.
 </Callout>
 
 ## Base URL
 
 ```
-https://api.pulsar.tools  (production — coming soon)
+https://api.xlmtools.com  (production — coming soon)
 http://localhost:3000      (local development / Docker)
 ```
 
@@ -194,7 +194,7 @@ Oracle prices. **Free**
 
 Health check. **Free, no auth**
 
-Returns `{ "status": "ok", "service": "pulsar-api", "version": "0.1.0" }`.
+Returns `{ "status": "ok", "service": "xlmtools-api", "version": "0.1.0" }`.
 
 ### GET /stats
 

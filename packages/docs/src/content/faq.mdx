@@ -4,37 +4,37 @@ import { Callout } from 'nextra/components'
 
 ## General
 
-### What is PULSAR?
+### What is XLMTools?
 
-PULSAR is a Stellar-native MCP (Model Context Protocol) server that gives AI agents access to 20 real-world tools. Seven tools are paid via USDC micropayments on Stellar, and fourteen are free.
+XLMTools is a Stellar-native MCP (Model Context Protocol) server that gives AI agents access to 20 real-world tools. Seven tools are paid via USDC micropayments on Stellar, and fourteen are free.
 
 ### What is MCP?
 
-MCP (Model Context Protocol) is an open standard that lets AI models call external tools. PULSAR implements the MCP server spec, so any MCP-compatible host (Claude, Cursor, Windsurf, etc.) can use PULSAR tools.
+MCP (Model Context Protocol) is an open standard that lets AI models call external tools. XLMTools implements the MCP server spec, so any MCP-compatible host (Claude, Cursor, Windsurf, etc.) can use XLMTools tools.
 
 ### What is MPP?
 
 MPP (Micropayment Protocol) is a challenge-response payment protocol. When a paid tool is called, the server returns HTTP 402 with payment instructions. The client signs a Stellar USDC transfer and retries the request with the payment proof.
 
-### Does PULSAR use real money?
+### Does XLMTools use real money?
 
-No. PULSAR currently runs on the **Stellar testnet** only. All payments use testnet USDC, which has no monetary value. The transaction structure is identical to mainnet for demo purposes.
+No. XLMTools currently runs on the **Stellar testnet** only. All payments use testnet USDC, which has no monetary value. The transaction structure is identical to mainnet for demo purposes.
 
 ## Installation
 
 ### What are the system requirements?
 
 - Node.js 22 or later
-- An MCP-compatible host (Claude Code, Claude Desktop, Cursor, Windsurf, VS Code Copilot, Gemini CLI, OpenAI Codex, Zed, Continue, Cline, Goose) — or just use the standalone `pulsar-cli`
+- An MCP-compatible host (Claude Code, Claude Desktop, Cursor, Windsurf, VS Code Copilot, Gemini CLI, OpenAI Codex, Zed, Continue, Cline, Goose) — or just use the standalone `xlm`
 - Internet connection
 
 ### Do I need to install anything globally?
 
-No. PULSAR runs via `npx`, which downloads and runs the package on demand. No global install needed.
+No. XLMTools runs via `npx`, which downloads and runs the package on demand. No global install needed.
 
 ### Where is my wallet stored?
 
-Your Stellar keypair is stored at `~/.pulsar/config.json`. This file is created automatically on first run.
+Your Stellar keypair is stored at `~/.xlmtools/config.json`. This file is created automatically on first run.
 
 <Callout type="warning">
 Your wallet file contains your Stellar secret key. While this is a testnet key with no real value, treat it as you would any private key.
@@ -67,7 +67,7 @@ Free tools use public APIs with no upstream cost:
 
 ### Is there a monthly fee or subscription?
 
-No. PULSAR is strictly pay-per-call. No subscriptions, no minimums, no commitments.
+No. XLMTools is strictly pay-per-call. No subscriptions, no minimums, no commitments.
 
 ## Payment
 
@@ -80,7 +80,7 @@ See the [Fund Your Wallet](/getting-started/fund-wallet) guide for detailed step
 
 ### Is my secret key safe?
 
-Yes. Your Stellar secret key is stored locally at `~/.pulsar/config.json` and **never leaves your machine**. Only signed transaction proofs are sent to the PULSAR API server.
+Yes. Your Stellar secret key is stored locally at `~/.xlmtools/config.json` and **never leaves your machine**. Only signed transaction proofs are sent to the XLMTools API server.
 
 ### Can I verify payments on-chain?
 
@@ -98,14 +98,14 @@ Your account may not be funded yet. Follow the [Fund Your Wallet](/getting-start
 
 ### Tool calls hang or timeout
 
-Check your internet connection. The PULSAR API server needs to be reachable. If running locally, make sure the API server is started.
+Check your internet connection. The XLMTools API server needs to be reachable. If running locally, make sure the API server is started.
 
 ### How do I reset my wallet?
 
 Delete the wallet file and restart:
 
 ```bash
-rm ~/.pulsar/config.json
+rm ~/.xlmtools/config.json
 ```
 
 A new keypair will be generated on the next tool call.

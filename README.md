@@ -1,4 +1,4 @@
-# PULSAR
+# XLMTools
 
 Stellar-native MCP server with pay-per-call tools for AI agents. One-line install. No subscriptions. Every payment settles on-chain.
 
@@ -6,61 +6,61 @@ Built for the Stellar Agents x402/MPP hackathon.
 
 ## Quick start
 
-PULSAR ships in three flavours: **MCP server**, **standalone CLI**, and **cross-client Agent Skill**. Install any or all.
+XLMTools ships in three flavours: **MCP server**, **standalone CLI**, and **cross-client Agent Skill**. Install any or all.
 
 ### MCP server
 
 ```bash
 # Claude Code
-claude mcp add pulsar npx @pulsar/mcp
+claude mcp add xlmtools npx @xlmtools/cli
 
 # Gemini CLI
-gemini mcp add pulsar npx -y @pulsar/mcp
+gemini mcp add xlmtools npx -y @xlmtools/cli
 
 # OpenAI Codex
-codex mcp add pulsar npx -y @pulsar/mcp
+codex mcp add xlmtools npx -y @xlmtools/cli
 
 # Cursor / Windsurf / Claude Desktop / VS Code / Zed / Cline / Continue / Goose
 # Add to the client's MCP config:
-#   { "command": "npx", "args": ["-y", "@pulsar/mcp"] }
+#   { "command": "npx", "args": ["-y", "@xlmtools/cli"] }
 ```
 
-See the [MCP Host Setup guide](https://pulsar.tools/docs/guides/mcp-setup) for exact config for each of 12 clients.
+See the [MCP Host Setup guide](https://xlmtools.com/docs/guides/mcp-setup) for exact config for each of 12 clients.
 
 ### Standalone CLI
 
 ```bash
-npm install -g @pulsar/mcp
-pulsar-cli --help
+npm install -g @xlmtools/cli
+xlm --help
 ```
 
 ### Agent Skill
 
 ```bash
 # Paste into any agent
-Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.
+Read https://xlmtools.com/skill.md and follow the instructions to install XLMTools.
 
 # Or via CLI
-npx skills add github:Blockchain-Oracle/pulsar --skill pulsar
+npx skills add github:Blockchain-Oracle/xlmtools --skill xlmtools
 ```
 
 The skill works natively in Claude Code, Cursor 2.4+, Windsurf, VS Code Copilot, Codex CLI, Gemini CLI, Goose, and Cline.
 
-On first run, PULSAR generates a Stellar testnet wallet, funds it with XLM via friendbot, and adds a USDC trustline — all automatically. This only happens on testnet. The only manual step is getting testnet USDC:
+On first run, XLMTools generates a Stellar testnet wallet, funds it with XLM via friendbot, and adds a USDC trustline — all automatically. This only happens on testnet. The only manual step is getting testnet USDC:
 
 1. Run the install command above and make any tool call to trigger wallet setup
 2. Go to [faucet.circle.com](https://faucet.circle.com), select Stellar, paste your wallet address
 3. Done — all paid tools will now work
 
-Your wallet is at `~/.pulsar/config.json`. The secret key never leaves your machine.
+Your wallet is at `~/.xlmtools/config.json`. The secret key never leaves your machine.
 
 Note: Auto-wallet funding (friendbot XLM + USDC trustline) only runs on testnet. On mainnet, fund your wallet manually.
 
 ## What this does
 
-PULSAR gives AI agents access to 21 tools. Paid tools cost $0.001 to $0.04 per call in USDC via Stellar's Micropayment Protocol. Free tools have no cost. No API keys needed. No accounts to create.
+XLMTools gives AI agents access to 21 tools. Paid tools cost $0.001 to $0.04 per call in USDC via Stellar's Micropayment Protocol. Free tools have no cost. No API keys needed. No accounts to create.
 
-Works with every major agent client (Claude Code, Claude Desktop, Cursor, Windsurf, VS Code Copilot, Gemini CLI, OpenAI Codex, Zed, Continue, Cline, Goose) and as a standalone `pulsar-cli` for direct terminal use.
+Works with every major agent client (Claude Code, Claude Desktop, Cursor, Windsurf, VS Code Copilot, Gemini CLI, OpenAI Codex, Zed, Continue, Cline, Goose) and as a standalone `xlm` for direct terminal use.
 
 ## Tools
 
@@ -97,33 +97,33 @@ Works with every major agent client (Claude Code, Claude Desktop, Cursor, Windsu
 
 ## Agent Skill
 
-PULSAR also ships as an Agent Skill — procedural instructions that teach Claude (or any skill-capable agent) when and how to use PULSAR tools. Three install methods:
+XLMTools also ships as an Agent Skill — procedural instructions that teach Claude (or any skill-capable agent) when and how to use XLMTools tools. Three install methods:
 
 ```bash
 # 1. Via the community skills CLI
-pnpm dlx skills add github:Blockchain-Oracle/pulsar --skill pulsar
+pnpm dlx skills add github:Blockchain-Oracle/xlmtools --skill xlmtools
 
 # 2. Via prompt — paste into any agent
-Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.
+Read https://xlmtools.com/skill.md and follow the instructions to install XLMTools.
 
-# 3. Manual — copy the SKILL.md from packages/skills/pulsar/ into ~/.claude/skills/pulsar/
+# 3. Manual — copy the SKILL.md from packages/skills/xlmtools/ into ~/.claude/skills/xlmtools/
 ```
 
-The skill teaches your agent the decision tree (user intent → tool), paid tool warnings, receipt handling, and CLI fallback when MCP isn't available. See [`packages/skills/pulsar/SKILL.md`](packages/skills/pulsar/SKILL.md) or visit `/skill` on the frontend.
+The skill teaches your agent the decision tree (user intent → tool), paid tool warnings, receipt handling, and CLI fallback when MCP isn't available. See [`packages/skills/xlmtools/SKILL.md`](packages/skills/xlmtools/SKILL.md) or visit `/skill` on the frontend.
 
 ## Standalone CLI
 
-PULSAR also ships as a terminal tool. Same wallet, same payments, no MCP host needed.
+XLMTools also ships as a terminal tool. Same wallet, same payments, no MCP host needed.
 
 ```bash
-npm install -g @pulsar/mcp
+npm install -g @xlmtools/cli
 
-pulsar-cli wallet
-pulsar-cli crypto bitcoin,stellar
-pulsar-cli weather Lagos
-pulsar-cli search "Stellar MPP" --count 5
-pulsar-cli dex-orderbook XLM/USDC --limit 3
-pulsar-cli --help
+xlm wallet
+xlm crypto bitcoin,stellar
+xlm weather Lagos
+xlm search "Stellar MPP" --count 5
+xlm dex-orderbook XLM/USDC --limit 3
+xlm --help
 ```
 
 Every paid call prints a Stellar transaction hash you can verify on-chain.
@@ -132,7 +132,7 @@ Every paid call prints a Stellar transaction hash you can verify on-chain.
 
 ```
 You ask Claude to search for something
-  -> CLI sends request to PULSAR API
+  -> CLI sends request to XLMTools API
   -> API returns 402 Payment Required
   -> mppx auto-builds a Soroban USDC transfer on Stellar
   -> Your local key signs it (key never leaves your machine)
@@ -167,14 +167,14 @@ Claude / Cursor / Windsurf (MCP client)
     |
     | stdio
     v
-PULSAR CLI (@pulsar/mcp, runs locally)
+XLMTools CLI (@xlmtools/cli, runs locally)
     |  - auto-generated Stellar wallet
     |  - mppx handles 402 payments transparently
     |  - budget tracking + response caching
     |
     | HTTPS + signed MPP credentials
     v
-PULSAR API Server (Express, hosted)
+XLMTools API Server (Express, hosted)
     |  - verifies payments via Soroban simulation
     |  - calls backend APIs (Brave, Exa, OpenAI, etc.)
     |  - users never need backend API keys
@@ -216,7 +216,7 @@ docker compose up -d
 curl http://localhost:3000/health
 ```
 
-The Docker setup runs the API server only. The CLI (`@pulsar/mcp`) runs locally on the user's machine via `npx`.
+The Docker setup runs the API server only. The CLI (`@xlmtools/cli`) runs locally on the user's machine via `npx`.
 
 ## Development
 

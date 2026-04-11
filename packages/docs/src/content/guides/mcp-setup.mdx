@@ -2,9 +2,9 @@ import { Callout } from 'nextra/components'
 
 # MCP Host Setup
 
-PULSAR works with any MCP-compatible host. Here is how to install it in each supported client.
+XLMTools works with any MCP-compatible host. Here is how to install it in each supported client.
 
-All clients use the same npm package: `@pulsar/mcp`.
+All clients use the same npm package: `@xlmtools/cli`.
 
 <Callout type="info">
 The `-y` flag on `npx` auto-confirms the install prompt. Without it, `npx` will ask for confirmation on first run.
@@ -15,7 +15,7 @@ The `-y` flag on `npx` auto-confirms the install prompt. Without it, `npx` will 
 One command, no config file needed:
 
 ```bash
-claude mcp add pulsar npx @pulsar/mcp
+claude mcp add xlmtools npx @xlmtools/cli
 ```
 
 Optional scope flags:
@@ -39,9 +39,9 @@ Or via the app: Claude menu → Settings → Developer → Edit Config.
 ```json
 {
   "mcpServers": {
-    "pulsar": {
+    "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@pulsar/mcp"]
+      "args": ["-y", "@xlmtools/cli"]
     }
   }
 }
@@ -60,15 +60,15 @@ Or via UI: Settings → Tools & MCP → Add new MCP server.
 ```json
 {
   "mcpServers": {
-    "pulsar": {
+    "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@pulsar/mcp"]
+      "args": ["-y", "@xlmtools/cli"]
     }
   }
 }
 ```
 
-A green dot in the Tools & MCP panel means PULSAR is running.
+A green dot in the Tools & MCP panel means XLMTools is running.
 
 ## Windsurf
 
@@ -81,9 +81,9 @@ Or via UI: Cascade panel → MCPs icon (top-right) → Configure.
 ```json
 {
   "mcpServers": {
-    "pulsar": {
+    "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@pulsar/mcp"]
+      "args": ["-y", "@xlmtools/cli"]
     }
   }
 }
@@ -98,10 +98,10 @@ Config: `.vscode/mcp.json` in your workspace, or via Command Palette → `MCP: O
 ```json
 {
   "servers": {
-    "pulsar": {
+    "xlmtools": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@pulsar/mcp"]
+      "args": ["-y", "@xlmtools/cli"]
     }
   }
 }
@@ -116,9 +116,9 @@ In VS Code, click the MCP Servers icon in Cline's top nav → Installed → Conf
 ```json
 {
   "mcpServers": {
-    "pulsar": {
+    "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@pulsar/mcp"],
+      "args": ["-y", "@xlmtools/cli"],
       "disabled": false,
       "autoApprove": []
     }
@@ -137,10 +137,10 @@ Zed uses a different schema — note `context_servers` and `source: "custom"`:
 ```json
 {
   "context_servers": {
-    "pulsar": {
+    "xlmtools": {
       "source": "custom",
       "command": "npx",
-      "args": ["-y", "@pulsar/mcp"],
+      "args": ["-y", "@xlmtools/cli"],
       "env": {}
     }
   }
@@ -149,19 +149,19 @@ Zed uses a different schema — note `context_servers` and `source: "custom"`:
 
 ## Continue (VS Code / JetBrains)
 
-Create `.continue/mcpServers/pulsar.yaml` in your workspace:
+Create `.continue/mcpServers/xlmtools.yaml` in your workspace:
 
 ```yaml
-name: Pulsar MCP
+name: XLMTools MCP
 version: 0.0.1
 schema: v1
 mcpServers:
-  - name: Pulsar
+  - name: XLMTools
     type: stdio
     command: npx
     args:
       - "-y"
-      - "@pulsar/mcp"
+      - "@xlmtools/cli"
 ```
 
 <Callout type="warning">
@@ -177,22 +177,22 @@ goose configure
 ```
 
 Then choose: Add Extension → Command-line Extension (stdio). Fill in:
-- Name: `pulsar`
-- Command: `npx -y @pulsar/mcp`
+- Name: `xlmtools`
+- Command: `npx -y @xlmtools/cli`
 - Timeout: `300`
 
 Or edit the config directly at `~/.config/goose/config.yaml`:
 
 ```yaml
 extensions:
-  pulsar:
-    name: pulsar
+  xlmtools:
+    name: xlmtools
     type: stdio
     enabled: true
     cmd: npx
     args:
       - "-y"
-      - "@pulsar/mcp"
+      - "@xlmtools/cli"
     timeout: 300
 ```
 
@@ -200,7 +200,7 @@ extensions:
 
 Use the Tools page in the app: Tools → Add Server. Fill in:
 - Command: `npx`
-- Args: `-y @pulsar/mcp`
+- Args: `-y @xlmtools/cli`
 
 ## Roo Code (VS Code extension)
 
@@ -209,9 +209,9 @@ Roo Code → MCP Servers → Edit Global MCP, or create `.roo/mcp.json` in your 
 ```json
 {
   "mcpServers": {
-    "pulsar": {
+    "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@pulsar/mcp"],
+      "args": ["-y", "@xlmtools/cli"],
       "disabled": false,
       "alwaysAllow": [],
       "timeout": 60
@@ -226,12 +226,12 @@ Add to your `librechat.yaml`:
 
 ```yaml
 mcpServers:
-  pulsar:
+  xlmtools:
     type: stdio
     command: npx
     args:
       - "-y"
-      - "@pulsar/mcp"
+      - "@xlmtools/cli"
 ```
 
 Restart LibreChat for the server to load.
@@ -253,10 +253,10 @@ Three schemas exist across the ecosystem:
 After setup, ask your agent:
 
 ```
-List all available PULSAR tools
+List all available XLMTools tools
 ```
 
-The agent should call the `tools` tool and return a list of all 21 PULSAR tools with their prices.
+The agent should call the `tools` tool and return a list of all 21 XLMTools tools with their prices.
 
 ## Troubleshooting
 
@@ -264,8 +264,8 @@ The agent should call the `tools` tool and return a list of all 21 PULSAR tools 
 
 **Server starts but no tools appear** — Update your MCP host to the latest version. Some clients require Agent mode (Continue, VS Code Copilot).
 
-**Wallet errors** — On first run, PULSAR creates a wallet at `~/.pulsar/config.json`. If corrupted, delete it:
+**Wallet errors** — On first run, XLMTools creates a wallet at `~/.xlmtools/config.json`. If corrupted, delete it:
 ```bash
-rm ~/.pulsar/config.json
+rm ~/.xlmtools/config.json
 ```
 A new wallet will be generated and auto-funded on testnet.

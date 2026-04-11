@@ -2,8 +2,8 @@ import { ActivityStream } from "@/components/activity-stream";
 import { DotPattern } from "@/components/ui/dot-pattern";
 
 export const metadata = {
-  title: "Explorer — PULSAR",
-  description: "Live transaction stream for PULSAR tool calls on Stellar.",
+  title: "Explorer — XLMTools",
+  description: "Live transaction stream for XLMTools tool calls on Stellar.",
 };
 
 export default function ExplorePage() {

@@ -8,7 +8,7 @@ export function registerToolsListTool(server: McpServer): void {
     "tools",
     {
       title: "List Tools",
-      description: "List all PULSAR tools with their per-call cost in USDC.",      inputSchema: z.object({}),
+      description: "List all XLMTools tools with their per-call cost in USDC.",      inputSchema: z.object({}),
     },
     async () => {
       return ok({

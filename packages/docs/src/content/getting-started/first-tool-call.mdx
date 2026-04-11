@@ -2,7 +2,7 @@ import { Callout } from 'nextra/components'
 
 # First Tool Call
 
-With PULSAR installed and your wallet funded, you're ready to make your first paid tool call.
+With XLMTools installed and your wallet funded, you're ready to make your first paid tool call.
 
 ## Try a web search
 
@@ -12,12 +12,12 @@ Ask your AI agent:
 Search the web for "Stellar network MPP micropayments"
 ```
 
-Behind the scenes, PULSAR will:
+Behind the scenes, XLMTools will:
 
 1. Receive the `search` tool call from your MCP host
-2. Send the request to the PULSAR API server
+2. Send the request to the XLMTools API server
 3. The API responds with HTTP `402 Payment Required` and an MPP payment header
-4. PULSAR's MPP client (`mppx`) automatically builds a Soroban USDC transfer transaction
+4. XLMTools's MPP client (`mppx`) automatically builds a Soroban USDC transfer transaction
 5. Signs it with your local Stellar key
 6. Retries the request with the payment proof attached
 7. The API verifies the payment and returns the search results
@@ -47,7 +47,7 @@ The `dex-orderbook` tool queries the Stellar Horizon API directly. It's free and
 Ask your agent:
 
 ```
-Check my PULSAR wallet balance
+Check my XLMTools wallet balance
 ```
 
 You'll see that $0.003 was deducted for the search. Free tools don't affect your balance.

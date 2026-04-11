@@ -3,6 +3,12 @@ dist/
 .env
 *.env.local
 
+# Next.js build output
+.next/
+
+# Pagefind search index (generated at build)
+packages/docs/public/_pagefind/
+
 # OS
 .DS_Store
 

@@ -2,17 +2,17 @@ import { Callout } from 'nextra/components'
 
 # Payment Flow
 
-PULSAR uses the **Micropayment Protocol (MPP)** to handle pay-per-call billing on the Stellar network. This guide explains the full payment lifecycle for a paid tool call.
+XLMTools uses the **Micropayment Protocol (MPP)** to handle pay-per-call billing on the Stellar network. This guide explains the full payment lifecycle for a paid tool call.
 
 ## Overview
 
-MPP is a challenge-response protocol. When the PULSAR API server receives a request for a paid tool without a valid payment proof, it responds with HTTP `402 Payment Required` and includes payment instructions in the response headers. The PULSAR CLI client (`mppx`) handles the rest automatically.
+MPP is a challenge-response protocol. When the XLMTools API server receives a request for a paid tool without a valid payment proof, it responds with HTTP `402 Payment Required` and includes payment instructions in the response headers. The XLMTools CLI client (`mppx`) handles the rest automatically.
 
 ## Step-by-step flow
 
 ### 1. Tool call initiated
 
-Your AI agent calls a paid tool (e.g. `search`). The PULSAR CLI sends the request to the API server.
+Your AI agent calls a paid tool (e.g. `search`). The XLMTools CLI sends the request to the API server.
 
 ### 2. Server returns 402
 
@@ -39,7 +39,7 @@ The `mppx` library reads the 402 headers and builds a Soroban SAC (Stellar Asset
 
 ### 4. Transaction signed locally
 
-The transaction is signed with your local Stellar secret key (stored in `~/.pulsar/config.json`). Your key never leaves your machine.
+The transaction is signed with your local Stellar secret key (stored in `~/.xlmtools/config.json`). Your key never leaves your machine.
 
 ### 5. Request retried with proof
 
@@ -61,7 +61,7 @@ The entire flow happens in a few seconds.
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│  MCP Host   │────▶│  PULSAR CLI  │────▶│  PULSAR API     │
+│  MCP Host   │────▶│  XLMTools CLI  │────▶│  XLMTools API     │
 │  (Claude)   │     │  (local)     │     │  (remote)       │
 └─────────────┘     └──────┬───────┘     └────────┬────────┘
                            │                      │
@@ -87,7 +87,7 @@ The entire flow happens in a few seconds.
 ```
 
 <Callout type="warning">
-Your Stellar secret key is stored locally at `~/.pulsar/config.json` and is never sent to the PULSAR API server. Only signed transaction proofs are transmitted.
+Your Stellar secret key is stored locally at `~/.xlmtools/config.json` and is never sent to the XLMTools API server. Only signed transaction proofs are transmitted.
 </Callout>
 
 ## Security
@@ -95,4 +95,4 @@ Your Stellar secret key is stored locally at `~/.pulsar/config.json` and is neve
 - **Local signing** — Your secret key never leaves your machine.
 - **Per-call payments** — Each tool call is a separate, auditable transaction.
 - **On-chain verification** — Every payment is recorded on the Stellar ledger and can be independently verified.
-- **No pre-authorization** — PULSAR never holds or pools your funds. You pay exactly per call.
+- **No pre-authorization** — XLMTools never holds or pools your funds. You pay exactly per call.

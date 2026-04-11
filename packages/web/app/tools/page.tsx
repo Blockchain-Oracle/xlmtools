@@ -1,7 +1,7 @@
 import { ToolGrid } from "@/components/tool-grid"
 
 export const metadata = {
-  title: "Tools — PULSAR",
+  title: "Tools — XLMTools",
   description: "20 pay-per-call MCP tools for AI agents on Stellar.",
 }
 

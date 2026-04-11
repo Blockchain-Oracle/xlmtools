@@ -28,7 +28,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/health", (_req, res) => {
-  res.json({ status: "ok", service: "pulsar-api", version: "0.1.0" });
+  res.json({ status: "ok", service: "xlmtools-api", version: "0.1.0" });
 });
 
 // Agent discovery endpoints
@@ -62,5 +62,5 @@ app.use("/stats", cors(), statsRoute);
 
 const PORT = Number(process.env.PORT ?? 3000);
 app.listen(PORT, () => {
-  logger.info({ port: PORT }, "PULSAR API running");
+  logger.info({ port: PORT }, "XLMTools API running");
 });

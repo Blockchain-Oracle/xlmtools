@@ -1,13 +1,13 @@
-# PULSAR — Context for Claude Code
+# XLMTools — Context for Claude Code
 
 ## What we're building
-PULSAR is a Stellar-native MCP server for Claude Code, billed via MPP charge payments.
-One-line install: `claude mcp add pulsar npx @pulsar/mcp`
+XLMTools is a Stellar-native MCP server for Claude Code, billed via MPP charge payments.
+One-line install: `claude mcp add xlmtools npx @xlmtools/cli`
 
 ## Why
 Stellar Agents x402/MPP hackathon. The gap we're filling: nobody has built an MCP
 server on Stellar with MPP billing. BlockRun MCP does this on EVM/Base.
-PULSAR does it on Stellar.
+XLMTools does it on Stellar.
 
 ## The tools (21 total)
 **Paid:** search, research, youtube, screenshot, scrape, image, stocks
@@ -16,7 +16,7 @@ PULSAR does it on Stellar.
 stellar-asset, stellar-account, stellar-pools, oracle-price
 
 (Card tool removed — ASGCard already has their own MCP server with x402 billing.
-No point duplicating. Users can install ASGCard's MCP server alongside PULSAR.)
+No point duplicating. Users can install ASGCard's MCP server alongside XLMTools.)
 
 ## Payment model
 MPP charge mode (via `mppx`). Each paid tool call triggers a 402 → Mppx auto-builds
@@ -25,12 +25,12 @@ Soroban SAC USDC transfer → signs with local Stellar key → retries with paym
 ## Project structure
 ```
 packages/
-  cli/     ← stdio MCP server (local, user's machine, @pulsar/mcp)
+  cli/     ← stdio MCP server (local, user's machine, @xlmtools/cli)
   api/     ← hosted Express 5 API server (verifies MPP, calls backends)
   web/     ← Next.js 16 frontend (landing, tools, explore, stats)
   docs/    ← Nextra 4 documentation site
-docs/superpowers/specs/2026-04-03-pulsar-design.md  ← design spec
-docs/superpowers/plans/2026-04-03-pulsar-implementation.md  ← implementation plan
+docs/superpowers/specs/2026-04-03-xlmtools-design.md  ← design spec
+docs/superpowers/plans/2026-04-03-xlmtools-implementation.md  ← implementation plan
 research/  ← ecosystem research notes
 ```
 

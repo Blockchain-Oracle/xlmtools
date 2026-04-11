@@ -9,7 +9,7 @@ export function registerWalletTool(server: McpServer): void {
   server.registerTool(
     "wallet",
     {
-      title: "PULSAR Wallet",
+      title: "XLMTools Wallet",
       description:
         "Show your Stellar wallet address, current USDC balance, and how to fund it. Free.",      inputSchema: z.object({}),
     },

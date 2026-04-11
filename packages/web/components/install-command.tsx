@@ -14,19 +14,19 @@ interface McpOption {
 }
 
 const MCP_OPTIONS: McpOption[] = [
-  { client: "Claude Code", command: "claude mcp add pulsar npx @pulsar/mcp", hue: 200 },
-  { client: "Standalone CLI", command: "npm install -g @pulsar/mcp", hue: 140 },
-  { client: "Cursor", command: '// .cursor/mcp.json — "pulsar": { "command": "npx", "args": ["-y", "@pulsar/mcp"] }', hue: 260 },
+  { client: "Claude Code", command: "claude mcp add xlmtools npx @xlmtools/cli", hue: 200 },
+  { client: "Standalone CLI", command: "npm install -g @xlmtools/cli", hue: 140 },
+  { client: "Cursor", command: '// .cursor/mcp.json — "xlmtools": { "command": "npx", "args": ["-y", "@xlmtools/cli"] }', hue: 260 },
   { client: "Windsurf", command: "// ~/.codeium/windsurf/mcp_config.json — same mcpServers schema", hue: 290 },
-  { client: "Claude Desktop", command: '// claude_desktop_config.json — "pulsar": { "command": "npx", "args": ["-y", "@pulsar/mcp"] }', hue: 220 },
-  { client: "VS Code Copilot", command: '// .vscode/mcp.json — "servers": { "pulsar": { "type": "stdio", "command": "npx" } }', hue: 180 },
-  { client: "Gemini CLI", command: "gemini mcp add pulsar npx -y @pulsar/mcp", hue: 30 },
-  { client: "OpenAI Codex", command: "codex mcp add pulsar npx -y @pulsar/mcp", hue: 340 },
-  { client: "Zed", command: '// ~/.config/zed/settings.json — "context_servers": { "pulsar": ... }', hue: 60 },
-  { client: "Continue", command: "// .continue/mcpServers/pulsar.yaml — stdio command: npx -y @pulsar/mcp", hue: 120 },
-  { client: "Cline", command: '// cline_mcp_settings.json — "pulsar": { "command": "npx", "args": ["-y", "@pulsar/mcp"] }', hue: 90 },
-  { client: "Goose", command: "goose configure  # add @pulsar/mcp as stdio extension", hue: 40 },
-  { client: "OpenCode", command: "// opencode.json — mcp: { pulsar: { command: 'npx', args: ['-y', '@pulsar/mcp'] } }", hue: 310 },
+  { client: "Claude Desktop", command: '// claude_desktop_config.json — "xlmtools": { "command": "npx", "args": ["-y", "@xlmtools/cli"] }', hue: 220 },
+  { client: "VS Code Copilot", command: '// .vscode/mcp.json — "servers": { "xlmtools": { "type": "stdio", "command": "npx" } }', hue: 180 },
+  { client: "Gemini CLI", command: "gemini mcp add xlmtools npx -y @xlmtools/cli", hue: 30 },
+  { client: "OpenAI Codex", command: "codex mcp add xlmtools npx -y @xlmtools/cli", hue: 340 },
+  { client: "Zed", command: '// ~/.config/zed/settings.json — "context_servers": { "xlmtools": ... }', hue: 60 },
+  { client: "Continue", command: "// .continue/mcpServers/xlmtools.yaml — stdio command: npx -y @xlmtools/cli", hue: 120 },
+  { client: "Cline", command: '// cline_mcp_settings.json — "xlmtools": { "command": "npx", "args": ["-y", "@xlmtools/cli"] }', hue: 90 },
+  { client: "Goose", command: "goose configure  # add @xlmtools/cli as stdio extension", hue: 40 },
+  { client: "OpenCode", command: "// opencode.json — mcp: { xlmtools: { command: 'npx', args: ['-y', '@xlmtools/cli'] } }", hue: 310 },
 ];
 
 // ── Skill install options ────────────────────────────────────
@@ -38,10 +38,10 @@ interface SkillOption {
 }
 
 const SKILL_OPTIONS: SkillOption[] = [
-  { label: "Prompt", command: "Read https://pulsar.tools/skill.md and follow the instructions.", hue: 180 },
-  { label: "pnpm dlx", command: "pnpm dlx skills add github:Blockchain-Oracle/pulsar --skill pulsar", hue: 20 },
-  { label: "npx", command: "npx skills add github:Blockchain-Oracle/pulsar --skill pulsar", hue: 300 },
-  { label: "bunx", command: "bunx skills add github:Blockchain-Oracle/pulsar --skill pulsar", hue: 80 },
+  { label: "Prompt", command: "Read https://xlmtools.com/skill.md and follow the instructions.", hue: 180 },
+  { label: "pnpm dlx", command: "pnpm dlx skills add github:Blockchain-Oracle/xlmtools --skill xlmtools", hue: 20 },
+  { label: "npx", command: "npx skills add github:Blockchain-Oracle/xlmtools --skill xlmtools", hue: 300 },
+  { label: "bunx", command: "bunx skills add github:Blockchain-Oracle/xlmtools --skill xlmtools", hue: 80 },
 ];
 
 const ROTATE_MS = 3500;
@@ -225,7 +225,7 @@ export function McpInstall() {
     <RotatingCard
       eyebrow="MCP Server"
       title="One command, every client."
-      subtitle="PULSAR runs as an MCP server in 12+ clients. Pick yours — config auto-rotates."
+      subtitle="XLMTools runs as an MCP server in 12+ clients. Pick yours — config auto-rotates."
       options={MCP_OPTIONS}
       renderLabel={(o) => o.client}
     />

@@ -27,15 +27,15 @@ const TOOLS = [
 ];
 
 /**
- * /.well-known/pulsar.json — machine-readable service discovery
+ * /.well-known/xlmtools.json — machine-readable service discovery
  */
-discoveryRoute.get("/pulsar.json", (_req, res) => {
+discoveryRoute.get("/xlmtools.json", (_req, res) => {
   res.json({
-    name: "PULSAR",
+    name: "XLMTools",
     version: "0.1.0",
     description: "Stellar-native MCP server with 21 pay-per-call tools for AI agents",
     protocol: "MCP (Model Context Protocol)",
-    install: "claude mcp add pulsar npx @pulsar/mcp",
+    install: "claude mcp add xlmtools npx @xlmtools/cli",
     payment: {
       protocol: "MPP (Machine Payment Protocol)",
       network: "stellar:testnet",
@@ -59,7 +59,7 @@ discoveryRoute.get("/pulsar.json", (_req, res) => {
       "Auto-wallet — testnet wallet created and funded on first run",
     ],
     links: {
-      github: "https://github.com/Blockchain-Oracle/pulsar",
+      github: "https://github.com/Blockchain-Oracle/xlmtools",
       docs: "/docs",
       stats: "/stats",
       health: "/health",
@@ -74,12 +74,12 @@ discoveryRoute.get("/", (_req, res) => {
   const paid = TOOLS.filter((t) => t.price !== null);
   const free = TOOLS.filter((t) => t.price === null);
 
-  const text = `# PULSAR — Stellar-Native MCP Tools
+  const text = `# XLMTools — Stellar-Native MCP Tools
 
-PULSAR is an MCP server that gives AI agents access to 21 tools, paid via USDC micropayments on Stellar.
+XLMTools is an MCP server that gives AI agents access to 21 tools, paid via USDC micropayments on Stellar.
 
 ## Install
-claude mcp add pulsar npx @pulsar/mcp
+claude mcp add xlmtools npx @xlmtools/cli
 
 ## Payment
 Paid tools use Stellar's Micropayment Protocol (MPP). Each call triggers an automatic USDC payment on-chain. No API keys or subscriptions needed.
@@ -98,8 +98,8 @@ ${free.map((t) => `- ${t.name}: ${t.description}`).join("\n")}
 
 ## Links
 - API: /health, /stats, /stats/recent
-- Discovery: /.well-known/pulsar.json
-- GitHub: https://github.com/Blockchain-Oracle/pulsar
+- Discovery: /.well-known/xlmtools.json
+- GitHub: https://github.com/Blockchain-Oracle/xlmtools
 `;
 
   res.type("text/plain").send(text);

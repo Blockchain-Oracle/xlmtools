@@ -93,11 +93,11 @@ export default function Home() {
               startOnView
             >
               <TypingAnimation duration={28} className="text-foreground/90 font-mono">
-                $ pulsar-cli search "latest Stellar news" --count 3
+                $ xlm search "latest Stellar news" --count 3
               </TypingAnimation>
 
               <AnimatedSpan className="text-foreground/40 font-mono mt-1">
-                <span>  ↳ calling pulsar/search ...</span>
+                <span>  ↳ calling xlmtools/search ...</span>
               </AnimatedSpan>
 
               <AnimatedSpan className="text-foreground/55 font-mono">
@@ -149,7 +149,7 @@ export default function Home() {
               Two flavors. Your choice.
             </h2>
             <p className="mt-3 text-sm text-muted-foreground max-w-lg">
-              PULSAR ships as an MCP server AND as an Agent Skill. The MCP server gives your client direct tool access. The Skill teaches your agent when and how to use them. Install one or both.
+              XLMTools ships as an MCP server AND as an Agent Skill. The MCP server gives your client direct tool access. The Skill teaches your agent when and how to use them. Install one or both.
             </p>
           </div>
 

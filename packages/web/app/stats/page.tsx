@@ -1,7 +1,7 @@
 import { StatsLookup } from "@/components/stats-lookup";
 
 export const metadata = {
-  title: "Stats — PULSAR",
+  title: "Stats — XLMTools",
   description: "Look up usage statistics for any Stellar address.",
 };
 

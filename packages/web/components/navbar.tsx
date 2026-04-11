@@ -7,10 +7,10 @@ import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-// TODO: point docs link to deployed docs URL once live (e.g. docs.pulsar.tools)
+// TODO: point docs link to deployed docs URL once live (e.g. docs.xlmtools.com)
 const DOCS_URL =
-  "https://github.com/Blockchain-Oracle/pulsar/tree/main/packages/docs";
-const GITHUB_URL = "https://github.com/Blockchain-Oracle/pulsar";
+  "https://github.com/Blockchain-Oracle/xlmtools/tree/main/packages/docs";
+const GITHUB_URL = "https://github.com/Blockchain-Oracle/xlmtools";
 
 const navLinks = [
   { href: "/tools", label: "Tools" },
@@ -20,7 +20,7 @@ const navLinks = [
   { href: DOCS_URL, label: "Docs", external: true },
 ];
 
-function PulsarLogo({ className }: { className?: string }) {
+function XLMToolsLogo({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 40 40"
@@ -73,9 +73,9 @@ export function Navbar() {
           className="flex items-center gap-2.5 sm:gap-3 hover:opacity-80 transition-opacity shrink-0"
           onClick={() => setMobileOpen(false)}
         >
-          <PulsarLogo className="size-6 sm:size-7 text-foreground shrink-0" />
+          <XLMToolsLogo className="size-6 sm:size-7 text-foreground shrink-0" />
           <span className="font-mono text-sm sm:text-base font-bold tracking-[0.15em] text-foreground">
-            PULSAR
+            XLMTools
           </span>
         </Link>
 

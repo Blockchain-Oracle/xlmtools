@@ -2,21 +2,21 @@ import { Callout } from 'nextra/components'
 
 # Agent Skill
 
-PULSAR also ships as an Agent Skill. A skill is a `SKILL.md` file that teaches Claude (or any skill-capable agent) when and how to use a tool, without consuming context until it is needed.
+XLMTools also ships as an Agent Skill. A skill is a `SKILL.md` file that teaches Claude (or any skill-capable agent) when and how to use a tool, without consuming context until it is needed.
 
 ## Skill vs MCP server — what's the difference?
 
-PULSAR is both, and they are complementary.
+XLMTools is both, and they are complementary.
 
 | | MCP Server | Skill |
 | --- | --- | --- |
 | What it ships | Tool schemas (machine-readable) | Procedural instructions (markdown) |
 | Context cost | Always in context | ~100 tokens at startup, full body loads on demand |
 | Who invokes | Agent calls tools directly | Agent reads instructions, then calls tools |
-| Install | `claude mcp add pulsar npx @pulsar/mcp` | `~/.claude/skills/pulsar/SKILL.md` |
+| Install | `claude mcp add xlmtools npx @xlmtools/cli` | `~/.claude/skills/xlmtools/SKILL.md` |
 
 The skill's job is to teach your agent:
-- When PULSAR is the right choice
+- When XLMTools is the right choice
 - The decision tree mapping user intent to tool
 - Paid tool warnings and cost awareness
 - How to read payment receipts
@@ -29,11 +29,11 @@ The skill's job is to teach your agent:
 Uses [`vercel-labs/skills`](https://github.com/vercel-labs/skills), the emerging standard for skill distribution:
 
 ```bash
-pnpm dlx skills add github:Blockchain-Oracle/pulsar --skill pulsar
+pnpm dlx skills add github:Blockchain-Oracle/xlmtools --skill xlmtools
 
 # or with npm / bun
-npx skills add github:Blockchain-Oracle/pulsar --skill pulsar
-bunx skills add github:Blockchain-Oracle/pulsar --skill pulsar
+npx skills add github:Blockchain-Oracle/xlmtools --skill xlmtools
+bunx skills add github:Blockchain-Oracle/xlmtools --skill xlmtools
 ```
 
 This clones our skills directory and installs `SKILL.md` into the right location for whichever agents you have installed.
@@ -43,7 +43,7 @@ This clones our skills directory and installs `SKILL.md` into the right location
 Paste this sentence into any agent:
 
 ```
-Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.
+Read https://xlmtools.com/skill.md and follow the instructions to install XLMTools.
 ```
 
 The agent fetches the file over HTTPS, reads the instructions, and installs the skill itself. No CLI required.
@@ -53,7 +53,7 @@ The agent fetches the file over HTTPS, reads the instructions, and installs the 
 Download `SKILL.md` from our `/skill` page, then save it to:
 
 ```
-~/.claude/skills/pulsar/SKILL.md
+~/.claude/skills/xlmtools/SKILL.md
 ```
 
 Restart or reload your agent and the skill becomes available.
@@ -67,7 +67,7 @@ For Claude Code, skills are live-loaded — you do not need to restart after add
 The SKILL.md contains:
 
 - **YAML frontmatter** with a "pushy" description that lists trigger keywords (crypto, stock, weather, Stellar, etc.)
-- **Mode priority** — use MCP tools first, fall back to `pulsar-cli`
+- **Mode priority** — use MCP tools first, fall back to `xlm`
 - **Decision tree** — user intent to tool lookup table
 - **Tool catalog** — all 21 tools with prices and parameters
 - **CLI invocation examples**
@@ -87,11 +87,11 @@ This is especially important for:
 - Preventing accidental expensive calls (image generation is $0.040, research is $0.010)
 
 <Callout type="warning">
-Skills currently tend to under-trigger in Claude. PULSAR's skill description is intentionally "pushy" with trigger keywords to counteract this — it explicitly lists every topic the skill covers so Claude auto-invokes it reliably.
+Skills currently tend to under-trigger in Claude. XLMTools's skill description is intentionally "pushy" with trigger keywords to counteract this — it explicitly lists every topic the skill covers so Claude auto-invokes it reliably.
 </Callout>
 
 ## See also
 
-- [MCP Host Setup](/guides/mcp-setup) — install PULSAR in 12 different MCP clients
-- [Standalone CLI](/guides/cli) — use `pulsar-cli` directly from your terminal
+- [MCP Host Setup](/guides/mcp-setup) — install XLMTools in 12 different MCP clients
+- [Standalone CLI](/guides/cli) — use `xlm` directly from your terminal
 - [Payment Flow](/guides/payment-flow) — how MPP micropayments work

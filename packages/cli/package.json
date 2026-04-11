@@ -1,10 +1,10 @@
 {
-  "name": "@pulsar/mcp",
+  "name": "@xlmtools/cli",
   "version": "0.1.0",
   "type": "module",
   "bin": {
-    "pulsar": "./dist/index.js",
-    "pulsar-cli": "./dist/cli.js"
+    "xlmtools": "./dist/index.js",
+    "xlm": "./dist/cli.js"
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",

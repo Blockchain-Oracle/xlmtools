@@ -61,7 +61,7 @@ function buildRequest(
 
   const builder = toolMap[tool];
   if (!builder) {
-    process.stderr.write(`Unknown tool: ${tool}\nRun pulsar-cli --help for available tools.\n`);
+    process.stderr.write(`Unknown tool: ${tool}\nRun xlm --help for available tools.\n`);
     process.exit(1);
   }
 
@@ -122,9 +122,9 @@ function handleTools() {
 
 // ── Help text ────────────────────────────────────────────
 
-const HELP = `PULSAR CLI — Stellar-native tools with pay-per-call
+const HELP = `XLMTools CLI — Stellar-native tools with pay-per-call
 
-Usage: pulsar-cli <tool> [args] [--flag value]
+Usage: xlm <tool> [args] [--flag value]
 
 Paid tools ($0.001-$0.04 USDC via Stellar MPP):
   search <query> [--count N]            Web search
@@ -151,12 +151,12 @@ Free tools:
   tools                                 List all tools
 
 Examples:
-  pulsar-cli search "Stellar MPP micropayments"
-  pulsar-cli crypto bitcoin,ethereum,stellar
-  pulsar-cli weather Lagos
-  pulsar-cli stocks AAPL
-  pulsar-cli dex-orderbook XLM/USDC --limit 5
-  pulsar-cli wallet
+  xlm search "Stellar MPP micropayments"
+  xlm crypto bitcoin,ethereum,stellar
+  xlm weather Lagos
+  xlm stocks AAPL
+  xlm dex-orderbook XLM/USDC --limit 5
+  xlm wallet
 `;
 
 // ── Main ─────────────────────────────────────────────────

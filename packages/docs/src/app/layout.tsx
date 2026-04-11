@@ -6,12 +6,12 @@ import './globals.css'
 
 export const metadata = {
   title: {
-    template: '%s - PULSAR Docs',
-    default: 'PULSAR Docs',
+    template: '%s - XLMTools Docs',
+    default: 'XLMTools Docs',
   },
   description:
-    'PULSAR — Stellar-native MCP tools with pay-per-call micropayments',
-  applicationName: 'PULSAR',
+    'XLMTools — Stellar-native MCP tools with pay-per-call micropayments',
+  applicationName: 'XLMTools',
 }
 
 function Logo() {
@@ -30,7 +30,7 @@ function Logo() {
       >
         <polyline points="2,12 6,12 8,4 12,20 16,8 18,12 22,12" />
       </svg>
-      <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>PULSAR</span>
+      <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>XLMTools</span>
     </span>
   )
 }
@@ -50,16 +50,16 @@ export default async function RootLayout({
           navbar={
             <Navbar
               logo={<Logo />}
-              projectLink="https://github.com/Blockchain-Oracle/pulsar"
+              projectLink="https://github.com/Blockchain-Oracle/xlmtools"
             />
           }
           pageMap={pageMap}
-          docsRepositoryBase="https://github.com/Blockchain-Oracle/pulsar/tree/main/packages/docs"
+          docsRepositoryBase="https://github.com/Blockchain-Oracle/xlmtools/tree/main/packages/docs"
           editLink="Edit this page on GitHub"
           sidebar={{ defaultMenuCollapseLevel: 1 }}
           footer={
             <Footer>
-              {`\u00A9 ${new Date().getFullYear()} PULSAR \u2014 Stellar-native MCP tools`}
+              {`\u00A9 ${new Date().getFullYear()} XLMTools \u2014 Stellar-native MCP tools`}
             </Footer>
           }
         >

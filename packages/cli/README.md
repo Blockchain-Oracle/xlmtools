@@ -1,16 +1,16 @@
-# @pulsar/mcp
+# @xlmtools/cli
 
-PULSAR CLI — the MCP server that runs locally on the user's machine. Handles tool registration, payment signing, budget tracking, and response caching.
+XLMTools CLI — the MCP server that runs locally on the user's machine. Handles tool registration, payment signing, budget tracking, and response caching.
 
 ## How it works
 
-This package is an MCP stdio server. It's started automatically by Claude, Cursor, or any MCP-compatible host when a user calls a PULSAR tool.
+This package is an MCP stdio server. It's started automatically by Claude, Cursor, or any MCP-compatible host when a user calls a XLMTools tool.
 
 ```
 MCP Host (Claude, Cursor, Windsurf)
     |  stdio
     v
-@pulsar/mcp (this package)
+@xlmtools/cli (this package)
     |  - 21 tools registered via @modelcontextprotocol/sdk
     |  - mppx polyfills fetch to auto-handle 402 payments
     |  - budget enforcement (withBudget)
@@ -18,17 +18,17 @@ MCP Host (Claude, Cursor, Windsurf)
     |
     |  HTTPS
     v
-@pulsar/api (hosted API server)
+@xlmtools/api (hosted API server)
 ```
 
 ## Install (for users)
 
 ```bash
-claude mcp add pulsar npx @pulsar/mcp
+claude mcp add xlmtools npx @xlmtools/cli
 ```
 
 On first run, the CLI:
-1. Generates a Stellar keypair at `~/.pulsar/config.json`
+1. Generates a Stellar keypair at `~/.xlmtools/config.json`
 2. Funds the wallet with testnet XLM via friendbot (testnet only)
 3. Adds a USDC trustline so the wallet can receive payments
 

@@ -2,7 +2,7 @@ import { Callout } from 'nextra/components'
 
 # Spending Receipts
 
-Every paid PULSAR tool call creates a real transaction on the Stellar testnet. You can verify any payment independently using public block explorers.
+Every paid XLMTools tool call creates a real transaction on the Stellar testnet. You can verify any payment independently using public block explorers.
 
 ## Viewing your transaction history
 
@@ -26,7 +26,7 @@ Replace `YOUR_PUBLIC_KEY` with your wallet address.
 ### Option 3: Ask your agent
 
 ```
-Show me my PULSAR wallet and recent payments
+Show me my XLMTools wallet and recent payments
 ```
 
 The `wallet` tool returns your address and balance. You can then use the `stellar-account` tool to see full account details.
@@ -61,12 +61,12 @@ You can use the `tx_hash` to look up the exact transaction on Stellar Expert.
 
 ## Understanding the receipt
 
-Each PULSAR payment transaction contains:
+Each XLMTools payment transaction contains:
 
 | Field | Description |
 | --- | --- |
 | **from** | Your wallet address |
-| **to** | PULSAR API server's payment address |
+| **to** | XLMTools API server's payment address |
 | **amount** | Tool price in USDC (e.g. 0.003) |
 | **asset** | USDC on Stellar testnet |
 | **memo** | Tool name and request ID (e.g. `search:abc123`) |

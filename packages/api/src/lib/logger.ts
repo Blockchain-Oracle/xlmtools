@@ -1,6 +1,6 @@
 import pino from "pino";
 
 export const logger = pino({
-  name: "pulsar-api",
+  name: "xlmtools-api",
   level: process.env.LOG_LEVEL ?? "info",
 });

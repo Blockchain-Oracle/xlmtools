@@ -2,35 +2,35 @@ import { Callout } from 'nextra/components'
 
 # Standalone CLI
 
-PULSAR also ships as a standalone command-line tool. Use it directly from your terminal without needing an MCP host. Same wallet, same payments, same tools.
+XLMTools also ships as a standalone command-line tool. Use it directly from your terminal without needing an MCP host. Same wallet, same payments, same tools.
 
 ## Install
 
 ```bash
-npm install -g @pulsar/mcp
+npm install -g @xlmtools/cli
 ```
 
 This installs two binaries:
-- `pulsar` — the MCP stdio server (used by Claude, Cursor, etc.)
-- `pulsar-cli` — the standalone terminal CLI
+- `xlmtools` — the MCP stdio server (used by Claude, Cursor, etc.)
+- `xlm` — the standalone terminal CLI
 
 ## Usage
 
 ```bash
-pulsar-cli <tool> [args] [--flag value]
+xlm <tool> [args] [--flag value]
 ```
 
 ### Free tools
 
 ```bash
-pulsar-cli wallet
-pulsar-cli tools
-pulsar-cli crypto bitcoin,ethereum,stellar
-pulsar-cli weather Lagos
-pulsar-cli domain pulsar-mcp.xyz
-pulsar-cli dex-orderbook XLM/USDC --limit 5
-pulsar-cli oracle-price BTC
-pulsar-cli stellar-account GDJIFRCNKCYINRP3FCPGEOWB4L3JBU3LN4Y2AZNXCV7CK7MEGZTNG5NG
+xlm wallet
+xlm tools
+xlm crypto bitcoin,ethereum,stellar
+xlm weather Lagos
+xlm domain xlmtools-mcp.xyz
+xlm dex-orderbook XLM/USDC --limit 5
+xlm oracle-price BTC
+xlm stellar-account GDJIFRCNKCYINRP3FCPGEOWB4L3JBU3LN4Y2AZNXCV7CK7MEGZTNG5NG
 ```
 
 ### Paid tools
@@ -38,13 +38,13 @@ pulsar-cli stellar-account GDJIFRCNKCYINRP3FCPGEOWB4L3JBU3LN4Y2AZNXCV7CK7MEGZTNG
 Paid tools automatically handle the MPP payment — you just need testnet USDC in your wallet.
 
 ```bash
-pulsar-cli search "Stellar MPP micropayments" --count 5
-pulsar-cli research "Soroban smart contracts" --num-results 3
-pulsar-cli stocks AAPL
-pulsar-cli screenshot https://stellar.org --format png
-pulsar-cli scrape https://stellar.org
-pulsar-cli image "A pulsar in deep space" --size 1024x1024
-pulsar-cli youtube "Stellar development"
+xlm search "Stellar MPP micropayments" --count 5
+xlm research "Soroban smart contracts" --num-results 3
+xlm stocks AAPL
+xlm screenshot https://stellar.org --format png
+xlm scrape https://stellar.org
+xlm image "a pulsar star in deep space" --size 1024x1024
+xlm youtube "Stellar development"
 ```
 
 Every paid response prints a receipt line showing the Stellar transaction hash:
@@ -55,14 +55,14 @@ Every paid response prints a receipt line showing the Stellar transaction hash:
 
 ## How it differs from the MCP server
 
-| Feature | MCP server (`pulsar`) | Standalone CLI (`pulsar-cli`) |
+| Feature | MCP server (`xlmtools`) | Standalone CLI (`xlm`) |
 | --- | --- | --- |
 | Usage | Via Claude, Cursor, Windsurf | Direct terminal commands |
 | Interface | stdin/stdout JSON-RPC | `process.argv` parsing |
 | Persistence | Long-running process | One-shot (exits after each command) |
 | Budget tracking | Yes (session-scoped) | No (resets per invocation) |
 | Response caching | Yes (5-min TTL) | No (each call is fresh) |
-| Wallet | Shared (`~/.pulsar/config.json`) | Shared (same file) |
+| Wallet | Shared (`~/.xlmtools/config.json`) | Shared (same file) |
 | Payments | MPP via mppx | MPP via mppx (same flow) |
 
 Both modes share the same Stellar keypair and API endpoint. You can install once and use both.
@@ -73,13 +73,13 @@ Both modes share the same Stellar keypair and API endpoint. You can install once
 
 | Command | Cost | Example |
 | --- | --- | --- |
-| `search <query>` | $0.003 | `pulsar-cli search "Stellar news"` |
-| `research <query>` | $0.010 | `pulsar-cli research "Soroban"` |
-| `youtube <query>` | $0.002 | `pulsar-cli youtube "Stellar dev"` |
-| `screenshot <url>` | $0.010 | `pulsar-cli screenshot https://stellar.org` |
-| `scrape <url>` | $0.002 | `pulsar-cli scrape https://stellar.org` |
-| `image <prompt>` | $0.040 | `pulsar-cli image "pulsar in space"` |
-| `stocks <symbol>` | $0.001 | `pulsar-cli stocks AAPL` |
+| `search <query>` | $0.003 | `xlm search "Stellar news"` |
+| `research <query>` | $0.010 | `xlm research "Soroban"` |
+| `youtube <query>` | $0.002 | `xlm youtube "Stellar dev"` |
+| `screenshot <url>` | $0.010 | `xlm screenshot https://stellar.org` |
+| `scrape <url>` | $0.002 | `xlm scrape https://stellar.org` |
+| `image <prompt>` | $0.040 | `xlm image "xlmtools in space"` |
+| `stocks <symbol>` | $0.001 | `xlm stocks AAPL` |
 
 ### Free
 
@@ -87,28 +87,28 @@ Both modes share the same Stellar keypair and API endpoint. You can install once
 | --- | --- |
 | `wallet` | Your address and balances |
 | `tools` | List all 21 tools |
-| `crypto <ids>` | `pulsar-cli crypto bitcoin,stellar` |
-| `weather <location>` | `pulsar-cli weather "New York"` |
-| `domain <name>` | `pulsar-cli domain stellar.org` |
-| `dex-orderbook <pair>` | `pulsar-cli dex-orderbook XLM/USDC` |
-| `dex-candles <pair>` | `pulsar-cli dex-candles XLM/USDC --resolution 1h` |
-| `dex-trades <pair>` | `pulsar-cli dex-trades XLM/USDC` |
-| `swap-quote <from> <to> <amount>` | `pulsar-cli swap-quote XLM USDC 100` |
-| `stellar-asset <asset>` | `pulsar-cli stellar-asset USDC` |
-| `stellar-account <address>` | `pulsar-cli stellar-account G...` |
-| `stellar-pools` | `pulsar-cli stellar-pools --limit 5` |
-| `oracle-price <asset>` | `pulsar-cli oracle-price BTC` |
+| `crypto <ids>` | `xlm crypto bitcoin,stellar` |
+| `weather <location>` | `xlm weather "New York"` |
+| `domain <name>` | `xlm domain stellar.org` |
+| `dex-orderbook <pair>` | `xlm dex-orderbook XLM/USDC` |
+| `dex-candles <pair>` | `xlm dex-candles XLM/USDC --resolution 1h` |
+| `dex-trades <pair>` | `xlm dex-trades XLM/USDC` |
+| `swap-quote <from> <to> <amount>` | `xlm swap-quote XLM USDC 100` |
+| `stellar-asset <asset>` | `xlm stellar-asset USDC` |
+| `stellar-account <address>` | `xlm stellar-account G...` |
+| `stellar-pools` | `xlm stellar-pools --limit 5` |
+| `oracle-price <asset>` | `xlm oracle-price BTC` |
 
 ## Help
 
 ```bash
-pulsar-cli --help
+xlm --help
 ```
 
 <Callout type="info">
 Output is JSON by default so you can pipe it to tools like `jq`:
 
 ```bash
-pulsar-cli crypto bitcoin | jq '.bitcoin.usd'
+xlm crypto bitcoin | jq '.bitcoin.usd'
 ```
 </Callout>
