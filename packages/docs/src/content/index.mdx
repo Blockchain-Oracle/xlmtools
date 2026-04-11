@@ -2,12 +2,19 @@
 
 **Stellar-native MCP tools with pay-per-call micropayments.**
 
-PULSAR is a Model Context Protocol (MCP) server that gives AI agents access to 20 real-world tools — web search, image generation, financial data, Stellar DEX analytics, and more. Every paid tool call is settled instantly on the Stellar network using USDC micropayments via the Micropayment Protocol (MPP).
+PULSAR is a Model Context Protocol (MCP) server **and** a standalone CLI **and** a cross-client Agent Skill. It gives AI agents access to 21 real-world tools — web search, image generation, financial data, Stellar DEX analytics, and more. Every paid tool call is settled instantly on the Stellar network using USDC micropayments via the Micropayment Protocol (MPP).
 
-One command to install. No API keys. No subscriptions. Just pay-per-call.
+Works natively in Claude Code, Claude Desktop, Cursor, Windsurf, VS Code Copilot, Gemini CLI, OpenAI Codex, Zed, Continue, Cline, and Goose.
 
 ```bash
+# MCP server
 claude mcp add pulsar npx @pulsar/mcp
+
+# Standalone CLI
+npm install -g @pulsar/mcp
+
+# Agent Skill (install via prompt in any agent)
+Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.
 ```
 
 ---
@@ -17,8 +24,9 @@ claude mcp add pulsar npx @pulsar/mcp
 - **No API keys to manage** — PULSAR handles all backend integrations. You just call tools.
 - **Pay only for what you use** — Micropayments as low as $0.001 per call. No monthly fees.
 - **Stellar-native** — Payments settle in seconds on the Stellar network using USDC.
-- **21 tools in one server** — Web, media, finance, and the full Stellar DEX — all from a single MCP install.
-- **Works with any MCP host** — Claude Code, Claude Desktop, Cursor, Windsurf, and more.
+- **21 tools in one server** — Web, media, finance, and the full Stellar DEX — all from a single install.
+- **Works with every major client** — Claude Code, Cursor, Windsurf, VS Code Copilot, Gemini CLI, OpenAI Codex, Zed, Continue, Cline, Goose, and more.
+- **Three install flavors** — MCP server, standalone CLI, or cross-client Agent Skill.
 
 ---
 

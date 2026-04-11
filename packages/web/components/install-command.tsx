@@ -1,218 +1,165 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// ── MCP client rotation (only used on the "mcp" tab) ─────────
+// ── MCP server install options (all supported clients) ──────
 
-interface McpClient {
-  name: string;
+interface McpOption {
+  client: string;
   command: string;
-  hue: number; // 0-360 for subtle accent color rotation
+  hue: number;
 }
 
-const MCP_CLIENTS: McpClient[] = [
-  {
-    name: "Claude Code",
-    command: "claude mcp add pulsar npx @pulsar/mcp",
-    hue: 200,
-  },
-  {
-    name: "Cursor",
-    command: '"mcpServers": { "pulsar": { "command": "npx", "args": ["-y", "@pulsar/mcp"] } }',
-    hue: 160,
-  },
-  {
-    name: "Windsurf",
-    command: '"mcpServers": { "pulsar": { "command": "npx", "args": ["-y", "@pulsar/mcp"] } }',
-    hue: 280,
-  },
-  {
-    name: "VS Code",
-    command: '"servers": { "pulsar": { "type": "stdio", "command": "npx", "args": ["-y", "@pulsar/mcp"] } }',
-    hue: 220,
-  },
-  {
-    name: "Zed",
-    command: '"context_servers": { "pulsar": { "source": "custom", "command": "npx", "args": ["-y", "@pulsar/mcp"] } }',
-    hue: 40,
-  },
+const MCP_OPTIONS: McpOption[] = [
+  { client: "Claude Code", command: "claude mcp add pulsar npx @pulsar/mcp", hue: 200 },
+  { client: "Standalone CLI", command: "npm install -g @pulsar/mcp", hue: 140 },
+  { client: "Cursor", command: '// .cursor/mcp.json — "pulsar": { "command": "npx", "args": ["-y", "@pulsar/mcp"] }', hue: 260 },
+  { client: "Windsurf", command: "// ~/.codeium/windsurf/mcp_config.json — same mcpServers schema", hue: 290 },
+  { client: "Claude Desktop", command: '// claude_desktop_config.json — "pulsar": { "command": "npx", "args": ["-y", "@pulsar/mcp"] }', hue: 220 },
+  { client: "VS Code Copilot", command: '// .vscode/mcp.json — "servers": { "pulsar": { "type": "stdio", "command": "npx" } }', hue: 180 },
+  { client: "Gemini CLI", command: "gemini mcp add pulsar npx -y @pulsar/mcp", hue: 30 },
+  { client: "OpenAI Codex", command: "codex mcp add pulsar npx -y @pulsar/mcp", hue: 340 },
+  { client: "Zed", command: '// ~/.config/zed/settings.json — "context_servers": { "pulsar": ... }', hue: 60 },
+  { client: "Continue", command: "// .continue/mcpServers/pulsar.yaml — stdio command: npx -y @pulsar/mcp", hue: 120 },
+  { client: "Cline", command: '// cline_mcp_settings.json — "pulsar": { "command": "npx", "args": ["-y", "@pulsar/mcp"] }', hue: 90 },
+  { client: "Goose", command: "goose configure  # add @pulsar/mcp as stdio extension", hue: 40 },
+  { client: "OpenCode", command: "// opencode.json — mcp: { pulsar: { command: 'npx', args: ['-y', '@pulsar/mcp'] } }", hue: 310 },
+];
+
+// ── Skill install options ────────────────────────────────────
+
+interface SkillOption {
+  label: string;
+  command: string;
+  hue: number;
+}
+
+const SKILL_OPTIONS: SkillOption[] = [
+  { label: "Prompt", command: "Read https://pulsar.tools/skill.md and follow the instructions.", hue: 180 },
+  { label: "pnpm dlx", command: "pnpm dlx skills add github:pulsarmcp/pulsar --skill pulsar", hue: 20 },
+  { label: "npx", command: "npx skills add github:pulsarmcp/pulsar --skill pulsar", hue: 300 },
+  { label: "bunx", command: "bunx skills add github:pulsarmcp/pulsar --skill pulsar", hue: 80 },
 ];
 
 const ROTATE_MS = 3500;
 
-// ── Install method tabs ──────────────────────────────────────
+// ── Shared rotating card ─────────────────────────────────────
 
-interface InstallTab {
-  id: string;
-  label: string;
-  note: string;
-  // Static command, OR "rotate" which triggers MCP client rotation
-  command?: string;
-  rotate?: boolean;
+interface RotatingCardProps<T extends { command: string; hue: number }> {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  options: T[];
+  renderLabel: (opt: T) => string;
+  footer?: ReactNode;
 }
 
-const TABS: InstallTab[] = [
-  {
-    id: "mcp",
-    label: "mcp",
-    note: "Auto-rotating through every MCP client",
-    rotate: true,
-  },
-  {
-    id: "prompt",
-    label: "prompt",
-    note: "Paste into any agent — it reads the skill and installs itself",
-    command:
-      "Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.",
-  },
-  {
-    id: "pnpm",
-    label: "pnpm",
-    note: "pnpm dlx",
-    command: "pnpm dlx skills add github:pulsarmcp/pulsar --skill pulsar",
-  },
-  {
-    id: "npx",
-    label: "npx",
-    note: "Node package runner",
-    command: "npx skills add github:pulsarmcp/pulsar --skill pulsar",
-  },
-  {
-    id: "bunx",
-    label: "bunx",
-    note: "Bun package runner",
-    command: "bunx skills add github:pulsarmcp/pulsar --skill pulsar",
-  },
-];
-
-// ── Component ────────────────────────────────────────────────
-
-export function InstallCommand() {
-  const [activeTabId, setActiveTabId] = useState(TABS[0].id);
-  const [clientIndex, setClientIndex] = useState(0);
+function RotatingCard<T extends { command: string; hue: number }>({
+  eyebrow,
+  title,
+  subtitle,
+  options,
+  renderLabel,
+  footer,
+}: RotatingCardProps<T>) {
+  const [index, setIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const [paused, setPaused] = useState(false);
 
-  const activeTab = TABS.find((t) => t.id === activeTabId) ?? TABS[0];
-  const activeClient = MCP_CLIENTS[clientIndex];
-
-  // Rotate MCP clients when on the "mcp" tab
   useEffect(() => {
-    if (activeTab.id !== "mcp" || paused) return;
+    if (paused) return;
     const id = setInterval(() => {
-      setClientIndex((i) => (i + 1) % MCP_CLIENTS.length);
+      setIndex((i) => (i + 1) % options.length);
     }, ROTATE_MS);
     return () => clearInterval(id);
-  }, [activeTab.id, paused]);
+  }, [paused, options.length]);
 
-  const displayCommand = activeTab.rotate
-    ? activeClient.command
-    : activeTab.command ?? "";
-
-  // Accent hue: rotates on mcp tab, static on others
-  const accentHue = activeTab.rotate ? activeClient.hue : 220;
+  const current = options[index];
 
   async function handleCopy() {
-    await navigator.clipboard.writeText(displayCommand);
+    await navigator.clipboard.writeText(current.command);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
 
   return (
     <div
-      className="w-full max-w-2xl"
+      className="flex flex-col h-full"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Install method tabs */}
-      <div className="flex items-center gap-1 mb-3">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => {
-              setActiveTabId(tab.id);
-              setCopied(false);
-              setClientIndex(0);
-            }}
-            className={cn(
-              "font-mono text-xs tracking-tight px-3 py-1.5 rounded-[2px] transition-colors cursor-pointer",
-              activeTabId === tab.id
-                ? "bg-muted text-foreground"
-                : "text-muted-foreground hover:bg-muted/60 hover:text-foreground/80",
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
+      {/* Header */}
+      <div>
+        <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-muted-foreground/60">
+          {eyebrow}
+        </span>
+        <h3 className="text-2xl font-bold text-foreground tracking-tight mt-1">
+          {title}
+        </h3>
+        <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+          {subtitle}
+        </p>
       </div>
 
-      {/* Client name (only on mcp tab) */}
-      <div className="h-5 mb-1.5 flex items-center">
+      {/* Spacer — pushes command group to bottom for alignment */}
+      <div className="flex-1 min-h-6" />
+
+      {/* Current option label */}
+      <div className="flex items-center gap-2 h-4 mb-3">
         <AnimatePresence mode="wait">
-          {activeTab.rotate && (
-            <motion.div
-              key={activeClient.name}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.2 }}
-              className="flex items-center gap-2"
-            >
-              <motion.span
-                className="size-1.5 rounded-full shrink-0"
-                animate={{
-                  backgroundColor: `oklch(0.7 0.15 ${accentHue})`,
-                  boxShadow: `0 0 8px oklch(0.7 0.15 ${accentHue} / 0.6)`,
-                }}
-                transition={{ duration: 0.6 }}
-              />
-              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
-                {activeClient.name}
-              </span>
-            </motion.div>
-          )}
+          <motion.div
+            key={renderLabel(current)}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2 }}
+            className="flex items-center gap-2"
+          >
+            <motion.span
+              className="size-1.5 rounded-full shrink-0"
+              animate={{
+                backgroundColor: `oklch(0.7 0.15 ${current.hue})`,
+                boxShadow: `0 0 8px oklch(0.7 0.15 ${current.hue} / 0.6)`,
+              }}
+              transition={{ duration: 0.6 }}
+            />
+            <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
+              {renderLabel(current)}
+            </span>
+          </motion.div>
         </AnimatePresence>
       </div>
 
       {/* Command box */}
       <motion.div
         animate={{
-          borderColor: activeTab.rotate
-            ? `oklch(0.7 0.08 ${accentHue} / 0.4)`
-            : "var(--border)",
+          borderColor: `oklch(0.7 0.08 ${current.hue} / 0.4)`,
         }}
         transition={{ duration: 0.8 }}
-        className={cn(
-          "relative flex items-center justify-between gap-4",
-          "rounded-xl border bg-card px-5 py-4",
-          "overflow-hidden",
-        )}
+        className="relative flex items-center justify-between gap-3 rounded-xl border bg-card px-5 py-4 overflow-hidden"
       >
-        {/* Subtle color wash on mcp tab */}
-        {activeTab.rotate && (
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            animate={{
-              background: `linear-gradient(90deg, oklch(0.7 0.12 ${accentHue} / 0.04), transparent 60%)`,
-            }}
-            transition={{ duration: 1.2 }}
-          />
-        )}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          animate={{
+            background: `linear-gradient(90deg, oklch(0.7 0.12 ${current.hue} / 0.05), transparent 60%)`,
+          }}
+          transition={{ duration: 1.2 }}
+        />
 
         <div className="flex-1 min-w-0 overflow-hidden relative z-10">
           <AnimatePresence mode="wait">
             <motion.code
-              key={`${activeTab.id}-${activeTab.rotate ? clientIndex : "static"}`}
+              key={current.command}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.2 }}
               className="font-mono text-sm text-foreground select-all block truncate"
             >
-              {displayCommand}
+              {current.command}
             </motion.code>
           </AnimatePresence>
         </div>
@@ -241,46 +188,61 @@ export function InstallCommand() {
         </button>
       </motion.div>
 
-      {/* Note */}
-      <AnimatePresence mode="wait">
-        {activeTab.note && (
-          <motion.p
-            key={activeTab.id + "-note"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="mt-2 text-[11px] font-mono tracking-wide text-muted-foreground/70"
-          >
-            {activeTab.note}
-          </motion.p>
-        )}
-      </AnimatePresence>
-
-      {/* Client logos row */}
-      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-        <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">
-          Works with
-        </span>
-        {[
-          "Claude Code",
-          "Claude Desktop",
-          "Cursor",
-          "Windsurf",
-          "VS Code",
-          "Zed",
-          "Cline",
-          "Continue",
-          "Goose",
-        ].map((client) => (
-          <span
-            key={client}
-            className="font-mono text-[10px] tracking-[0.15em] uppercase text-muted-foreground/60"
-          >
-            {client}
-          </span>
+      {/* Option dots (clickable) */}
+      <div className="flex items-center gap-1.5 mt-3">
+        {options.map((opt, i) => (
+          <button
+            key={renderLabel(opt)}
+            onClick={() => {
+              setIndex(i);
+              setPaused(true);
+            }}
+            title={renderLabel(opt)}
+            className={cn(
+              "h-1 rounded-full transition-all",
+              i === index
+                ? "w-6 bg-foreground"
+                : "w-1 bg-muted-foreground/30 hover:bg-muted-foreground/60",
+            )}
+          />
         ))}
       </div>
+
+      {footer && <div className="mt-auto pt-2">{footer}</div>}
     </div>
   );
+}
+
+// ── MCP Install card ─────────────────────────────────────────
+
+export function McpInstall() {
+  return (
+    <RotatingCard
+      eyebrow="MCP Server"
+      title="One command, every client."
+      subtitle="PULSAR runs as an MCP server in 12+ clients. Pick yours — config auto-rotates."
+      options={MCP_OPTIONS}
+      renderLabel={(o) => o.client}
+    />
+  );
+}
+
+// ── Skill Install card ───────────────────────────────────────
+
+export function SkillInstall() {
+  return (
+    <RotatingCard
+      eyebrow="Agent Skill"
+      title="Teach agents when to use it."
+      subtitle="Cross-client SKILL.md format. Works natively in Claude Code, Cursor 2.4+, Windsurf, VS Code Copilot, Codex CLI, Gemini CLI, Goose, and Cline."
+      options={SKILL_OPTIONS}
+      renderLabel={(o) => o.label}
+    />
+  );
+}
+
+// ── Legacy wrapper (keeps existing imports working) ──────────
+
+export function InstallCommand() {
+  return <McpInstall />;
 }

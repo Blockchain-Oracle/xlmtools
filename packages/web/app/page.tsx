@@ -1,6 +1,6 @@
 "use client";
 
-import { InstallCommand } from "@/components/install-command";
+import { McpInstall, SkillInstall } from "@/components/install-command";
 import { LogoBar } from "@/components/logo-bar";
 import { StatsBar } from "@/components/stats-bar";
 import { SetupSteps } from "@/components/setup-steps";
@@ -64,12 +64,6 @@ export default function Home() {
               </p>
             </BlurFade>
 
-            <BlurFade delay={0.20}>
-              <div className="max-w-md">
-                <InstallCommand />
-              </div>
-            </BlurFade>
-
             <BlurFade delay={0.24}>
               <div className="flex items-center gap-3">
                 <Link href="/tools">
@@ -99,39 +93,43 @@ export default function Home() {
               startOnView
             >
               <TypingAnimation duration={28} className="text-foreground/90 font-mono">
-                $ claude mcp add pulsar npx @pulsar/mcp
+                $ pulsar-cli search "latest Stellar news" --count 3
               </TypingAnimation>
 
               <AnimatedSpan className="text-foreground/40 font-mono mt-1">
-                <span>  ↳ installing @pulsar/mcp ...</span>
+                <span>  ↳ calling pulsar/search ...</span>
               </AnimatedSpan>
 
-              <AnimatedSpan className="text-foreground/70 font-mono">
-                <span>  ✓ server configured</span>
+              <AnimatedSpan className="text-foreground/55 font-mono">
+                <span>  MPP  verifying credentials</span>
+              </AnimatedSpan>
+
+              <AnimatedSpan className="text-foreground/65 font-mono">
+                <span>  Pay  $0.003 USDC  ·  settled 1.2s</span>
               </AnimatedSpan>
 
               <AnimatedSpan className="text-foreground/20 font-mono mt-3 text-[11px]">
                 <span>────────────────────────────────────</span>
               </AnimatedSpan>
 
-              <AnimatedSpan className="text-foreground/55 font-mono mt-1">
-                <span>User  search for latest Stellar news</span>
-              </AnimatedSpan>
-
-              <AnimatedSpan className="text-foreground/45 font-mono">
-                <span>Tool  pulsar/search</span>
-              </AnimatedSpan>
-
-              <AnimatedSpan className="text-foreground/65 font-mono">
-                <span>Pay   $0.003 USDC  ·  settled 1.2s</span>
-              </AnimatedSpan>
-
-              <AnimatedSpan className="text-foreground/85 font-mono mt-1">
+              <AnimatedSpan className="text-foreground/85 font-mono">
                 <span>  ✓ 8 results returned</span>
               </AnimatedSpan>
 
+              <AnimatedSpan className="text-foreground/60 font-mono mt-1">
+                <span>  1. Stellar Foundation announces Q2 roadmap</span>
+              </AnimatedSpan>
+
+              <AnimatedSpan className="text-foreground/55 font-mono">
+                <span>  2. Soroban TPS hits 5,000 in testnet benchmark</span>
+              </AnimatedSpan>
+
+              <AnimatedSpan className="text-foreground/50 font-mono">
+                <span>  3. MPP protocol live on mainnet USDC</span>
+              </AnimatedSpan>
+
               <AnimatedSpan className="text-foreground/25 font-mono mt-3 text-[10px] tracking-widest uppercase">
-                <span>tx/abc123def456 · stellar testnet</span>
+                <span>tx/8f3a1b2c4d5e · stellar testnet</span>
               </AnimatedSpan>
             </Terminal>
           </BlurFade>
@@ -139,9 +137,33 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════
+          INSTALL — MCP + Skill side by side
+          ══════════════════════════════════════════ */}
+      <section className="w-full border-y border-border bg-secondary">
+        <div className="max-w-6xl mx-auto px-6 py-20">
+          <div className="mb-12">
+            <span className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase">
+              Install
+            </span>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-foreground leading-tight">
+              Two flavors. Your choice.
+            </h2>
+            <p className="mt-3 text-sm text-muted-foreground max-w-lg">
+              PULSAR ships as an MCP server AND as an Agent Skill. The MCP server gives your client direct tool access. The Skill teaches your agent when and how to use them. Install one or both.
+            </p>
+          </div>
+
+          <div className="grid gap-10 lg:grid-cols-2">
+            <McpInstall />
+            <SkillInstall />
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           LOGO BAR — alternating section
           ══════════════════════════════════════════ */}
-      <section className="w-full border-y border-border bg-secondary py-14">
+      <section className="w-full border-y border-border bg-background py-14">
         <LogoBar />
       </section>
 

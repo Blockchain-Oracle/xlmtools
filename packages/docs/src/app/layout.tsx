@@ -14,23 +14,26 @@ export const metadata = {
   applicationName: 'PULSAR',
 }
 
-const logo = (
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="2,12 6,12 8,4 12,20 16,8 18,12 22,12" />
-    </svg>
-    <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>PULSAR</span>
-  </div>
-)
+function Logo() {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <polyline points="2,12 6,12 8,4 12,20 16,8 18,12 22,12" />
+      </svg>
+      <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>PULSAR</span>
+    </span>
+  )
+}
 
 export default async function RootLayout({
   children,
@@ -46,7 +49,7 @@ export default async function RootLayout({
         <Layout
           navbar={
             <Navbar
-              logo={logo}
+              logo={<Logo />}
               projectLink="https://github.com/pulsarmcp/pulsar"
             />
           }

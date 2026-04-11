@@ -1,59 +1,238 @@
-import { Callout } from 'nextra/components'
+import { Callout, Tabs } from 'nextra/components'
 
 # Installation
 
-PULSAR installs as a single MCP server. No global packages, no Docker, no config files.
+PULSAR installs in two ways: as an **MCP server** (every major agent client supports it) or as a **standalone CLI** (for terminal use). Pick whichever fits your workflow — or install both.
 
-## Claude Code (recommended)
+## Install the MCP server
 
+PULSAR works natively with 12+ MCP clients. Pick yours:
+
+<Tabs items={['Claude Code', 'Claude Desktop', 'Cursor', 'Windsurf', 'VS Code', 'Gemini CLI', 'Codex', 'Zed', 'Continue', 'Cline', 'Goose']}>
+
+<Tabs.Tab>
 ```bash
 claude mcp add pulsar npx @pulsar/mcp
 ```
 
-That's it. Claude Code will download and run the server automatically the next time you start a session.
+Claude Code downloads and runs the server automatically on next session.
+</Tabs.Tab>
 
-## Claude Desktop
-
-Open your Claude Desktop config file:
-
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-Add PULSAR to the `mcpServers` section:
+<Tabs.Tab>
+Open your config file:
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+- Linux: `~/.config/Claude/claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "pulsar": {
       "command": "npx",
-      "args": ["@pulsar/mcp"]
+      "args": ["-y", "@pulsar/mcp"]
     }
   }
 }
 ```
 
-Restart Claude Desktop to pick up the change.
+Fully quit and restart Claude Desktop.
+</Tabs.Tab>
 
-## Cursor / Windsurf
+<Tabs.Tab>
+Create `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global):
 
-Both editors support MCP servers via their settings. Add a new server entry:
+```json
+{
+  "mcpServers": {
+    "pulsar": {
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"]
+    }
+  }
+}
+```
 
-- **Command**: `npx`
-- **Args**: `@pulsar/mcp`
-- **Transport**: `stdio`
+Or use the UI: Settings → Tools & MCP → Add new MCP server.
+</Tabs.Tab>
 
-See the [MCP Host Setup](/guides/mcp-setup) guide for detailed instructions per editor.
+<Tabs.Tab>
+Edit `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "pulsar": {
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"]
+    }
+  }
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+VS Code Copilot uses a different schema — note `servers` key (not `mcpServers`). Create `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "pulsar": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"]
+    }
+  }
+}
+```
+
+Copilot Chat must be in Agent mode for MCP tools to appear.
+</Tabs.Tab>
+
+<Tabs.Tab>
+```bash
+gemini mcp add pulsar npx -y @pulsar/mcp
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```bash
+codex mcp add pulsar npx -y @pulsar/mcp
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+Edit `~/.config/zed/settings.json`:
+
+```json
+{
+  "context_servers": {
+    "pulsar": {
+      "source": "custom",
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"],
+      "env": {}
+    }
+  }
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+Create `.continue/mcpServers/pulsar.yaml`:
+
+```yaml
+name: Pulsar MCP
+version: 0.0.1
+schema: v1
+mcpServers:
+  - name: Pulsar
+    type: stdio
+    command: npx
+    args:
+      - "-y"
+      - "@pulsar/mcp"
+```
+
+MCP only works in Continue's Agent mode.
+</Tabs.Tab>
+
+<Tabs.Tab>
+Edit `cline_mcp_settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "pulsar": {
+      "command": "npx",
+      "args": ["-y", "@pulsar/mcp"],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```bash
+goose configure
+```
+
+Choose: Add Extension → Command-line Extension (stdio)
+- Name: `pulsar`
+- Command: `npx -y @pulsar/mcp`
+</Tabs.Tab>
+
+</Tabs>
+
+## Install the standalone CLI
+
+If you want to use PULSAR directly from your terminal (no MCP host required):
+
+```bash
+npm install -g @pulsar/mcp
+```
+
+This gives you two binaries:
+- `pulsar` — the MCP server (for clients above)
+- `pulsar-cli` — the standalone CLI
+
+```bash
+pulsar-cli wallet
+pulsar-cli crypto bitcoin,stellar
+pulsar-cli search "Stellar hackathon" --count 3
+```
+
+See the [Standalone CLI guide](/guides/cli) for all commands.
+
+## Install the Agent Skill
+
+PULSAR also ships as a cross-client Agent Skill that teaches your agent when and how to use its tools. Works natively in Claude Code, Cursor 2.4+, Windsurf, VS Code Copilot, Codex CLI, Gemini CLI, Goose, and Cline.
+
+<Tabs items={['Prompt', 'pnpm', 'npx', 'bunx']}>
+
+<Tabs.Tab>
+Paste this into any agent:
+
+```
+Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.
+```
+
+The agent fetches the skill and installs itself.
+</Tabs.Tab>
+
+<Tabs.Tab>
+```bash
+pnpm dlx skills add github:pulsarmcp/pulsar --skill pulsar
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```bash
+npx skills add github:pulsarmcp/pulsar --skill pulsar
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```bash
+bunx skills add github:pulsarmcp/pulsar --skill pulsar
+```
+</Tabs.Tab>
+
+</Tabs>
+
+See the [Agent Skill guide](/guides/skill) for details.
 
 ## Verify installation
 
-After adding the server, ask your AI agent:
+After installing, ask your agent:
 
 ```
 What tools does PULSAR provide?
 ```
 
-The agent will call the `tools` tool and list all 20 available tools with their prices.
+The agent will call the `tools` tool and list all 21 available tools with their prices.
 
 <Callout type="info">
-On first run, PULSAR generates a Stellar keypair and stores it locally at `~/.pulsar/config.json`. This wallet is used to sign micropayments for paid tool calls. You'll need to fund it with testnet USDC before using paid tools.
+On first run, PULSAR generates a Stellar testnet keypair at `~/.pulsar/config.json` and auto-funds it with XLM via friendbot. The wallet is used to sign USDC micropayments for paid tool calls. You'll still need to grab testnet USDC from [faucet.circle.com](https://faucet.circle.com) to use paid tools.
 </Callout>

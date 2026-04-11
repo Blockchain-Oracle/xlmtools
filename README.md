@@ -6,21 +6,45 @@ Built for the Stellar Agents x402/MPP hackathon.
 
 ## Quick start
 
-PULSAR works with any MCP-compatible client, and also ships as a standalone CLI. Pick your flavour:
+PULSAR ships in three flavours: **MCP server**, **standalone CLI**, and **cross-client Agent Skill**. Install any or all.
+
+### MCP server
 
 ```bash
 # Claude Code
 claude mcp add pulsar npx @pulsar/mcp
 
-# Standalone CLI (works without any MCP host)
-npm install -g @pulsar/mcp
+# Gemini CLI
+gemini mcp add pulsar npx -y @pulsar/mcp
 
-# Cursor, Windsurf, Claude Desktop, VS Code, Zed, Cline, Goose, 5ire, Continue, Roo, LibreChat
+# OpenAI Codex
+codex mcp add pulsar npx -y @pulsar/mcp
+
+# Cursor / Windsurf / Claude Desktop / VS Code / Zed / Cline / Continue / Goose
 # Add to the client's MCP config:
 #   { "command": "npx", "args": ["-y", "@pulsar/mcp"] }
 ```
 
-See the [MCP Host Setup guide](/guides/mcp-setup) for exact config for each client.
+See the [MCP Host Setup guide](https://pulsar.tools/docs/guides/mcp-setup) for exact config for each of 12 clients.
+
+### Standalone CLI
+
+```bash
+npm install -g @pulsar/mcp
+pulsar-cli --help
+```
+
+### Agent Skill
+
+```bash
+# Paste into any agent
+Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.
+
+# Or via CLI
+npx skills add github:pulsarmcp/pulsar --skill pulsar
+```
+
+The skill works natively in Claude Code, Cursor 2.4+, Windsurf, VS Code Copilot, Codex CLI, Gemini CLI, Goose, and Cline.
 
 On first run, PULSAR generates a Stellar testnet wallet, funds it with XLM via friendbot, and adds a USDC trustline — all automatically. This only happens on testnet. The only manual step is getting testnet USDC:
 
@@ -36,7 +60,7 @@ Note: Auto-wallet funding (friendbot XLM + USDC trustline) only runs on testnet.
 
 PULSAR gives AI agents access to 21 tools. Paid tools cost $0.001 to $0.04 per call in USDC via Stellar's Micropayment Protocol. Free tools have no cost. No API keys needed. No accounts to create.
 
-Works with every major MCP client (Claude Code, Claude Desktop, Cursor, Windsurf, VS Code Copilot, Cline, Zed, Continue, Goose, 5ire, Roo Code, LibreChat) and as a standalone `pulsar-cli` for direct terminal use.
+Works with every major agent client (Claude Code, Claude Desktop, Cursor, Windsurf, VS Code Copilot, Gemini CLI, OpenAI Codex, Zed, Continue, Cline, Goose) and as a standalone `pulsar-cli` for direct terminal use.
 
 ## Tools
 
