@@ -5,11 +5,15 @@ import { GitFork } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 
+// TODO: point docs link to deployed docs URL once live (e.g. docs.pulsar.tools)
+const DOCS_URL = "https://github.com/pulsarmcp/pulsar/tree/main/packages/docs";
+
 const navLinks = [
   { href: "/tools", label: "Tools" },
   { href: "/skill", label: "Skill" },
   { href: "/explore", label: "Explore" },
   { href: "/stats", label: "Stats" },
+  { href: DOCS_URL, label: "Docs", external: true },
 ];
 
 function PulsarLogo({ className }: { className?: string }) {
@@ -55,15 +59,27 @@ export function Navbar() {
 
         {/* Right: nav links + github + theme toggle + CTA */}
         <nav className="flex items-center gap-0.5">
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
-            >
-              {label}
-            </Link>
-          ))}
+          {navLinks.map(({ href, label, external }) =>
+            external ? (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
+              >
+                {label}
+              </a>
+            ) : (
+              <Link
+                key={href}
+                href={href}
+                className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/40"
+              >
+                {label}
+              </Link>
+            ),
+          )}
 
           <a
             href="https://github.com/pulsarmcp/pulsar"

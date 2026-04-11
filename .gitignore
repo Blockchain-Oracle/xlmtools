@@ -2,3 +2,9 @@ node_modules/
 dist/
 .env
 *.env.local
+
+# OS
+.DS_Store
+
+# Personal / private
+deployment.md
