@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "type": "module",
   "bin": {
-    "xlmtools": "./dist/index.js",
-    "xlm": "./dist/cli.js"
+    "xlmtools": "dist/index.js",
+    "xlm": "dist/cli.js"
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",
