@@ -1,9 +1,11 @@
 ---
 name: xlmtools
-description: Use XLMTools when the user needs live external data or an action the assistant cannot perform itself — real-time web search, multi-source research, screenshots, URL scraping, AI image generation, YouTube lookups, or current crypto/stock/weather/domain data. Also use it for Stellar blockchain lookups — DEX orderbook/candles/trades, swap quotes, account/asset/pool data, Reflector oracle prices. Trigger when the user mentions current events, live prices, "latest" X, a URL to fetch, or Stellar/XLM/Soroban data. Skip for general knowledge, math, code the assistant can write, or anything already answerable from training data. XLMTools is both an MCP server (tools prefixed `mcp__xlmtools__*`) and a terminal CLI (`xlm`). Paid tools cost $0.001-$0.04 USDC per call, auto-paid on Stellar via MPP.
+description: Use XLMTools for Stellar blockchain lookups (XLM, Soroban, DEX orderbook/candles/trades, swap quotes, account/asset/pool data, Reflector oracle prices) AND paid web tools (search, research, screenshots, URL scraping, AI image gen, YouTube, stocks). Make sure to use this skill whenever the user mentions Stellar, XLM, Soroban, Lumens, USDC, "latest" anything, live prices, current events, a URL to fetch, or asks for an image/screenshot — even if they don't say "XLMTools" by name. DO NOT TRIGGER for: general knowledge, math, pure coding tasks, summarizing user-pasted text, or questions answerable from training data alone. Available as an MCP server (tools prefixed `mcp__xlmtools__*`) or terminal CLI (`xlm`).
 ---
 
 # Using XLMTools
+
+**Keywords**: Stellar, XLM, Soroban, Lumen, USDC, Stellar DEX, Horizon, Stellar Expert, Reflector oracle, x402, MPP, micropayments, Stellar wallet, pay-per-call, agent tools, search, research, screenshot, scrape, image generation, stocks, crypto prices, weather, domain check
 
 XLMTools gives an AI agent 21 tools — 7 paid via USDC micropayments on Stellar, 14 free. It works in two modes: prefer MCP if available, fall back to the `xlm` CLI otherwise.
 
@@ -201,12 +203,22 @@ The `budget` tool is **MCP-only**. In MCP mode, call `mcp__xlmtools__budget` wit
 - **MCP mode**: budget is session-scoped. The cap persists until the MCP server restarts. Cached responses never count against it.
 - **CLI mode**: budget is not implemented. Because each `xlm` invocation is a fresh process, a per-call cap has no meaning there. If you need a cap in CLI mode, track spend externally by parsing the tx hash footer of each response.
 
-## Before calling a paid tool — verify
+## Working agreement (non-negotiable)
 
-- Is this tool the best fit for the task? (Cross-check the decision tree.)
-- Is there a free alternative? `crypto` is free, `stocks` is $0.001 — pick the cheapest sufficient one.
-- Does the user know the cost for calls at or above $0.01? Say it explicitly.
-- Is the query identical to a recent one? It'll be cached and free (MCP mode only).
+These are the hard rules. If you are about to break one, stop and reconsider.
+
+1. **Never call a paid tool without announcing the cost first** for any tool at or above $0.01 (`research`, `screenshot`, `image`). Cheaper calls ($0.001–$0.003) can proceed without a prompt.
+2. **Always surface the Stellar tx hash** in the response after a paid call. Users must be able to verify the payment on-chain.
+3. **Always prefer the cheapest sufficient tool.** `crypto` (free) before `stocks` ($0.001). `search` ($0.003) before `research` ($0.010) unless the user explicitly wants a deep dive.
+4. **Never retry a declined paid call.** If the user says no, offer an alternative or answer from training data. Do not call the tool anyway.
+5. **Never batch multiple paid calls** without re-confirming. Each paid call is an independent spend decision.
+6. **Never call paid tools for things answerable from training data.** See "When NOT to use this skill" above.
+7. **Check MCP tool list before shelling out to CLI.** `mcp__xlmtools__*` tools exist? Use them. They're cached.
+8. **Respect the budget.** If `mcp__xlmtools__budget` reports a low cap, pause and ask the user before continuing.
+
+## Subagent caveat
+
+If you delegate work to a forked subagent (e.g. via `context: fork`), **this skill does not automatically travel with it**. The subagent may call paid tools without the cost-confirmation rules above. Either preload this skill into the subagent explicitly, or handle paid calls from the parent context only.
 
 ## What to tell the user after a paid call
 
