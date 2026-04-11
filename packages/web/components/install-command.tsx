@@ -188,8 +188,8 @@ function RotatingCard<T extends { command: string; hue: number }>({
         </button>
       </motion.div>
 
-      {/* Option dots (clickable) */}
-      <div className="flex items-center gap-1.5 mt-3">
+      {/* Option dots (clickable — padded hit target, small visible dot) */}
+      <div className="flex items-center gap-0.5 mt-3 -mx-2">
         {options.map((opt, i) => (
           <button
             key={renderLabel(opt)}
@@ -198,13 +198,18 @@ function RotatingCard<T extends { command: string; hue: number }>({
               setPaused(true);
             }}
             title={renderLabel(opt)}
-            className={cn(
-              "h-1 rounded-full transition-all",
-              i === index
-                ? "w-6 bg-foreground"
-                : "w-1 bg-muted-foreground/30 hover:bg-muted-foreground/60",
-            )}
-          />
+            aria-label={`Jump to ${renderLabel(opt)}`}
+            className="group p-2 cursor-pointer"
+          >
+            <span
+              className={cn(
+                "block h-1 rounded-full transition-all",
+                i === index
+                  ? "w-6 bg-foreground"
+                  : "w-1.5 bg-muted-foreground/40 group-hover:bg-muted-foreground/80 group-hover:w-3",
+              )}
+            />
+          </button>
         ))}
       </div>
 
