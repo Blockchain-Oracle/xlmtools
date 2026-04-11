@@ -71,6 +71,22 @@ Works with every major MCP client (Claude Code, Claude Desktop, Cursor, Windsurf
 | stellar-pools | Liquidity pool data |
 | oracle-price | Reflector oracle prices |
 
+## Agent Skill
+
+PULSAR also ships as an Agent Skill — procedural instructions that teach Claude (or any skill-capable agent) when and how to use PULSAR tools. Three install methods:
+
+```bash
+# 1. Via the community skills CLI
+pnpm dlx skills add github:pulsarmcp/pulsar --skill pulsar
+
+# 2. Via prompt — paste into any agent
+Read https://pulsar.tools/skill.md and follow the instructions to install PULSAR.
+
+# 3. Manual — copy the SKILL.md from packages/skills/pulsar/ into ~/.claude/skills/pulsar/
+```
+
+The skill teaches your agent the decision tree (user intent → tool), paid tool warnings, receipt handling, and CLI fallback when MCP isn't available. See [`packages/skills/pulsar/SKILL.md`](packages/skills/pulsar/SKILL.md) or visit `/skill` on the frontend.
+
 ## Standalone CLI
 
 PULSAR also ships as a terminal tool. Same wallet, same payments, no MCP host needed.
