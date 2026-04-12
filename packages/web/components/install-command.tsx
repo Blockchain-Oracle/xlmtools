@@ -27,6 +27,7 @@ const MCP_OPTIONS: McpOption[] = [
   { client: "Cline", command: '// cline_mcp_settings.json — "xlmtools": { "command": "npx", "args": ["-y", "@xlmtools/mcp"] }', hue: 90 },
   { client: "Goose", command: "goose configure  # Add stdio extension → Command: npx -y @xlmtools/mcp", hue: 40 },
   { client: "OpenCode", command: "// opencode.json — mcp: { xlmtools: { command: 'npx', args: ['-y', '@xlmtools/mcp'] } }", hue: 310 },
+  { client: "OpenClaw", command: '// ~/.openclaw/openclaw.json — "xlmtools": { "command": "npx", "args": ["-y", "@xlmtools/mcp"] }', hue: 15 },
 ];
 
 // ── Skill install options ────────────────────────────────────

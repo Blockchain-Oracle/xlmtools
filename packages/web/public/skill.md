@@ -21,7 +21,7 @@ If the user needs to install XLMTools:
 # Standalone CLI (universal — works with any agent host that has Bash)
 npm install -g @xlmtools/cli
 
-# MCP server (optional fast-path for Claude Code, Cursor, Cline, etc.)
+# MCP server (optional fast-path for Claude Code, Cursor, Cline, OpenClaw, etc.)
 claude mcp add xlmtools npx @xlmtools/mcp
 ```
 

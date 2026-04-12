@@ -6,9 +6,9 @@ XLMTools installs in two ways: as an **MCP server** (every major agent client su
 
 ## Install the MCP server
 
-XLMTools works natively with 12+ MCP clients. Pick yours:
+XLMTools works natively with 13+ MCP clients. Pick yours:
 
-<Tabs items={['Claude Code', 'Claude Desktop', 'Cursor', 'Windsurf', 'VS Code', 'Gemini CLI', 'Codex', 'Zed', 'Continue', 'Cline', 'Goose']}>
+<Tabs items={['Claude Code', 'Claude Desktop', 'Cursor', 'Windsurf', 'VS Code', 'Gemini CLI', 'Codex', 'Zed', 'Continue', 'Cline', 'Goose', 'OpenClaw']}>
 
 <Tabs.Tab>
 ```bash
@@ -161,6 +161,25 @@ goose configure
 Choose: Add Extension → Command-line Extension (stdio)
 - Name: `xlmtools`
 - Command: `npx -y @xlmtools/mcp`
+</Tabs.Tab>
+
+<Tabs.Tab>
+Edit `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "mcpServers": {
+    "xlmtools": {
+      "command": "npx",
+      "args": ["-y", "@xlmtools/mcp"]
+    }
+  }
+}
+```
+
+Or via CLI: `openclaw mcp set xlmtools '{"command":"npx","args":["-y","@xlmtools/mcp"]}'`
+
+Restart the OpenClaw gateway after adding.
 </Tabs.Tab>
 
 </Tabs>

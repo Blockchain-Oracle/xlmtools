@@ -236,13 +236,38 @@ mcpServers:
 
 Restart LibreChat for the server to load.
 
+## OpenClaw
+
+[OpenClaw](https://openclaw.ai) is an open-source AI agent that runs across WhatsApp, Telegram, Slack, Discord, and 20+ messaging platforms. It supports MCP servers via stdio.
+
+Config: `~/.openclaw/openclaw.json`
+
+```json
+{
+  "mcpServers": {
+    "xlmtools": {
+      "command": "npx",
+      "args": ["-y", "@xlmtools/mcp"]
+    }
+  }
+}
+```
+
+Or via the OpenClaw CLI:
+
+```bash
+openclaw mcp set xlmtools '{"command":"npx","args":["-y","@xlmtools/mcp"]}'
+```
+
+Restart the OpenClaw gateway after adding the server.
+
 ## Config schemas at a glance
 
 Three schemas exist across the ecosystem:
 
 | Schema | Root key | Used by |
 | --- | --- | --- |
-| Standard MCP | `mcpServers` | Claude Desktop, Claude Code, Cursor, Windsurf, Cline, Roo Code, 5ire, LibreChat |
+| Standard MCP | `mcpServers` | Claude Desktop, Claude Code, Cursor, Windsurf, Cline, Roo Code, 5ire, LibreChat, OpenClaw |
 | VS Code Copilot | `servers` + `type: "stdio"` | VS Code GitHub Copilot |
 | Zed | `context_servers` + `source: "custom"` | Zed |
 | Continue YAML | `mcpServers` array + `name`/`type` | Continue |
