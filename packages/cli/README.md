@@ -1,110 +1,152 @@
 # @xlmtools/cli
 
-XLMTools CLI — the universal standalone CLI that runs on the user's machine. Provides the `xlm` binary for direct terminal use and exports the `createMcpServer()` factory that powers the `@xlmtools/mcp` stdio server. Handles tool registration, payment signing, budget tracking, and response caching.
+Standalone CLI for XLMTools — 21 pay-per-call tools for AI agents on Stellar. Install it, type `xlm`, and go.
 
-## How it works
-
-This package ships two things:
-
-1. A standalone `xlm` binary — the universal path. Any agent host with a Bash tool can invoke XLMTools by shelling out to `xlm <tool> <args>`.
-2. A `createMcpServer()` factory exported from `main`/`types` — consumed by the sibling `@xlmtools/mcp` package, which wraps it in a thin stdio adapter for MCP-capable hosts.
-
-```
-Agent host
-    |
-    |--  Bash tool  --> xlm (this package's bin)
-    |
-    |--  MCP stdio  --> @xlmtools/mcp ──> imports createMcpServer() from @xlmtools/cli
-    v
-@xlmtools/api (hosted API server)
-    - 21 tools registered via @modelcontextprotocol/sdk
-    - mppx polyfills fetch to auto-handle 402 payments
-    - budget enforcement (withBudget)
-    - response caching (withCache, 5-min TTL)
-```
-
-## Install (for users)
+## Install
 
 ```bash
-# Standalone CLI (universal — works with any agent host that has Bash)
 npm install -g @xlmtools/cli
-
-# MCP server (optional fast-path — install the sibling package)
-claude mcp add xlmtools npx @xlmtools/mcp
 ```
 
-On first run, the CLI:
-1. Generates a Stellar keypair at `~/.xlmtools/config.json`
-2. Funds the wallet with testnet XLM via friendbot (testnet only)
-3. Adds a USDC trustline so the wallet can receive payments
+On first run, XLMTools auto-generates a Stellar testnet wallet, funds it with XLM via friendbot, and adds a USDC trustline. The only manual step is grabbing testnet USDC from [faucet.circle.com](https://faucet.circle.com) to use paid tools.
 
-## Development
+## Usage
 
 ```bash
-# From the monorepo root
-pnpm dev:cli
-
-# Or directly
-cd packages/cli
-pnpm dev
+xlm <tool> [args] [--flag value]
 ```
 
-The dev script uses `tsx watch` for hot-reload during development.
+### Quick examples
 
-## Build
+```bash
+# Free tools — no cost
+xlm crypto bitcoin,ethereum,stellar
+xlm weather Lagos
+xlm wallet
+xlm oracle-price BTC
+xlm dex-orderbook XLM/USDC --limit 5
+xlm swap-quote XLM USDC 100
+xlm stellar-asset USDC
+xlm domain xlmtools.com
+xlm tools
+
+# Paid tools — USDC charged per call via Stellar MPP
+xlm search "Stellar x402 micropayments" --count 5
+xlm stocks AAPL
+xlm research "Soroban smart contracts" --num-results 3
+xlm youtube "Stellar blockchain"
+xlm scrape https://stellar.org
+xlm screenshot https://xlmtools.com --format png
+xlm image "a stingray gliding over a coral reef at dusk" --size 1024x1024
+```
+
+Output is JSON. Pipe to `jq` for filtering:
+
+```bash
+xlm crypto bitcoin | jq '.bitcoin.usd'
+```
+
+### All commands
+
+**Paid** ($0.001–$0.04 USDC per call, settled on Stellar testnet):
+
+| Command | Price | What it does |
+| --- | --- | --- |
+| `xlm search <query> [--count N]` | $0.003 | Web + news search |
+| `xlm research <query> [--num-results N]` | $0.010 | Multi-source deep research |
+| `xlm youtube <query>` or `--id <id>` | $0.002 | Video search or lookup |
+| `xlm screenshot <url> [--format png]` | $0.010 | Capture a URL screenshot |
+| `xlm scrape <url>` | $0.002 | Extract clean text from a URL |
+| `xlm image <prompt> [--size 1024x1024]` | $0.040 | AI image generation |
+| `xlm stocks <symbol>` | $0.001 | Real-time stock quotes |
+
+**Free** (no cost):
+
+| Command | What it does |
+| --- | --- |
+| `xlm crypto <ids> [--vs-currency usd]` | Crypto prices from CoinGecko |
+| `xlm weather <location>` | Current weather for any city |
+| `xlm domain <name>` | Domain availability check |
+| `xlm dex-orderbook <pair> [--limit N]` | Stellar DEX orderbook |
+| `xlm dex-candles <pair> [--resolution 1h] [--limit N]` | OHLCV candlesticks |
+| `xlm dex-trades <pair> [--limit N]` | Recent DEX trades |
+| `xlm swap-quote <from> <to> <amount>` | Best swap path between assets |
+| `xlm stellar-asset <asset>` | Asset info, supply, trustlines |
+| `xlm stellar-account <address>` | Account balances and signers |
+| `xlm stellar-pools [--asset X] [--limit N]` | Liquidity pool data |
+| `xlm oracle-price <asset> [--feed crypto]` | Reflector oracle prices |
+| `xlm wallet` | Your Stellar wallet address + balance |
+| `xlm tools` | List all 21 tools and prices |
+| `xlm --help` | Full help text |
+
+## Payment
+
+Every paid tool call produces a real Stellar testnet transaction. The receipt shows at the bottom of the output:
+
+```
+Payment: $0.003 USDC · tx/a3f9c28d71e0... · stellar testnet
+```
+
+Verify any payment at [stellar.expert/explorer/testnet](https://stellar.expert/explorer/testnet).
+
+## Wallet
+
+Your wallet is at `~/.xlmtools/config.json`. The private key never leaves your machine. Check your balance:
+
+```bash
+xlm wallet
+```
+
+Fund with testnet USDC: visit [faucet.circle.com](https://faucet.circle.com), select Stellar, paste your wallet address.
+
+## Also available as
+
+- **MCP server**: `claude mcp add xlmtools npx @xlmtools/mcp` — for Claude Code, Cursor, Cline, VS Code Copilot, Windsurf, and 7+ other MCP hosts. Same wallet, same tools.
+- **Agent Skill**: `pnpm dlx skills add github:Blockchain-Oracle/xlmtools --skill xlmtools` — teaches agents when and how to use each tool.
+
+## Links
+
+- [xlmtools.com](https://xlmtools.com) — website
+- [docs.xlmtools.com](https://docs.xlmtools.com) — full documentation
+- [api.xlmtools.com](https://api.xlmtools.com) — hosted API
+- [GitHub](https://github.com/Blockchain-Oracle/xlmtools) — source code
+- [`@xlmtools/mcp`](https://www.npmjs.com/package/@xlmtools/mcp) — MCP server package
+
+---
+
+## For contributors
+
+This package provides two things:
+
+1. The `xlm` binary (standalone CLI) at `dist/cli.js`
+2. A `createMcpServer()` factory at `dist/server.js` — imported by [`@xlmtools/mcp`](https://www.npmjs.com/package/@xlmtools/mcp) to power the MCP stdio server
+
+### Development
+
+```bash
+pnpm dev:cli    # from monorepo root
+# or
+cd packages/cli && pnpm dev
+```
+
+### Build
 
 ```bash
 pnpm build
 ```
 
-Compiles TypeScript to `dist/`. Two compiled outputs matter:
-
-- `dist/cli.js` — the `xlm` standalone binary (entry declared in `package.json` `bin`)
-- `dist/server.js` — the `createMcpServer()` factory (entry declared in `package.json` `main`), consumed by `@xlmtools/mcp` as a runtime dependency
-
-## Architecture
-
-### Tools (21 total)
-
-**Paid** (7) — wrapped with `withCache` + `withBudget`:
-search, research, youtube, screenshot, scrape, image, stocks
-
-**Free** (14):
-crypto, weather, domain, wallet, tools, budget, dex-orderbook, dex-candles, dex-trades, swap-quote, stellar-asset, stellar-account, stellar-pools, oracle-price
-
-### Key modules
+### Key files
 
 | File | Purpose |
 | --- | --- |
-| `src/server.ts` | `createMcpServer()` factory — builds a fresh McpServer and registers all 21 tools. No transport connected. Consumed by `@xlmtools/mcp`. |
-| `src/cli.ts` | Standalone `xlm` binary — arg parsing, URL building, response printing, receipt footer rendering |
-| `src/lib/wallet.ts` | Wallet creation, auto-funding on testnet |
-| `src/lib/api-fetch.ts` | Shared fetch helper that stamps `X-XLMTools-Client` header for per-address stats attribution |
-| `src/lib/budget.ts` | Session budget state, `withBudget()` wrapper |
-| `src/lib/cache.ts` | Response cache, `withCache()` wrapper |
-| `src/lib/format.ts` | `ok()`, `okPaid()`, `err()` response formatters |
-| `src/lib/config.ts` | Tool prices and free tool list |
-| `src/lib/logger.ts` | pino logger (stderr) |
+| `src/cli.ts` | Standalone `xlm` binary — arg parsing, URL building, response printing |
+| `src/server.ts` | `createMcpServer()` factory — registers all 21 tools on a fresh McpServer |
+| `src/lib/wallet.ts` | Wallet creation, testnet auto-funding |
+| `src/lib/api-fetch.ts` | Shared fetch with `X-XLMTools-Client` header for stats attribution |
+| `src/lib/budget.ts` | Session budget cap (`withBudget()` wrapper) |
+| `src/lib/cache.ts` | 5-min response cache (`withCache()` wrapper) |
 | `src/tools/*.ts` | One file per tool — each calls `server.registerTool(...)` |
 
-### Payment flow
+## License
 
-1. Tool handler calls `fetch(apiUrl/toolname)` with params
-2. API returns `402 Payment Required`
-3. mppx (global fetch polyfill) intercepts the 402
-4. Builds a Soroban SAC USDC transfer using the local Stellar keypair
-5. Signs and retries the request with payment proof
-6. API verifies, executes the tool, returns result with receipt
-7. `okPaid()` strips the receipt and appends a human-readable payment footer
-
-### Budget flow
-
-```
-withCache(tool, params, () =>
-  withBudget(tool, async () => {
-    // API call
-  })
-)
-```
-
-Cache is checked first (hit = free). Budget is checked second (over limit = blocked). API call happens last. Only successful calls are charged and cached.
+MIT

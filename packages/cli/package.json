@@ -1,6 +1,6 @@
 {
   "name": "@xlmtools/cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "XLMTools standalone CLI — the `xlm` command plus the `createMcpServer` factory used by the @xlmtools/mcp wrapper package.",
   "type": "module",
   "bin": {
