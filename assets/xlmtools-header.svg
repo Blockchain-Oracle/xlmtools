@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-label="XLMTools — Stellar-native MCP server with pay-per-call tools for AI agents">
+  <title>XLMTools — Stellar-native MCP server with pay-per-call tools for AI agents</title>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#101018"/>
+      <stop offset="100%" stop-color="#07070c"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Base -->
+  <rect width="1200" height="360" fill="url(#bg)"/>
+
+  <!-- Faint waveform motif (background texture) -->
+  <polyline
+    points="640,180 680,180 700,120 720,240 740,130 760,230 780,110 800,250 820,170 840,170 1140,170"
+    stroke="#ffffff"
+    stroke-opacity="0.04"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+  <polyline
+    points="640,180 680,180 700,120 720,240 740,130 760,230 780,110 800,250 820,170 840,170 1140,170"
+    stroke="#10b981"
+    stroke-opacity="0.08"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+
+  <!-- Dot grid pattern — very subtle -->
+  <g fill="#ffffff" fill-opacity="0.04">
+    <circle cx="80" cy="60" r="1"/>
+    <circle cx="140" cy="60" r="1"/>
+    <circle cx="200" cy="60" r="1"/>
+    <circle cx="80" cy="300" r="1"/>
+    <circle cx="140" cy="300" r="1"/>
+    <circle cx="200" cy="300" r="1"/>
+    <circle cx="1000" cy="60" r="1"/>
+    <circle cx="1060" cy="60" r="1"/>
+    <circle cx="1120" cy="60" r="1"/>
+    <circle cx="1000" cy="300" r="1"/>
+    <circle cx="1060" cy="300" r="1"/>
+    <circle cx="1120" cy="300" r="1"/>
+  </g>
+
+  <!-- Logo card -->
+  <g transform="translate(72, 110)">
+    <rect width="140" height="140" rx="26" fill="#14141f" stroke="#2a2a3a" stroke-width="1.5"/>
+    <!-- Pulse wave mark -->
+    <polyline
+      points="22,70 34,70 44,36 54,104 64,40 74,100 84,28 94,112 104,58 114,58 120,58"
+      stroke="#ffffff"
+      stroke-width="5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+  </g>
+
+  <!-- Wordmark -->
+  <text x="248" y="184" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="92" font-weight="800" fill="#ffffff" letter-spacing="-3">XLMTools</text>
+
+  <!-- Tagline -->
+  <text x="250" y="220" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="21" font-weight="500" fill="#a1a1aa">Stellar-native MCP server with pay-per-call tools for AI agents</text>
+
+  <!-- Divider -->
+  <line x1="250" y1="246" x2="320" y2="246" stroke="url(#accent)" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Meta / status line -->
+  <g transform="translate(250, 278)">
+    <circle cx="6" cy="6" r="6" fill="#10b981"/>
+    <text x="22" y="11" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" fill="#10b981" letter-spacing="1.4">21 TOOLS  ·  USDC ON STELLAR  ·  MCP + CLI  ·  STELLAR AGENTS HACKATHON</text>
+  </g>
+
+  <!-- Corner accent: version/bin -->
+  <g transform="translate(1060, 50)">
+    <rect width="84" height="28" rx="14" fill="#14141f" stroke="#2a2a3a" stroke-width="1"/>
+    <text x="12" y="18" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11" font-weight="700" fill="#a1a1aa">v0.2.0</text>
+    <circle cx="68" cy="14" r="4" fill="#10b981"/>
+  </g>
+</svg>

@@ -1,8 +1,12 @@
+<p align="center">
+  <img src="./assets/xlmtools-header.svg" alt="XLMTools — Stellar-native MCP server with pay-per-call tools for AI agents" width="100%"/>
+</p>
+
 # XLMTools
 
 Stellar-native MCP server with pay-per-call tools for AI agents. One-line install. No subscriptions. Every payment settles on-chain.
 
-Built for the Stellar Agents x402/MPP hackathon.
+Built for the **Stellar Hacks: Agents** hackathon (x402 / MPP track). For the judge-facing submission document, see [`SUBMISSION.md`](./SUBMISSION.md). For the demo video script, see [`DEMO-SCRIPT.md`](./DEMO-SCRIPT.md).
 
 ## Quick start
 
