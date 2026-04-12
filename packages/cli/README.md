@@ -1,30 +1,36 @@
 # @xlmtools/cli
 
-XLMTools CLI — the MCP server that runs locally on the user's machine. Handles tool registration, payment signing, budget tracking, and response caching.
+XLMTools CLI — the universal standalone CLI that runs on the user's machine. Provides the `xlm` binary for direct terminal use and exports the `createMcpServer()` factory that powers the `@xlmtools/mcp` stdio server. Handles tool registration, payment signing, budget tracking, and response caching.
 
 ## How it works
 
-This package is an MCP stdio server. It's started automatically by Claude, Cursor, or any MCP-compatible host when a user calls a XLMTools tool.
+This package ships two things:
+
+1. A standalone `xlm` binary — the universal path. Any agent host with a Bash tool can invoke XLMTools by shelling out to `xlm <tool> <args>`.
+2. A `createMcpServer()` factory exported from `main`/`types` — consumed by the sibling `@xlmtools/mcp` package, which wraps it in a thin stdio adapter for MCP-capable hosts.
 
 ```
-MCP Host (Claude, Cursor, Windsurf)
-    |  stdio
-    v
-@xlmtools/cli (this package)
-    |  - 21 tools registered via @modelcontextprotocol/sdk
-    |  - mppx polyfills fetch to auto-handle 402 payments
-    |  - budget enforcement (withBudget)
-    |  - response caching (withCache, 5-min TTL)
+Agent host
     |
-    |  HTTPS
+    |--  Bash tool  --> xlm (this package's bin)
+    |
+    |--  MCP stdio  --> @xlmtools/mcp ──> imports createMcpServer() from @xlmtools/cli
     v
 @xlmtools/api (hosted API server)
+    - 21 tools registered via @modelcontextprotocol/sdk
+    - mppx polyfills fetch to auto-handle 402 payments
+    - budget enforcement (withBudget)
+    - response caching (withCache, 5-min TTL)
 ```
 
 ## Install (for users)
 
 ```bash
-claude mcp add xlmtools npx @xlmtools/cli
+# Standalone CLI (universal — works with any agent host that has Bash)
+npm install -g @xlmtools/cli
+
+# MCP server (optional fast-path — install the sibling package)
+claude mcp add xlmtools npx @xlmtools/mcp
 ```
 
 On first run, the CLI:

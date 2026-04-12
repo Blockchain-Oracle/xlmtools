@@ -7,11 +7,11 @@ XLMTools is a Model Context Protocol (MCP) server **and** a standalone CLI **and
 Works natively in Claude Code, Claude Desktop, Cursor, Windsurf, VS Code Copilot, Gemini CLI, OpenAI Codex, Zed, Continue, Cline, and Goose.
 
 ```bash
-# MCP server
-claude mcp add xlmtools npx @xlmtools/cli
-
-# Standalone CLI
+# Standalone CLI (universal — works with any agent host)
 npm install -g @xlmtools/cli
+
+# MCP server (optional fast-path for Claude Code, Cursor, Cline, etc.)
+claude mcp add xlmtools npx @xlmtools/mcp
 
 # Agent Skill (install via prompt in any agent)
 Read https://xlmtools.com/skill.md and follow the instructions to install XLMTools.

@@ -18,11 +18,11 @@ This skill assumes the agent host grants **Bash** (for the `xlm` CLI fallback) a
 If the user needs to install XLMTools:
 
 ```bash
-# MCP server (for Claude Code, Cursor, Windsurf, etc.)
-claude mcp add xlmtools npx @xlmtools/cli
-
-# Standalone CLI
+# Standalone CLI (universal — works with any agent host that has Bash)
 npm install -g @xlmtools/cli
+
+# MCP server (optional fast-path for Claude Code, Cursor, Cline, etc.)
+claude mcp add xlmtools npx @xlmtools/mcp
 ```
 
 On first run, XLMTools auto-generates a Stellar testnet wallet at `~/.xlmtools/config.json`, funds it with XLM via Stellar's friendbot, and adds a USDC trustline — fully automatic. The user only needs to grab testnet USDC from [faucet.circle.com](https://faucet.circle.com) to use paid tools.
@@ -243,7 +243,7 @@ Include the transaction link so the user can verify the payment on-chain.
 
 **"Budget limit reached"** — Only appears in MCP mode. Ask user to either clear the budget (`mcp__xlmtools__budget` with `action: "clear"`) or raise the cap (`action: "set"` with a higher `amount`).
 
-**MCP tools not appearing** — User may need to install XLMTools as an MCP server: `claude mcp add xlmtools npx @xlmtools/cli`. Fall back to CLI mode in the meantime if `xlm` is installed.
+**MCP tools not appearing** — User may need to install XLMTools as an MCP server: `claude mcp add xlmtools npx @xlmtools/mcp`. Fall back to CLI mode in the meantime if `xlm` is installed.
 
 **API server unreachable** — XLMTools tools require the API server to be running. If every call hangs or times out, the API is either down or unreachable. Report to the user and stop retrying.
 

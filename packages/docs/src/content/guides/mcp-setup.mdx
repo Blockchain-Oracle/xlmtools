@@ -4,7 +4,7 @@ import { Callout } from 'nextra/components'
 
 XLMTools works with any MCP-compatible host. Here is how to install it in each supported client.
 
-All clients use the same npm package: `@xlmtools/cli`.
+All clients use the same npm package: `@xlmtools/mcp`.
 
 <Callout type="info">
 The `-y` flag on `npx` auto-confirms the install prompt. Without it, `npx` will ask for confirmation on first run.
@@ -15,7 +15,7 @@ The `-y` flag on `npx` auto-confirms the install prompt. Without it, `npx` will 
 One command, no config file needed:
 
 ```bash
-claude mcp add xlmtools npx @xlmtools/cli
+claude mcp add xlmtools npx @xlmtools/mcp
 ```
 
 Optional scope flags:
@@ -41,7 +41,7 @@ Or via the app: Claude menu → Settings → Developer → Edit Config.
   "mcpServers": {
     "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"]
+      "args": ["-y", "@xlmtools/mcp"]
     }
   }
 }
@@ -62,7 +62,7 @@ Or via UI: Settings → Tools & MCP → Add new MCP server.
   "mcpServers": {
     "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"]
+      "args": ["-y", "@xlmtools/mcp"]
     }
   }
 }
@@ -83,7 +83,7 @@ Or via UI: Cascade panel → MCPs icon (top-right) → Configure.
   "mcpServers": {
     "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"]
+      "args": ["-y", "@xlmtools/mcp"]
     }
   }
 }
@@ -101,7 +101,7 @@ Config: `.vscode/mcp.json` in your workspace, or via Command Palette → `MCP: O
     "xlmtools": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"]
+      "args": ["-y", "@xlmtools/mcp"]
     }
   }
 }
@@ -118,7 +118,7 @@ In VS Code, click the MCP Servers icon in Cline's top nav → Installed → Conf
   "mcpServers": {
     "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"],
+      "args": ["-y", "@xlmtools/mcp"],
       "disabled": false,
       "autoApprove": []
     }
@@ -140,7 +140,7 @@ Zed uses a different schema — note `context_servers` and `source: "custom"`:
     "xlmtools": {
       "source": "custom",
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"],
+      "args": ["-y", "@xlmtools/mcp"],
       "env": {}
     }
   }
@@ -161,7 +161,7 @@ mcpServers:
     command: npx
     args:
       - "-y"
-      - "@xlmtools/cli"
+      - "@xlmtools/mcp"
 ```
 
 <Callout type="warning">
@@ -178,7 +178,7 @@ goose configure
 
 Then choose: Add Extension → Command-line Extension (stdio). Fill in:
 - Name: `xlmtools`
-- Command: `npx -y @xlmtools/cli`
+- Command: `npx -y @xlmtools/mcp`
 - Timeout: `300`
 
 Or edit the config directly at `~/.config/goose/config.yaml`:
@@ -192,7 +192,7 @@ extensions:
     cmd: npx
     args:
       - "-y"
-      - "@xlmtools/cli"
+      - "@xlmtools/mcp"
     timeout: 300
 ```
 
@@ -200,7 +200,7 @@ extensions:
 
 Use the Tools page in the app: Tools → Add Server. Fill in:
 - Command: `npx`
-- Args: `-y @xlmtools/cli`
+- Args: `-y @xlmtools/mcp`
 
 ## Roo Code (VS Code extension)
 
@@ -211,7 +211,7 @@ Roo Code → MCP Servers → Edit Global MCP, or create `.roo/mcp.json` in your 
   "mcpServers": {
     "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"],
+      "args": ["-y", "@xlmtools/mcp"],
       "disabled": false,
       "alwaysAllow": [],
       "timeout": 60
@@ -231,7 +231,7 @@ mcpServers:
     command: npx
     args:
       - "-y"
-      - "@xlmtools/cli"
+      - "@xlmtools/mcp"
 ```
 
 Restart LibreChat for the server to load.

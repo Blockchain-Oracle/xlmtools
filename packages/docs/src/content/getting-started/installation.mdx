@@ -12,7 +12,7 @@ XLMTools works natively with 12+ MCP clients. Pick yours:
 
 <Tabs.Tab>
 ```bash
-claude mcp add xlmtools npx @xlmtools/cli
+claude mcp add xlmtools npx @xlmtools/mcp
 ```
 
 Claude Code downloads and runs the server automatically on next session.
@@ -29,7 +29,7 @@ Open your config file:
   "mcpServers": {
     "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"]
+      "args": ["-y", "@xlmtools/mcp"]
     }
   }
 }
@@ -46,7 +46,7 @@ Create `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global):
   "mcpServers": {
     "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"]
+      "args": ["-y", "@xlmtools/mcp"]
     }
   }
 }
@@ -63,7 +63,7 @@ Edit `~/.codeium/windsurf/mcp_config.json`:
   "mcpServers": {
     "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"]
+      "args": ["-y", "@xlmtools/mcp"]
     }
   }
 }
@@ -79,7 +79,7 @@ VS Code Copilot uses a different schema — note `servers` key (not `mcpServers`
     "xlmtools": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"]
+      "args": ["-y", "@xlmtools/mcp"]
     }
   }
 }
@@ -90,13 +90,13 @@ Copilot Chat must be in Agent mode for MCP tools to appear.
 
 <Tabs.Tab>
 ```bash
-gemini mcp add xlmtools npx -y @xlmtools/cli
+gemini mcp add xlmtools npx -y @xlmtools/mcp
 ```
 </Tabs.Tab>
 
 <Tabs.Tab>
 ```bash
-codex mcp add xlmtools npx -y @xlmtools/cli
+codex mcp add xlmtools npx -y @xlmtools/mcp
 ```
 </Tabs.Tab>
 
@@ -109,7 +109,7 @@ Edit `~/.config/zed/settings.json`:
     "xlmtools": {
       "source": "custom",
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"],
+      "args": ["-y", "@xlmtools/mcp"],
       "env": {}
     }
   }
@@ -130,7 +130,7 @@ mcpServers:
     command: npx
     args:
       - "-y"
-      - "@xlmtools/cli"
+      - "@xlmtools/mcp"
 ```
 
 MCP only works in Continue's Agent mode.
@@ -144,7 +144,7 @@ Edit `cline_mcp_settings.json`:
   "mcpServers": {
     "xlmtools": {
       "command": "npx",
-      "args": ["-y", "@xlmtools/cli"],
+      "args": ["-y", "@xlmtools/mcp"],
       "disabled": false,
       "autoApprove": []
     }
@@ -160,7 +160,7 @@ goose configure
 
 Choose: Add Extension → Command-line Extension (stdio)
 - Name: `xlmtools`
-- Command: `npx -y @xlmtools/cli`
+- Command: `npx -y @xlmtools/mcp`
 </Tabs.Tab>
 
 </Tabs>
@@ -173,9 +173,7 @@ If you want to use XLMTools directly from your terminal (no MCP host required):
 npm install -g @xlmtools/cli
 ```
 
-This gives you two binaries:
-- `xlmtools` — the MCP server (for clients above)
-- `xlm` — the standalone CLI
+This gives you the `xlm` binary — a universal CLI that works in any agent host with a Bash tool (no MCP required).
 
 ```bash
 xlm wallet

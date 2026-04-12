@@ -2,7 +2,7 @@
 
 ## What we're building
 XLMTools is a Stellar-native MCP server for Claude Code, billed via MPP charge payments.
-One-line install: `claude mcp add xlmtools npx @xlmtools/cli`
+One-line install: `claude mcp add xlmtools npx @xlmtools/mcp`
 
 ## Why
 Stellar Agents x402/MPP hackathon. The gap we're filling: nobody has built an MCP

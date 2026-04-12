@@ -35,7 +35,7 @@ discoveryRoute.get("/xlmtools.json", (_req, res) => {
     version: "0.1.0",
     description: "Stellar-native MCP server with 21 pay-per-call tools for AI agents",
     protocol: "MCP (Model Context Protocol)",
-    install: "claude mcp add xlmtools npx @xlmtools/cli",
+    install: "claude mcp add xlmtools npx @xlmtools/mcp",
     payment: {
       protocol: "MPP (Machine Payment Protocol)",
       network: "stellar:testnet",
@@ -79,7 +79,7 @@ discoveryRoute.get("/", (_req, res) => {
 XLMTools is an MCP server that gives AI agents access to 21 tools, paid via USDC micropayments on Stellar.
 
 ## Install
-claude mcp add xlmtools npx @xlmtools/cli
+claude mcp add xlmtools npx @xlmtools/mcp
 
 ## Payment
 Paid tools use Stellar's Micropayment Protocol (MPP). Each call triggers an automatic USDC payment on-chain. No API keys or subscriptions needed.

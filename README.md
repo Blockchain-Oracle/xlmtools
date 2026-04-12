@@ -12,17 +12,17 @@ XLMTools ships in three flavours: **MCP server**, **standalone CLI**, and **cros
 
 ```bash
 # Claude Code
-claude mcp add xlmtools npx @xlmtools/cli
+claude mcp add xlmtools npx @xlmtools/mcp
 
 # Gemini CLI
-gemini mcp add xlmtools npx -y @xlmtools/cli
+gemini mcp add xlmtools npx -y @xlmtools/mcp
 
 # OpenAI Codex
-codex mcp add xlmtools npx -y @xlmtools/cli
+codex mcp add xlmtools npx -y @xlmtools/mcp
 
 # Cursor / Windsurf / Claude Desktop / VS Code / Zed / Cline / Continue / Goose
 # Add to the client's MCP config:
-#   { "command": "npx", "args": ["-y", "@xlmtools/cli"] }
+#   { "command": "npx", "args": ["-y", "@xlmtools/mcp"] }
 ```
 
 See the [MCP Host Setup guide](https://xlmtools.com/docs/guides/mcp-setup) for exact config for each of 12 clients.

@@ -63,7 +63,7 @@ An agent that has never heard of XLMTools before can:
 
 1. **Hit `/.well-known/xlmtools.json`** — learn about all 21 tools in one HTTP call
 2. **Parse the `tools` array** — find a tool matching its current task (e.g. "I need stock prices → `stocks` tool at $0.001")
-3. **Read the `payment.install` field** — run `claude mcp add xlmtools npx @xlmtools/cli` and gain access
+3. **Read the `payment.install` field** — run `claude mcp add xlmtools npx @xlmtools/mcp` and gain access
 4. **Check `features`** — understand that responses include tx hashes, there's a budget tool, and caching is free
 
 All without a human reading docs or setting up API keys. That's the whole point.
