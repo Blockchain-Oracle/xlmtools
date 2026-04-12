@@ -6,7 +6,7 @@
 
 Stellar-native MCP server with pay-per-call tools for AI agents. One-line install. No subscriptions. Every payment settles on-chain.
 
-Built for the **Stellar Hacks: Agents** hackathon (x402 / MPP track). For the judge-facing submission document, see [`SUBMISSION.md`](./SUBMISSION.md). For the demo video script, see [`DEMO-SCRIPT.md`](./DEMO-SCRIPT.md).
+Built for the **Stellar Hacks: Agents** hackathon (x402 / MPP track).
 
 ## Quick start
 
