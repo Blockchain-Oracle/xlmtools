@@ -1,9 +1,0 @@
-{
-    "location": "New York",
-    "country": "US",
-    "temp_c": 8.15,
-    "feels_like_c": 7.49,
-    "humidity_pct": 94,
-    "description": "mist",
-    "wind_ms": 1.54
-}

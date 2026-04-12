@@ -18,3 +18,9 @@ deployment.md
 # Hackathon submission artifacts — kept locally, uploaded externally (DoraHacks, email)
 SUBMISSION.md
 DEMO-SCRIPT.md
+
+# Removed from repo — internal dev artifacts
+screenshots/
+research/
+docs/superpowers/
+tests/fixtures/
