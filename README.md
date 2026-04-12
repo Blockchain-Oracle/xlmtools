@@ -163,14 +163,19 @@ Calls that would exceed the limit are blocked. Use `budget check` to see remaini
 ## Architecture
 
 ```
-Claude / Cursor / Windsurf (MCP client)
+Claude / Cursor / Windsurf / VS Code Copilot / …    (MCP host)
     |
-    | stdio
+    | stdio (when user installs via claude mcp add xlmtools npx @xlmtools/mcp)
     v
-XLMTools CLI (@xlmtools/cli, runs locally)
-    |  - auto-generated Stellar wallet
-    |  - mppx handles 402 payments transparently
-    |  - budget tracking + response caching
+@xlmtools/mcp                                       (thin wrapper, ~15 lines)
+    |  imports createMcpServer() factory from @xlmtools/cli
+    |  connects StdioServerTransport, done
+    v
+@xlmtools/cli  (also runnable as standalone `xlm` via Bash)
+    |  - auto-generated Stellar wallet at ~/.xlmtools/config.json
+    |  - mppx polyfill handles 402 payments transparently
+    |  - X-XLMTools-Client header → per-address stats attribution
+    |  - session budget tracking + 5-min response caching
     |
     | HTTPS + signed MPP credentials
     v
@@ -178,20 +183,36 @@ XLMTools API Server (Express, hosted)
     |  - verifies payments via Soroban simulation
     |  - calls backend APIs (Brave, Exa, OpenAI, etc.)
     |  - users never need backend API keys
-    |  - in-memory call log for stats
+    |  - in-memory call log for /stats + /stats/by-client
     |
     v
-Stellar Testnet (USDC settlement)
+Stellar Testnet (USDC settlement via Soroban SAC)
 ```
+
+### Two install paths, one source of truth
+
+XLMTools ships as **two packages** instead of one to make the install story work cleanly across every MCP host:
+
+| Package | Bin | What you install | Purpose |
+| --- | --- | --- | --- |
+| [`@xlmtools/mcp`](https://npmjs.com/package/@xlmtools/mcp) | `xlmtools-mcp` | `claude mcp add xlmtools npx @xlmtools/mcp` | MCP stdio server. Thin wrapper that imports the server factory from `@xlmtools/cli`. Single bin, so `npx @xlmtools/mcp` auto-resolves. |
+| [`@xlmtools/cli`](https://npmjs.com/package/@xlmtools/cli) | `xlm` | `npm install -g @xlmtools/cli` | Standalone terminal CLI. Also exports `createMcpServer()` via `main`/`types` — consumed by `@xlmtools/mcp` as a runtime dependency. |
+
+**Why two packages?** npm/npx can't auto-resolve `npx @pkg/name` when a package has multiple bins and none matches the package tail. The ecosystem convention (`@upstash/context7-mcp`, `@magicuidesign/mcp`, `@modelcontextprotocol/server-*`) is one package per bin. Shipping the MCP as its own single-bin package is the only clean way to make `claude mcp add xlmtools npx @xlmtools/mcp` work in every host, while still giving terminal users `npm install -g @xlmtools/cli` for the `xlm` command.
 
 ## Project structure
 
 ```
 packages/
-  cli/   - MCP server (local, user's machine)
-  api/   - Express API (hosted, verifies MPP, calls backends)
-  web/   - Next.js frontend (landing page, tools, explorer)
-  docs/  - Nextra documentation site (29 pages)
+  mcp/     - @xlmtools/mcp — thin stdio wrapper, published to npm
+  cli/     - @xlmtools/cli — standalone `xlm` + createMcpServer() factory,
+             owns all tool implementations + shared lib code, published to npm
+  api/     - Express API (hosted at api.xlmtools.com)
+             verifies MPP, calls backends, per-address stats
+  web/     - Next.js 16 frontend (xlmtools.com)
+             landing page, tools browser, Explorer live stream, Stats history
+  docs/    - Nextra 4 documentation site (docs.xlmtools.com)
+  skills/  - Cross-client Agent Skill (SKILL.md), distributed via skills CLI
 ```
 
 ## Documentation
@@ -216,7 +237,7 @@ docker compose up -d
 curl http://localhost:3000/health
 ```
 
-The Docker setup runs the API server only. The CLI (`@xlmtools/cli`) runs locally on the user's machine via `npx`.
+The Docker setup runs the API server only. Both the MCP (`@xlmtools/mcp`) and standalone CLI (`@xlmtools/cli`) run locally on the user's machine — spawned via `npx` or installed globally via `npm install -g`. They hit the hosted API over HTTPS.
 
 ## Development
 

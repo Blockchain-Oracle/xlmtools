@@ -57,7 +57,10 @@ The dev script uses `tsx watch` for hot-reload during development.
 pnpm build
 ```
 
-Compiles TypeScript to `dist/`. The compiled entry point is `dist/index.js`.
+Compiles TypeScript to `dist/`. Two compiled outputs matter:
+
+- `dist/cli.js` — the `xlm` standalone binary (entry declared in `package.json` `bin`)
+- `dist/server.js` — the `createMcpServer()` factory (entry declared in `package.json` `main`), consumed by `@xlmtools/mcp` as a runtime dependency
 
 ## Architecture
 
@@ -73,14 +76,16 @@ crypto, weather, domain, wallet, tools, budget, dex-orderbook, dex-candles, dex-
 
 | File | Purpose |
 | --- | --- |
-| `src/index.ts` | Entry point, registers all 21 tools |
+| `src/server.ts` | `createMcpServer()` factory — builds a fresh McpServer and registers all 21 tools. No transport connected. Consumed by `@xlmtools/mcp`. |
+| `src/cli.ts` | Standalone `xlm` binary — arg parsing, URL building, response printing, receipt footer rendering |
 | `src/lib/wallet.ts` | Wallet creation, auto-funding on testnet |
+| `src/lib/api-fetch.ts` | Shared fetch helper that stamps `X-XLMTools-Client` header for per-address stats attribution |
 | `src/lib/budget.ts` | Session budget state, `withBudget()` wrapper |
 | `src/lib/cache.ts` | Response cache, `withCache()` wrapper |
 | `src/lib/format.ts` | `ok()`, `okPaid()`, `err()` response formatters |
 | `src/lib/config.ts` | Tool prices and free tool list |
 | `src/lib/logger.ts` | pino logger (stderr) |
-| `src/tools/*.ts` | One file per tool |
+| `src/tools/*.ts` | One file per tool — each calls `server.registerTool(...)` |
 
 ### Payment flow
 
