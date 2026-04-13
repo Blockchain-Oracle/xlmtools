@@ -166,32 +166,13 @@ Calls that would exceed the limit are blocked. Use `budget check` to see remaini
 
 ## Architecture
 
-```
-Claude / Cursor / Windsurf / VS Code Copilot / …    (MCP host)
-    |
-    | stdio (when user installs via claude mcp add xlmtools npx @xlmtools/mcp)
-    v
-@xlmtools/mcp                                       (thin wrapper, ~15 lines)
-    |  imports createMcpServer() factory from @xlmtools/cli
-    |  connects StdioServerTransport, done
-    v
-@xlmtools/cli  (also runnable as standalone `xlm` via Bash)
-    |  - auto-generated Stellar wallet at ~/.xlmtools/config.json
-    |  - mppx polyfill handles 402 payments transparently
-    |  - X-XLMTools-Client header → per-address stats attribution
-    |  - session budget tracking + 5-min response caching
-    |
-    | HTTPS + signed MPP credentials
-    v
-XLMTools API Server (Express, hosted)
-    |  - verifies payments via Soroban simulation
-    |  - calls backend APIs (Brave, Exa, OpenAI, etc.)
-    |  - users never need backend API keys
-    |  - in-memory call log for /stats + /stats/by-client
-    |
-    v
-Stellar Testnet (USDC settlement via Soroban SAC)
-```
+<p align="center">
+  <img src="./assets/xlmtools-architecture.svg" alt="XLMTools architecture — five-step flow from MCP host to Stellar testnet" width="100%"/>
+</p>
+
+Payment is handled by two Stellar libraries working in tandem: **`@stellar/mpp`** defines the Soroban SAC USDC charge method; **`mppx`** wraps `fetch` to intercept 402 responses, build and sign the transaction, and retry transparently. Your secret key never leaves your machine.
+
+See the [Architecture guide](https://xlmtools.com/docs/guides/architecture) for a full breakdown of the two-package split, request lifecycle, and security properties.
 
 ### Two install paths, one source of truth
 

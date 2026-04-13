@@ -65,49 +65,7 @@ XLMTools ships as two npm packages:
 
 ## Full system diagram
 
-```
-MCP host (Claude / Cursor / Windsurf / VS Code / Gemini CLI / …)
-    │
-    │  stdio (MCP protocol)
-    ▼
-@xlmtools/mcp                          ← thin wrapper, ~15 lines
-    │  imports createMcpServer() from @xlmtools/cli
-    │  connects StdioServerTransport
-    ▼
-@xlmtools/cli                          ← all tool logic lives here
-    │  - auto-generates Stellar wallet at ~/.xlmtools/config.json
-    │  - Mppx.create() installs 402-intercept polyfill on fetch
-    │  - stellar.charge() signs Soroban USDC transfers locally
-    │  - session budget cap + 5-min response cache
-    │  - X-XLMTools-Client header for per-address stats
-    │
-    │  HTTPS — request (first attempt, no payment proof)
-    ▼
-XLMTools API (Express 5, hosted)
-    │  mppx.charge({ amount }) checks for valid MPP proof
-    │  → no proof: returns 402 + payment instructions
-    │
-    │  402 response travels back to @xlmtools/cli
-    ▼
-mppx (client-side)
-    │  reads 402 headers
-    │  builds Soroban SAC USDC transfer via @stellar/mpp
-    │  signs with local keypair (key never transmitted)
-    │
-    │  HTTPS — retry with signed payment proof in headers
-    ▼
-XLMTools API (Express 5, hosted)
-    │  mppx.charge() verifies proof signature
-    │  submits transaction to Stellar network
-    │  confirms settlement on-chain
-    │  executes tool call (Brave / Exa / OpenAI / etc.)
-    │  returns result + Stellar tx hash
-    │
-    ▼
-Stellar Testnet
-    USDC transfer settled via Soroban SAC
-    every payment publicly verifiable at stellar.expert
-```
+[![XLMTools architecture — five-step flow from MCP host to Stellar testnet](/architecture.svg)](/architecture.svg)
 
 ## Request lifecycle for a paid tool call
 

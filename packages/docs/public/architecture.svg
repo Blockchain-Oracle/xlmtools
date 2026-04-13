@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 480" role="img" aria-label="XLMTools architecture — five-step flow from MCP host to Stellar testnet">
+  <title>XLMTools architecture — how a tool call propagates from an MCP host to Stellar testnet</title>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#101018"/>
+      <stop offset="100%" stop-color="#07070c"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="480" fill="url(#bg)"/>
+
+  <!-- Faint dot grid in corners -->
+  <g fill="#ffffff" fill-opacity="0.05">
+    <circle cx="20" cy="20" r="1"/>
+    <circle cx="60" cy="20" r="1"/>
+    <circle cx="100" cy="20" r="1"/>
+    <circle cx="20" cy="460" r="1"/>
+    <circle cx="60" cy="460" r="1"/>
+    <circle cx="100" cy="460" r="1"/>
+    <circle cx="1300" cy="460" r="1"/>
+    <circle cx="1340" cy="460" r="1"/>
+    <circle cx="1380" cy="460" r="1"/>
+  </g>
+
+  <!-- Title (top-left) -->
+  <text x="40" y="58" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="30" font-weight="800" fill="#ffffff" letter-spacing="-0.5">XLMTools architecture</text>
+  <text x="40" y="86" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#71717a">How a tool call propagates from an MCP host to Stellar testnet</text>
+  <line x1="40" y1="102" x2="120" y2="102" stroke="url(#accent)" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- XLMTools logo (top-right) -->
+  <svg x="1280" y="15" width="90" height="90" viewBox="0 0 140 140">
+    <rect width="140" height="140" rx="26" fill="#14141f" stroke="#2a2a3a" stroke-width="1.5"/>
+    <polyline
+      points="22,70 34,70 44,36 54,104 64,40 74,100 84,28 94,112 104,58 114,58 120,58"
+      stroke="#ffffff"
+      stroke-width="5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+  </svg>
+
+  <!-- ─────────── BOX 1: Agent host (x=40) ─────────── -->
+  <g transform="translate(40, 140)">
+    <rect width="200" height="280" rx="14" fill="#14141f" stroke="#2a2a3a" stroke-width="1.5"/>
+    <text x="16" y="30" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" font-weight="700" fill="#10b981" letter-spacing="1.3">01 · MCP HOST</text>
+    <line x1="16" y1="44" x2="52" y2="44" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="16" y="76" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">Agent host</text>
+    <text x="16" y="118" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Claude Code · Cursor</text>
+    <text x="16" y="136" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Cline · VS Code Copilot</text>
+    <text x="16" y="154" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Windsurf · Zed · Goose</text>
+    <text x="16" y="172" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Gemini CLI · Codex</text>
+    <text x="16" y="190" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Continue · OpenCode</text>
+    <text x="16" y="232" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" font-weight="700" fill="#10b981">12+ SUPPORTED</text>
+  </g>
+
+  <!-- Arrow 1 → 2 -->
+  <g>
+    <line x1="252" y1="280" x2="310" y2="280" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="281" y="268" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="9" font-weight="700" fill="#a1a1aa">stdio</text>
+    <text x="281" y="300" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="9" font-weight="500" fill="#71717a">JSON-RPC</text>
+  </g>
+
+  <!-- ─────────── BOX 2: @xlmtools/mcp (x=320) ─────────── -->
+  <g transform="translate(320, 140)">
+    <rect width="200" height="280" rx="14" fill="#14141f" stroke="#2a2a3a" stroke-width="1.5"/>
+    <text x="16" y="30" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" font-weight="700" fill="#10b981" letter-spacing="1.3">02 · NPX WRAPPER</text>
+    <line x1="16" y1="44" x2="52" y2="44" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="16" y="76" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="17" font-weight="700" fill="#ffffff">@xlmtools/mcp</text>
+    <text x="16" y="118" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Thin stdio wrapper</text>
+    <text x="16" y="136" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">~15 lines of code</text>
+    <text x="16" y="154" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Single bin →</text>
+    <text x="16" y="172" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">npx auto-picks it</text>
+    <text x="16" y="190" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Zero install friction</text>
+    <text x="16" y="232" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" font-weight="700" fill="#10b981">NPX @xlmtools/mcp</text>
+  </g>
+
+  <!-- Arrow 2 → 3 -->
+  <g>
+    <line x1="532" y1="280" x2="590" y2="280" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="561" y="268" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="9" font-weight="700" fill="#a1a1aa">imports</text>
+    <text x="561" y="300" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="9" font-weight="500" fill="#71717a">factory</text>
+  </g>
+
+  <!-- ─────────── BOX 3: @xlmtools/cli (x=600) ─────────── -->
+  <g transform="translate(600, 140)">
+    <rect width="200" height="280" rx="14" fill="#14141f" stroke="#2a2a3a" stroke-width="1.5"/>
+    <text x="16" y="30" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" font-weight="700" fill="#10b981" letter-spacing="1.3">03 · TOOL FACTORY</text>
+    <line x1="16" y1="44" x2="52" y2="44" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="16" y="76" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="17" font-weight="700" fill="#ffffff">@xlmtools/cli</text>
+    <text x="16" y="118" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">createMcpServer()</text>
+    <text x="16" y="136" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">21 tools registered</text>
+    <text x="16" y="154" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Auto-wallet on first run</text>
+    <text x="16" y="172" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Session budget cap</text>
+    <text x="16" y="190" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">5-min response cache</text>
+    <text x="16" y="232" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" font-weight="700" fill="#10b981">mppx FETCH POLYFILL</text>
+  </g>
+
+  <!-- Arrow 3 → 4 -->
+  <g>
+    <line x1="812" y1="280" x2="870" y2="280" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="841" y="268" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="9" font-weight="700" fill="#a1a1aa">HTTPS</text>
+    <text x="841" y="300" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="9" font-weight="500" fill="#71717a">+ client header</text>
+  </g>
+
+  <!-- ─────────── BOX 4: api.xlmtools.com (x=880) ─────────── -->
+  <g transform="translate(880, 140)">
+    <rect width="200" height="280" rx="14" fill="#14141f" stroke="#2a2a3a" stroke-width="1.5"/>
+    <text x="16" y="30" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" font-weight="700" fill="#10b981" letter-spacing="1.3">04 · API SERVER</text>
+    <line x1="16" y1="44" x2="52" y2="44" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="16" y="76" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#ffffff">api.xlmtools.com</text>
+    <text x="16" y="118" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Express 5 (hosted)</text>
+    <text x="16" y="136" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Returns 402 for paid</text>
+    <text x="16" y="154" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">MPP receipt verify</text>
+    <text x="16" y="172" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Proxies Brave · Exa</text>
+    <text x="16" y="190" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">OpenAI · ScreenshotOne</text>
+    <text x="16" y="232" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" font-weight="700" fill="#10b981">PER-ADDRESS STATS</text>
+  </g>
+
+  <!-- Arrow 4 → 5 -->
+  <g>
+    <line x1="1092" y1="280" x2="1150" y2="280" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="1121" y="268" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="9" font-weight="700" fill="#a1a1aa">Soroban</text>
+    <text x="1121" y="300" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="9" font-weight="500" fill="#71717a">SAC transfer</text>
+  </g>
+
+  <!-- ─────────── BOX 5: Stellar Testnet (x=1160) ─────────── -->
+  <g transform="translate(1160, 140)">
+    <rect width="200" height="280" rx="14" fill="#14141f" stroke="#10b981" stroke-width="2"/>
+    <text x="16" y="30" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" font-weight="700" fill="#10b981" letter-spacing="1.3">05 · SETTLEMENT</text>
+    <line x1="16" y1="44" x2="52" y2="44" stroke="url(#accent)" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="16" y="76" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">Stellar Testnet</text>
+    <text x="16" y="118" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">USDC SAC transfer</text>
+    <text x="16" y="136" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">~1 second finality</text>
+    <text x="16" y="154" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Real tx hash returned</text>
+    <text x="16" y="172" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">Verifiable on-chain at</text>
+    <text x="16" y="190" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#a1a1aa">stellar.expert/testnet</text>
+    <text x="16" y="232" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" font-weight="700" fill="#10b981">PAYMENT RECEIPT</text>
+  </g>
+
+  <!-- Install caption at the very bottom -->
+  <g transform="translate(700, 452)">
+    <text text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11" font-weight="600" fill="#71717a">$ claude mcp add xlmtools npx @xlmtools/mcp</text>
+  </g>
+</svg>
