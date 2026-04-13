@@ -2,6 +2,7 @@ export default {
   index: { title: 'Overview' },
   'payment-flow': { title: 'Payment Flow' },
   'mcp-setup': { title: 'MCP Host Setup' },
+  openclaw: { title: 'Set Up with OpenClaw' },
   cli: { title: 'Standalone CLI' },
   skill: { title: 'Agent Skill' },
   'agent-discovery': { title: 'Agent Discovery' },

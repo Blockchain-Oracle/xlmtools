@@ -1,0 +1,165 @@
+import { Callout, Steps } from 'nextra/components'
+
+# XLMTools on OpenClaw
+
+[OpenClaw](https://openclaw.ai) is an open-source AI agent platform that runs across WhatsApp, Telegram, Slack, Discord, and 20+ messaging platforms. It supports both MCP servers and Skills — so you can run XLMTools with full payment and skill awareness from any chat app.
+
+This guide walks through the complete setup: enabling MCP, adding XLMTools, and installing the agent skill.
+
+<Callout type="info">
+OpenClaw supports both **MCP tools** (for calling XLMTools directly) and **Skills** (to teach the agent when and how to use each tool). Install both for the best experience.
+</Callout>
+
+## Part 1: Set up the MCP server
+
+<Steps>
+
+### Add XLMTools via the CLI
+
+Run this one command:
+
+```bash
+openclaw mcp set xlmtools '{"command":"npx","args":["-y","@xlmtools/mcp"]}'
+```
+
+This writes the server entry to `~/.openclaw/openclaw.json` automatically.
+
+### Or edit the config file directly
+
+**Config location:** `~/.openclaw/openclaw.json`
+
+```json
+{
+  "mcpServers": {
+    "xlmtools": {
+      "command": "npx",
+      "args": ["-y", "@xlmtools/mcp"]
+    }
+  }
+}
+```
+
+### Restart the gateway
+
+```bash
+openclaw restart
+```
+
+### Verify the connection
+
+In any connected chat (Telegram, WhatsApp, Slack, etc.), send:
+
+```
+List all XLMTools tools
+```
+
+OpenClaw should call the `tools` tool and return all 21 XLMTools tools with their prices.
+
+</Steps>
+
+## Part 2: Install the XLMTools skill
+
+The skill teaches OpenClaw's agent *when* to use XLMTools and how to handle payments correctly. Without it, the agent has to infer from tool names alone.
+
+<Steps>
+
+### Open the Skills panel
+
+In the OpenClaw app, click **Skills** in the left sidebar (or top navigation).
+
+![Skills panel in OpenClaw](/openclaw/skill-serach.jpg)
+
+### Search for XLMTools
+
+Type `xlmtools` in the search box. Select **XLMTools** from the results and click **Install**.
+
+### Or install via CLI
+
+```bash
+openclaw skill add xlmtools
+```
+
+This fetches the latest `SKILL.md` directly from the XLMTools registry.
+
+### Or install manually
+
+Paste this into any OpenClaw conversation:
+
+```
+Read https://xlmtools.com/skill.md and follow the instructions to install XLMTools.
+```
+
+The agent will fetch and install the skill itself.
+
+</Steps>
+
+## Running your first command
+
+Once MCP and the skill are active, try these from any connected chat app:
+
+**Free tools** — no payment needed:
+
+```
+What's the price of XLM right now?
+```
+
+```
+Check if stellar.org is available as a domain
+```
+
+```
+Show me my XLMTools wallet address
+```
+
+**Paid tools** — agent will confirm cost before calling:
+
+```
+Search for the latest news about Stellar blockchain
+```
+
+```
+What's the current price of Apple stock?
+```
+
+```
+Generate an image of a futuristic Stellar network
+```
+
+The agent will tell you the cost (e.g. `.003 USDC`) before running any paid tool, and return a Stellar transaction hash you can verify on-chain.
+
+## How payments work
+
+Every paid XLMTools call triggers a micropayment on Stellar testnet:
+
+1. Your agent calls the tool
+2. The API returns a `402 Payment Required` response
+3. XLMTools auto-builds a Soroban USDC transfer, signs it with your local Stellar key, and retries with payment proof
+4. The tool result comes back with a transaction hash
+
+The agent surfaces the hash so you can verify: `https://stellar.expert/explorer/testnet/tx/<hash>`
+
+To fund your wallet with testnet USDC, visit [faucet.circle.com](https://faucet.circle.com).
+
+## Troubleshooting
+
+**MCP tools not appearing after setup**
+Make sure **Enable MCP** is toggled on in Settings → Integrations. Then restart the gateway with `openclaw restart`.
+
+**`openclaw` command not found**
+Install the OpenClaw CLI:
+```bash
+npm install -g @openclaw/cli
+```
+
+**Payment errors / "Account not found"**
+Your wallet needs testnet USDC. On first run, XLMTools auto-creates a wallet at `~/.xlmtools/config.json` and funds it with XLM via friendbot — but you still need USDC. Visit [faucet.circle.com](https://faucet.circle.com).
+
+**Skill not triggering**
+Make sure the skill is installed (check **Skills** panel — it should show XLMTools as active). If it's installed but not triggering, try: `Use XLMTools to search for [topic]` to invoke it explicitly.
+
+## See also
+
+- [MCP Host Setup](/guides/mcp-setup) — setup instructions for Claude Code, Cursor, Windsurf, and 12 other hosts
+- [Agent Skill](/guides/skill) — how the XLMTools skill works and all install methods
+- [Payment Flow](/guides/payment-flow) — how MPP micropayments work on Stellar
+- [Spending Receipts](/guides/spending-receipts) — verifying payments on-chain
