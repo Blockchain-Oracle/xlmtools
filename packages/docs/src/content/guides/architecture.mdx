@@ -1,0 +1,135 @@
+import { Callout } from 'nextra/components'
+
+# Architecture
+
+XLMTools is built on two Stellar payment libraries and split across two npm packages. This page explains both decisions — they are the core of what makes XLMTools different from a standard MCP server.
+
+## The two Stellar payment libraries
+
+XLMTools uses two libraries together to handle pay-per-call billing:
+
+### `@stellar/mpp` — the charge protocol
+
+`@stellar/mpp` is Stellar's Micropayment Protocol library. It defines a **charge method** — the rules for how a payment is constructed, signed, and verified on-chain.
+
+XLMTools uses the `stellar.charge()` method from `@stellar/mpp`, which settles via a **Soroban SAC (Stellar Asset Contract) USDC transfer**. On the client side, it takes a Stellar keypair and signs the transaction locally. On the server side, it takes a recipient address and verifies incoming proofs.
+
+```ts
+// Client (CLI) — @stellar/mpp/charge/client
+stellar.charge({
+  keypair,        // local Stellar key — never transmitted
+  mode: 'pull',   // server pulls exact amount; client approves each call
+})
+
+// Server (API) — @stellar/mpp/charge/server
+stellar.charge({
+  recipient: STELLAR_RECIPIENT,   // your payment destination
+  currency: USDC_SAC_TESTNET,     // Soroban USDC contract address
+  network: 'stellar:testnet',
+})
+```
+
+### `mppx` — the 402 orchestration layer
+
+`mppx` is the layer that makes payments transparent. It wraps `fetch` and intercepts `402 Payment Required` responses. When a 402 arrives, `mppx` invokes the configured payment method (`stellar.charge()`), attaches the signed proof, and retries the original request automatically.
+
+```ts
+// Client — install the polyfill once, all subsequent fetches auto-pay
+Mppx.create({
+  methods: [stellar.charge({ keypair, mode: 'pull' })],
+})
+
+// Server — gate a route with a per-call price
+const result = await mppx.charge({ amount: 0.003 })(req, res)
+if (result.status === 402) return  // no valid proof yet — client will retry
+```
+
+**The result:** the AI agent calls a tool. From its perspective, the request just works. The 402 challenge, Soroban transaction, and retry all happen inside `mppx` before the response reaches the agent.
+
+<Callout type="info">
+`@stellar/mpp` answers *how* to move USDC on Stellar. `mppx` answers *when* and *whether* to move it — intercepting the 402, orchestrating the charge method, and retrying transparently.
+</Callout>
+
+## Two-package split
+
+XLMTools ships as two npm packages:
+
+| Package | Bin | Installed via |
+| --- | --- | --- |
+| [`@xlmtools/mcp`](https://npmjs.com/package/@xlmtools/mcp) | `xlmtools-mcp` | `claude mcp add xlmtools npx @xlmtools/mcp` |
+| [`@xlmtools/cli`](https://npmjs.com/package/@xlmtools/cli) | `xlm` | `npm install -g @xlmtools/cli` |
+
+`@xlmtools/mcp` is a thin wrapper (~15 lines). It imports `createMcpServer()` from `@xlmtools/cli`, connects a `StdioServerTransport`, and starts. That's it. All 21 tool implementations, wallet management, payment handling, caching, and budget logic live in `@xlmtools/cli`.
+
+**Why two packages?** `npx @pkg/name` only auto-resolves when a package has exactly one binary whose name matches the package tail. If you ship two bins in one package, `npx` doesn't know which to run. The MCP ecosystem convention (used by Context7, Magic UI, Upstash, and the official `@modelcontextprotocol/server-*` packages) is one package = one bin. Shipping `@xlmtools/mcp` as its own single-bin package is the only way to make `claude mcp add xlmtools npx @xlmtools/mcp` resolve cleanly across every MCP host, while still giving terminal users the `xlm` command via `@xlmtools/cli`.
+
+## Full system diagram
+
+```
+MCP host (Claude / Cursor / Windsurf / VS Code / Gemini CLI / …)
+    │
+    │  stdio (MCP protocol)
+    ▼
+@xlmtools/mcp                          ← thin wrapper, ~15 lines
+    │  imports createMcpServer() from @xlmtools/cli
+    │  connects StdioServerTransport
+    ▼
+@xlmtools/cli                          ← all tool logic lives here
+    │  - auto-generates Stellar wallet at ~/.xlmtools/config.json
+    │  - Mppx.create() installs 402-intercept polyfill on fetch
+    │  - stellar.charge() signs Soroban USDC transfers locally
+    │  - session budget cap + 5-min response cache
+    │  - X-XLMTools-Client header for per-address stats
+    │
+    │  HTTPS — request (first attempt, no payment proof)
+    ▼
+XLMTools API (Express 5, hosted)
+    │  mppx.charge({ amount }) checks for valid MPP proof
+    │  → no proof: returns 402 + payment instructions
+    │
+    │  402 response travels back to @xlmtools/cli
+    ▼
+mppx (client-side)
+    │  reads 402 headers
+    │  builds Soroban SAC USDC transfer via @stellar/mpp
+    │  signs with local keypair (key never transmitted)
+    │
+    │  HTTPS — retry with signed payment proof in headers
+    ▼
+XLMTools API (Express 5, hosted)
+    │  mppx.charge() verifies proof signature
+    │  submits transaction to Stellar network
+    │  confirms settlement on-chain
+    │  executes tool call (Brave / Exa / OpenAI / etc.)
+    │  returns result + Stellar tx hash
+    │
+    ▼
+Stellar Testnet
+    USDC transfer settled via Soroban SAC
+    every payment publicly verifiable at stellar.expert
+```
+
+## Request lifecycle for a paid tool call
+
+1. Agent calls `search` → `@xlmtools/cli` sends `GET /search?q=...` to the API
+2. API's `mppx.charge({ amount: 0.003 })` finds no proof → returns `402` with MPP headers
+3. `mppx` on the client reads the headers, calls `stellar.charge()` to build and sign a Soroban USDC transfer for 0.003 USDC
+4. Client retries the request with the signed proof attached
+5. API verifies the proof, submits the transaction to Stellar testnet, confirms it settled
+6. API calls Brave Search, returns results plus `tx_hash`
+7. CLI prints the result and the Stellar transaction hash
+
+The entire round-trip takes a few seconds. The AI agent sees none of this — it just receives the tool result.
+
+## Security properties
+
+- **Local signing only** — your Stellar secret key is stored at `~/.xlmtools/config.json` and never transmitted to the API server
+- **Per-call payments** — each tool call is a separate, independently auditable Stellar transaction
+- **No pre-authorization** — XLMTools never holds your funds; you pay exactly per call
+- **On-chain receipts** — every payment is recorded on the Stellar ledger and can be independently verified at [stellar.expert](https://stellar.expert/explorer/testnet)
+
+## See also
+
+- [Payment Flow](/guides/payment-flow) — step-by-step walkthrough of the 402 challenge-response
+- [Spending Receipts](/guides/spending-receipts) — how to verify payments on-chain
+- [MCP Host Setup](/guides/mcp-setup) — installing `@xlmtools/mcp` in 13+ clients

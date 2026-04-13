@@ -1,5 +1,6 @@
 export default {
   index: { title: 'Overview' },
+  architecture: { title: 'Architecture' },
   'payment-flow': { title: 'Payment Flow' },
   'mcp-setup': { title: 'MCP Host Setup' },
   openclaw: { title: 'Set Up with OpenClaw' },

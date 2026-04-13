@@ -28,32 +28,30 @@ X-MPP-Network: testnet
 X-MPP-Memo: search:abc123
 ```
 
-### 3. MPP client builds payment
+### 3. `mppx` builds and signs payment
 
-The `mppx` library reads the 402 headers and builds a Soroban SAC (Stellar Asset Contract) USDC transfer transaction:
+`mppx` (the 402 orchestration layer) reads the response headers and invokes the configured `@stellar/mpp` charge method to build a **Soroban SAC USDC transfer**:
 
 - **From**: Your local wallet address
-- **To**: The server's payment destination
+- **To**: The server's `STELLAR_RECIPIENT` address
 - **Amount**: The tool's price (e.g. 0.003 USDC)
-- **Memo**: Server-provided memo for matching
+- **Asset**: `USDC_SAC_TESTNET` — the Soroban USDC contract on Stellar testnet
 
-### 4. Transaction signed locally
+The transaction is signed with your local Stellar secret key (stored in `~/.xlmtools/config.json`). **Your key never leaves your machine** — only the signed proof is transmitted.
 
-The transaction is signed with your local Stellar secret key (stored in `~/.xlmtools/config.json`). Your key never leaves your machine.
+### 4. Request retried with proof
 
-### 5. Request retried with proof
+`mppx` attaches the signed transaction proof to the retry request headers and re-sends the original request automatically. The agent sees none of this.
 
-The signed transaction is attached to the request as an MPP payment proof header, and the request is retried.
+### 5. Server verifies and executes
 
-### 6. Server verifies and executes
+The API's `mppx.charge()` middleware (backed by `@stellar/mpp/charge/server`):
 
-The API server:
-
-1. Verifies the payment proof signature
-2. Submits the transaction to the Stellar network
-3. Confirms settlement
-4. Executes the tool call
-5. Returns the results
+1. Verifies the MPP proof signature
+2. Submits the Soroban transaction to Stellar testnet
+3. Confirms on-chain settlement
+4. Executes the tool call against the backend (Brave, Exa, OpenAI, etc.)
+5. Returns the results plus a Stellar transaction hash
 
 The entire flow happens in a few seconds.
 
