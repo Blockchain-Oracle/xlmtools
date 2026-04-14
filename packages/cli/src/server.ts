@@ -12,7 +12,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { Mppx } from "mppx/client";
 import { stellar } from "@stellar/mpp/charge/client";
-import { loadOrCreateWallet, getKeypair } from "./lib/wallet.js";
+import { initWallet, getKeypair } from "./lib/wallet.js";
 import { logger } from "./lib/logger.js";
 import { registerCryptoTool } from "./tools/crypto.js";
 import { registerWeatherTool } from "./tools/weather.js";
@@ -45,8 +45,8 @@ import { registerBudgetTool } from "./tools/budget.js";
  *   - Initializes Mppx with a Stellar charge method (polyfills fetch
  *     to auto-handle 402 payment challenges)
  */
-export function createMcpServer(): McpServer {
-  const config = loadOrCreateWallet();
+export async function createMcpServer(): Promise<McpServer> {
+  const config = await initWallet();
   const keypair = getKeypair(config);
 
   // Mppx polyfills global fetch to auto-handle 402 payments

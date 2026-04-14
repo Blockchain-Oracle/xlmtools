@@ -3,7 +3,7 @@
 import { Mppx } from "mppx/client";
 import { stellar } from "@stellar/mpp/charge/client";
 import { Horizon } from "@stellar/stellar-sdk";
-import { loadOrCreateWallet, getKeypair } from "./lib/wallet.js";
+import { initWallet, getKeypair } from "./lib/wallet.js";
 import { apiFetch } from "./lib/api-fetch.js";
 import { TOOL_PRICES } from "./lib/config.js";
 import { logger } from "./lib/logger.js";
@@ -175,7 +175,7 @@ async function main() {
   const { tool, positional, flags } = parseArgs(args);
 
   // Init wallet + mppx (payment handling)
-  const config = loadOrCreateWallet();
+  const config = await initWallet();
   const keypair = getKeypair(config);
 
   Mppx.create({

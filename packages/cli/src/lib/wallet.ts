@@ -100,6 +100,26 @@ export function loadOrCreateWallet(): XLMToolsConfig {
   mkdirSync(CONFIG_DIR, { recursive: true });
   writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), { mode: 0o600 });
 
+  logger.info(
+    { publicKey: config.stellarPublicKey },
+    "New Stellar wallet generated",
+  );
+  return config;
+}
+
+/**
+ * Initialize wallet at startup — creates if needed and funds on testnet.
+ * Call this once at startup (server.ts / cli.ts) before any tool calls.
+ * Tool handlers continue to use loadOrCreateWallet() (sync fast path).
+ */
+export async function initWallet(): Promise<XLMToolsConfig> {
+  const isNew = !existsSync(CONFIG_PATH);
+  const config = loadOrCreateWallet();
+
+  if (!isNew) return config;
+
+  const keypair = Keypair.fromSecret(config.stellarPrivateKey);
+
   process.stderr.write(
     "\n" +
       "XLMTools — First Run Setup (Stellar Testnet)\n" +
@@ -108,33 +128,27 @@ export function loadOrCreateWallet(): XLMToolsConfig {
       `  Network: Stellar Testnet\n\n`,
   );
 
-  // Auto-fund on testnet (non-blocking — don't break startup if it fails)
-  fundTestnetWallet(keypair)
-    .then((funded) => {
-      if (funded) {
-        process.stderr.write(
-          "\n  Wallet funded and ready.\n" +
-            "  Get testnet USDC: https://faucet.circle.com\n" +
-            "  (paste your wallet address above)\n\n" +
-            "─".repeat(40) + "\n\n",
-        );
-      } else {
-        process.stderr.write(
-          "\n  Auto-funding failed. Fund manually:\n" +
-            "  1. https://lab.stellar.org/account/fund  (testnet XLM)\n" +
-            "  2. https://faucet.circle.com             (testnet USDC)\n\n" +
-            "─".repeat(40) + "\n\n",
-        );
-      }
-    })
-    .catch(() => {
-      // Silently handle — wallet is still created, just unfunded
-    });
+  try {
+    const funded = await fundTestnetWallet(keypair);
+    if (funded) {
+      process.stderr.write(
+        "\n  Wallet funded and ready.\n" +
+          "  Get testnet USDC: https://faucet.circle.com\n" +
+          "  (paste your wallet address above)\n\n" +
+          "─".repeat(40) + "\n\n",
+      );
+    } else {
+      process.stderr.write(
+        "\n  Auto-funding failed. Fund manually:\n" +
+          "  1. https://lab.stellar.org/account/fund  (testnet XLM)\n" +
+          "  2. https://faucet.circle.com             (testnet USDC)\n\n" +
+          "─".repeat(40) + "\n\n",
+      );
+    }
+  } catch {
+    // Wallet is created but unfunded — user can fund manually
+  }
 
-  logger.info(
-    { publicKey: config.stellarPublicKey },
-    "New Stellar wallet generated",
-  );
   return config;
 }
 
